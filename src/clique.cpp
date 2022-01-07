@@ -1,6 +1,8 @@
 #include <unordered_map>
-#include <vector> // std::insert
-#include <algorithm>
+#include <vector>
+#include <algorithm> //std::stable_sort
+#include <iostream> // std::cout std::endl
+#include <numeric> // std::iota
 
 #include "util.h"
 #include "init.h"
@@ -9,25 +11,43 @@
 using namespace std;
 using namespace lonelynodes;
 
+// find maximum clique(s) by a given `node` in graph `g`.
+ln::vecvu MaxCliques(const ln::gumap& g,
+                     const unsigned int node) {
 
-// find cliques by search the left tree
+  // step1: sort nodes according to degree by decreasing order.
+  auto lnodes = SortNodes_(g.at(node), g);
+  vecvu cliques{{}};
+  vecvu sclique = {{node}};
+  vecvu nodes = {lnodes};
+
+  // step2: search
+  SearchTree_(cliques, sclique, nodes, g);
+
+  return cliques;
+}
+
+
 void SearchTree_(ln::vecvu& cliques,
                  ln::vecvu& sclique,
                  ln::vecvu& nodes,
                  const ln::gumap& g) {
 
   do {
-    // step1: search left leaf
+    // step1: search left leaf.
     SearchLeaf_(sclique, nodes, g);
     CompareClique_(cliques, sclique);
 
-    // step2: trim if leaf exist.
-    TrimLeaf_(sclique, nodes);
+    // step2: compare best clique (last elem of `cliques`) with potentials.
+    // Then trim leaves, if exist.
+    TrimLeaf_(sclique, nodes, cliques.back().size());
 
     cout << "1st nodes size: " << nodes.front().size() <<
       "; sclique size: " << sclique.size() <<
       "; nodes size: " << nodes.size() <<
-      "; cliques size: " << cliques.size() << endl;
+      "; cliques size: " << cliques.size() <<
+      "; maximum clique size: " << cliques.back().size() <<
+      endl;
 
   } while (!nodes.empty());
 
@@ -82,16 +102,16 @@ void CompareClique_(ln::vecvu& cliques,
 
 // case1 (1 node): TrimLeaf_({{0}, {0, 1}}, {{}, {}})
 // case2 (typical): TrimLeaf_({{0}, {0, 3}, {0, 3, 4}, {0, 3, 4, 5}}, {{4, 5}, {5}, {}, {}}
-// @keywords internal
+// `bestSize` is the length of best maximum clique so far.
 void TrimLeaf_(ln::vecvu& sclique,
-               ln::vecvu& nodes) {
+               ln::vecvu& nodes,
+               const unsigned int bestSize) {
 
   // optimization:
   // 1. check if `sclique.back().size()` is the largest so far.
   // 2. last elem of `sclique` is always is the best, so skip.
   auto ps = next(sclique.rbegin());
   auto pn = next(nodes.rbegin());
-  auto bestSize = sclique.back().size();
 
   for (; pn != nodes.rend(); ++ps, ++pn) {
 
@@ -159,6 +179,62 @@ void PushHead_(ln::vecvu& sclique,
 
 }
 
+
+// sort linked nodes by the degree in decreasing order.
+ln::vecu SortNodes_(const ln::vecu& nodes,
+                    const ln::gumap& g) {
+
+  // step1: count degree
+  vecu degree(nodes.size(), 0);
+
+  for (auto elem : nodes) {
+    Count_(degree, nodes, g.at(elem));
+  }
+
+  // step2: decreasing order of degree
+  auto degreeIdx = SortIdx_(degree);
+
+  vecu res(nodes.size());
+  auto pres = res.begin();
+  auto pdi = degreeIdx.rbegin();
+  for (;
+       pdi != degreeIdx.rend();
+       *pres = nodes.at(*pdi), ++pres, ++pdi) {}
+
+  return res;
+}
+
+
+void Count_(ln::vecu& degree,
+            const ln::vecu& nodes,
+            const ln::vecu& tnodes) {
+
+  for (unsigned int i = 0; i < nodes.size(); ++i) {
+
+    auto snode = nodes.at(i);
+    for (auto p = tnodes.begin(); p != tnodes.end(); ++p) {
+      if (snode == *p) {
+        ++degree.at(i);
+        break;
+      } else {}
+    }
+
+  }
+}
+
+ln::vecu SortIdx_(const ln::vecu& v) {
+
+  // get index in not decreasing order
+  vecu idx(v.size());
+  iota(idx.begin(), idx.end(), 0);
+
+  stable_sort(idx.begin(), idx.end(),
+              [&v](size_t i1, size_t i2) {
+                return v[i1] < v[i2];
+              });
+
+  return idx;
+}
 
 
 // // expand nodes into children nodes

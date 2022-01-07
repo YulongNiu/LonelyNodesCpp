@@ -27,6 +27,8 @@ namespace lonelynodes {
 
 }
 
+ln::vecvu MaxCliques(const ln::gumap& g,
+                     const unsigned int node);
 
 void SearchTree_(ln::vecvu& cliques,
                  ln::vecvu& sclique,
@@ -37,7 +39,8 @@ void CompareClique_(ln::vecvu& cliques,
                     ln::vecvu& sclique);
 
 void TrimLeaf_(ln::vecvu& sclique,
-               ln::vecvu& nodes);
+               ln::vecvu& nodes,
+               const unsigned int bestSize);
 
 void SearchLeaf_(ln::vecvu& cliques,
                  ln::vecvu& nodes,
@@ -50,5 +53,13 @@ void NextLeaf_(ln::vecvu& sclique,
 void PushHead_(ln::vecvu& cliques,
                ln::vecvu& nodes);
 
+ln::vecu SortNodes_(const ln::vecu& nodes,
+                    const ln::gumap& g);
+
+void Count_(ln::vecu& degree,
+            const ln::vecu& nodes,
+            const ln::vecu& tnodes);
+
+ln::vecu SortIdx_(const ln::vecu& v);
 
 #endif // _CLIQUE_H_

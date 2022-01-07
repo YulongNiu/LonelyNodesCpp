@@ -115,29 +115,53 @@ int main() {
   // TestPushHead();
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+  // //~~~~~~~~~~~~~~~~~~~~test TestSortNodes~~~~~~~~~~~~~~~~~~
+  // vecu ln = {4, 8, 3, 10};
+  // vecu tn = {4, 20, 100, 34, 3, 28, 9};
+  // vecu degree(ln.size(), 0);
+
+  // Count_(degree, ln, tn);
+  // Printvecu(degree);
+  // Printvecu(SortIdx_(ln));
+
+  // umat testm;
+  // testm.load("../tests/testm.bin", arma_binary);
+  // auto gm = gumapInit(testm);
+  // testm.print("gm is: ");
+
+  // Printvecu(gm.at(0));
+  // Printvecu(SortNodes_(gm.at(0), gm));
+
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
   // small graph
   umat testm;
   testm.load("../tests/testm.bin", arma_binary);
   auto gm = gumapInit(testm);
-  testm.brief_print("gm is: ");
+  testm.print("gm is: ");
 
-  TestSearchLeaf(gm, 0);
-  auto treem = TestSearchTree(gm, 0);
-  Printvecvu(treem);
+  // TestSearchLeaf(gm, 0);
+  // auto treem = TestSearchTree(gm, 0);
+  // Printvecvu(treem);
+
+  auto mcm = MaxCliques(gm, 0);
+  Printvecvu(mcm);
 
   // median graph
-  // umat testg;
-  // testg.load("../tests/testg.bin", arma_binary);
-  // auto gg = gumapInit(testg);
-  // testg.brief_print("gg is: ");
+  umat testg;
+  testg.load("../tests/testg.bin", arma_binary);
+  auto gg = gumapInit(testg);
+  testg.brief_print("gg is: ");
 
-  // TestSearchLeaf(gg, 408);
+  unsigned int nodeIdx = 406;
+  // // TestSearchLeaf(gg, nodeIdx);
   // cout << "vertex number is: " << gg.size() << '\n' << endl;
-  // auto treeg = TestSearchTree(gg, 408);
+  // auto treeg = TestSearchTree(gg, nodeIdx);
   // Printvecvu(treeg);
 
-  
+  auto mcg = MaxCliques(gg, nodeIdx);
+  Printvecvu(mcg);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   return 0;
