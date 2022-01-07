@@ -28,18 +28,13 @@ namespace lonelynodes {
 }
 
 
-ln::vecvu FindAllCliques2(const ln::vecu& nodes,
-                          const ln::gumap& g);
-
-void SearchForest_(ln::vecvu& cliques,
-                   ln::vecu& roots,
-                   const ln::vecu& lnodes,
-                   const ln::gumap& g);
-
 void SearchTree_(ln::vecvu& cliques,
                  ln::vecvu& sclique,
                  ln::vecvu& nodes,
                  const ln::gumap& g);
+
+void CompareClique_(ln::vecvu& cliques,
+                    ln::vecvu& sclique);
 
 void TrimLeaf_(ln::vecvu& sclique,
                ln::vecvu& nodes);

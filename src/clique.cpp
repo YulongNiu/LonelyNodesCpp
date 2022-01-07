@@ -19,7 +19,7 @@ void SearchTree_(ln::vecvu& cliques,
   do {
     // step1: search left leaf
     SearchLeaf_(sclique, nodes, g);
-    cliques.push_back(sclique.back());
+    CompareClique_(cliques, sclique);
 
     // step2: trim if leaf exist.
     TrimLeaf_(sclique, nodes);
@@ -30,6 +30,27 @@ void SearchTree_(ln::vecvu& cliques,
       "; cliques size: " << cliques.size() << endl;
 
   } while (!nodes.empty());
+
+}
+
+
+
+// if new cliques is larger, then replace all old cliques.
+// if new cliques' size is equal with old cliques, then append.
+void CompareClique_(ln::vecvu& cliques,
+                    ln::vecvu& sclique) {
+
+  auto existSize = cliques.back().size();
+  auto newSize = sclique.back().size();
+
+  if (newSize == existSize) {
+    cliques.push_back(sclique.back());
+  }
+  else if (newSize > existSize) {
+    cliques.erase(cliques.begin(), cliques.end());
+    cliques.push_back(sclique.back());
+  }
+  else {}
 
 }
 
@@ -59,19 +80,24 @@ void SearchTree_(ln::vecvu& cliques,
 // }
 
 
-// case1: TrimLeaf_({{0}, {0, 1}}, {{}, {}})
-// case2: TrimLeaf_({{0}, {0, 1}, {0, 1, 2}}, {{4, }, {3}, {}})
+// case1 (1 node): TrimLeaf_({{0}, {0, 1}}, {{}, {}})
+// case2 (typical): TrimLeaf_({{0}, {0, 3}, {0, 3, 4}, {0, 3, 4, 5}}, {{4, 5}, {5}, {}, {}}
 // @keywords internal
 void TrimLeaf_(ln::vecvu& sclique,
                ln::vecvu& nodes) {
 
-  // trim from the end, and size of `nodes` > 1.
-  // end of `nodes` is always empty, so end is skipped.
-  auto ps = sclique.rbegin() + 1;
-  auto pn = nodes.rbegin() + 1;
+  // optimization:
+  // 1. check if `sclique.back().size()` is the largest so far.
+  // 2. last elem of `sclique` is always is the best, so skip.
+  auto ps = next(sclique.rbegin());
+  auto pn = next(nodes.rbegin());
+  auto bestSize = sclique.back().size();
 
   for (; pn != nodes.rend(); ++ps, ++pn) {
-    if ((*pn).size() - (*(pn - 1)).size() > 1) {
+
+    auto eachSize = (*ps).size() + (*pn).size();
+
+    if (eachSize >= bestSize) {
       break;
     } else {}
   }

@@ -63,9 +63,6 @@ ln::vecvu TestSearchLeaf(const ln::gumap& g,
   cout << "nodes are: \n";
   Printvecvu(nodes);
 
-  cout << "length of sclique is: " << sclique.size() << '\n';
-  cout << "length of nodes is: " << nodes.size() << '\n';
-
   return nodes;
 }
 
@@ -120,25 +117,27 @@ int main() {
 
   //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
   // small graph
-  // umat testm;
-  // testm.load("../tests/testm.bin", arma_binary);
-  // auto gm = gumapInit(testm);
-  // testm.brief_print("gm is: ");
+  umat testm;
+  testm.load("../tests/testm.bin", arma_binary);
+  auto gm = gumapInit(testm);
+  testm.brief_print("gm is: ");
 
-  // TestSearchLeaf(gm, 0);
-  // auto treem = TestSearchTree(gm, 0);
-  // Printvecvu(treem);
+  TestSearchLeaf(gm, 0);
+  auto treem = TestSearchTree(gm, 0);
+  Printvecvu(treem);
 
   // median graph
-  umat testg;
-  testg.load("../tests/testg.bin", arma_binary);
-  auto gg = gumapInit(testg);
-  testg.brief_print("gg is: ");
+  // umat testg;
+  // testg.load("../tests/testg.bin", arma_binary);
+  // auto gg = gumapInit(testg);
+  // testg.brief_print("gg is: ");
 
-  TestSearchLeaf(gg, 408);
-  cout << "vertex number is: " << gg.size() << '\n' << endl;
-  auto treeg = TestSearchTree(gg, 408);
-  Printvecvu(treeg);
+  // TestSearchLeaf(gg, 408);
+  // cout << "vertex number is: " << gg.size() << '\n' << endl;
+  // auto treeg = TestSearchTree(gg, 408);
+  // Printvecvu(treeg);
+
+  
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   return 0;
