@@ -119,7 +119,7 @@ int main() {
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
-  // // small graph
+  // small graph
   // umat testm;
   // testm.load("../tests/testm.bin", arma_binary);
   // auto gm = gumapInit(testm);
@@ -138,7 +138,7 @@ int main() {
   TestSearchLeaf(gg, 408);
   cout << "vertex number is: " << gg.size() << '\n' << endl;
   auto treeg = TestSearchTree(gg, 408);
-  // Printvecvu(treeg);
+  Printvecvu(treeg);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   return 0;

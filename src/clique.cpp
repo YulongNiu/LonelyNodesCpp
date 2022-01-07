@@ -19,9 +19,7 @@ void SearchTree_(ln::vecvu& cliques,
   do {
     // step1: search left leaf
     SearchLeaf_(sclique, nodes, g);
-    if (sclique.back().size() >= cliques.back().size()) {
-      cliques.back() = sclique.back();
-    } else {}
+    cliques.push_back(sclique.back());
 
     // step2: trim if leaf exist.
     TrimLeaf_(sclique, nodes);
@@ -61,22 +59,27 @@ void SearchTree_(ln::vecvu& cliques,
 // }
 
 
-// case1: TrimLeaf_({{}, {1}}, {{}, {}})
-// case2: TrimLeaf_({{}, {1, 2}}, {{}, {3}})
-// case3: TrimLeaf({{}, {2}, {2, 7}}, {{}, {}, {}});
+// case1: TrimLeaf_({{0}, {0, 1}}, {{}, {}})
+// case2: TrimLeaf_({{0}, {0, 1}, {0, 1, 2}}, {{4, }, {3}, {}})
 // @keywords internal
 void TrimLeaf_(ln::vecvu& sclique,
                ln::vecvu& nodes) {
 
-  // trim from the end
-  auto ps = sclique.rbegin();
-  auto pn = nodes.rbegin();
+  // trim from the end, and size of `nodes` > 1.
+  // end of `nodes` is always empty, so end is skipped.
+  auto ps = sclique.rbegin() + 1;
+  auto pn = nodes.rbegin() + 1;
 
-  for (; (*pn).empty() & (pn != nodes.rend()); ++ps, ++pn) {}
+  for (; pn != nodes.rend(); ++ps, ++pn) {
+    if ((*pn).size() - (*(pn - 1)).size() > 1) {
+      break;
+    } else {}
+  }
 
   sclique.erase(ps.base(), sclique.end());
   nodes.erase(pn.base(), nodes.end());
 }
+
 
 
 // find one clique by search the left tree
