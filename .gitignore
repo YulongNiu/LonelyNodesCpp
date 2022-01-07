@@ -1,0 +1,14 @@
+# ignore files
+*~
+.Rhistory
+.Rbuildignore
+.Rproj.user/
+.directory
+*.pyc
+*.DS_Store
+*.bam
+*.bam.bai
+tests/
+*.out
+*.dSYM
+*.o
