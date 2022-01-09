@@ -16,7 +16,8 @@ ln::vecvu MaxCliques(const ln::gumap& g,
                      const unsigned int node) {
 
   // step1: sort nodes according to degree by decreasing order.
-  auto lnodes = SortNodes_(g.at(node), g);
+  // auto lnodes = SortNodes_(g.at(node), g);
+  auto lnodes = g.at(node);
   vecvu cliques{{}};
   vecvu sclique = {{node}};
   vecvu nodes = {lnodes};
@@ -36,16 +37,17 @@ void SearchTree_(ln::vecvu& cliques,
   do {
     // step1: search left leaf.
     SearchLeaf_(sclique, nodes, g);
-    CompareClique_(cliques, sclique);
+    cliques.push_back(sclique.back());
+    // CompareClique_(cliques, sclique);
 
     // step2: compare best clique (last elem of `cliques`) with potentials.
     // Then trim leaves, if exist.
-    TrimLeaf_(sclique, nodes, cliques.back().size());
+    TrimLeaf_(sclique, nodes);
 
     cout << "1st nodes size: " << nodes.front().size() <<
-      "; sclique size: " << sclique.size() <<
-      "; nodes size: " << nodes.size() <<
-      "; cliques size: " << cliques.size() <<
+      "; last size: " << sclique.back().size() <<
+      "|" << nodes.back().size() <<
+      "; #cliques: " << cliques.size() <<
       "; maximum clique size: " << cliques.back().size() <<
       endl;
 
@@ -102,16 +104,23 @@ void CompareClique_(ln::vecvu& cliques,
 
 // case1 (1 node): TrimLeaf_({{0}, {0, 1}}, {{}, {}})
 // case2 (typical): TrimLeaf_({{0}, {0, 3}, {0, 3, 4}, {0, 3, 4, 5}}, {{4, 5}, {5}, {}, {}}
-// `bestSize` is the length of best maximum clique so far.
+// optimization:
+// 1. backtrack: 
+// 1. check if `sclique.back().size()` is the largest so far.
+// 2. last elem of `sclique` is always is the best, so skip.
 void TrimLeaf_(ln::vecvu& sclique,
-               ln::vecvu& nodes,
-               const unsigned int bestSize) {
+               ln::vecvu& nodes) {
 
-  // optimization:
-  // 1. check if `sclique.back().size()` is the largest so far.
-  // 2. last elem of `sclique` is always is the best, so skip.
+  BackSkipLeaf_(sclique, nodes);
+}
+
+
+void BackSkipLeaf_(ln::vecvu& sclique,
+                   ln::vecvu& nodes) {
+
   auto ps = next(sclique.rbegin());
   auto pn = next(nodes.rbegin());
+  auto bestSize = sclique.back().size();
 
   for (; pn != nodes.rend(); ++ps, ++pn) {
 
@@ -125,6 +134,7 @@ void TrimLeaf_(ln::vecvu& sclique,
   sclique.erase(ps.base(), sclique.end());
   nodes.erase(pn.base(), nodes.end());
 }
+
 
 
 

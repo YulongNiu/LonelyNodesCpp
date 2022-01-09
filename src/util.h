@@ -12,6 +12,7 @@ namespace lonelynodes {
   using iterv = vecu::iterator;
   using citerv = vecu::const_iterator;
   using itervv = vecvu::iterator;
+  using citervv = vecvu::const_iterator;
 
 } // namespace lonelynodes
 

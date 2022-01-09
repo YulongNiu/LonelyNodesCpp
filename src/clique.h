@@ -39,8 +39,10 @@ void CompareClique_(ln::vecvu& cliques,
                     ln::vecvu& sclique);
 
 void TrimLeaf_(ln::vecvu& sclique,
-               ln::vecvu& nodes,
-               const unsigned int bestSize);
+               ln::vecvu& nodes);
+
+void BackSkipLeaf_(ln::vecvu& sclique,
+                   ln::vecvu& nodes);
 
 void SearchLeaf_(ln::vecvu& cliques,
                  ln::vecvu& nodes,

@@ -148,20 +148,47 @@ int main() {
   auto mcm = MaxCliques(gm, 0);
   Printvecvu(mcm);
 
-  // median graph
-  umat testg;
-  testg.load("../tests/testg.bin", arma_binary);
-  auto gg = gumapInit(testg);
-  testg.brief_print("gg is: ");
+  // // median graph
+  // umat testg;
+  // testg.load("../tests/testg.bin", arma_binary);
+  // auto gg = gumapInit(testg);
+  // testg.brief_print("gg is: ");
 
-  unsigned int nodeIdx = 406;
-  // // TestSearchLeaf(gg, nodeIdx);
-  // cout << "vertex number is: " << gg.size() << '\n' << endl;
-  // auto treeg = TestSearchTree(gg, nodeIdx);
-  // Printvecvu(treeg);
+  // unsigned int nodeIdx = 366;
+  // // // TestSearchLeaf(gg, nodeIdx);
+  // // cout << "vertex number is: " << gg.size() << '\n' << endl;
+  // // auto treeg = TestSearchTree(gg, nodeIdx);
+  // // Printvecvu(treeg);
 
-  auto mcg = MaxCliques(gg, nodeIdx);
-  Printvecvu(mcg);
+  // auto mcg = MaxCliques(gg, nodeIdx);
+  // Printvecvu(mcg);
+
+  // // large graph
+  // umat testgbig;
+  // testgbig.load("../tests/testgbig.bin", arma_binary);
+  // auto gbig = gumapInit(testgbig);
+  // testgbig.brief_print("gbig is: ");
+
+  // unsigned int nodeIdx = 9117;
+  // auto mcbig = MaxCliques(gbig, nodeIdx);
+  // Printvecvu(mcbig);
+
+  // blog graph test
+  // umat testblog = {{1, 2}, {1, 3}, {2, 3}, {2, 4},
+  //                  {0, 1}, {0, 2}, {0, 3}, {0, 4}};
+
+  umat testblog = {{1, 2}, {1, 3}, {1, 4},
+                   {2, 3}, {2, 4}, {3, 4},
+                   {2, 5}, {4, 5},
+                   {5, 7}, {4, 6},
+                   {0, 1}, {0, 2}, {0, 3}, {0, 4},
+                   {0, 5}, {0, 6}, {0, 7}};
+  auto gblog = gumapInit(testblog);
+  testblog.brief_print("gblog is: ");
+
+  TestSearchLeaf(gblog, 0);
+  auto cliqueblog = TestSearchTree(gblog, 0);
+  Printvecvu(cliqueblog);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   return 0;
