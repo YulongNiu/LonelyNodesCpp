@@ -12,3 +12,6 @@ tests/
 *.out
 *.dSYM
 *.o
+GPATH
+GRTAGS
+GTAGS

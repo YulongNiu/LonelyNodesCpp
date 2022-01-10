@@ -105,9 +105,8 @@ void CompareClique_(ln::vecvu& cliques,
 // case1 (1 node): TrimLeaf_({{0}, {0, 1}}, {{}, {}})
 // case2 (typical): TrimLeaf_({{0}, {0, 3}, {0, 3, 4}, {0, 3, 4, 5}}, {{4, 5}, {5}, {}, {}}
 // optimization:
-// 1. backtrack: 
+// 1. backtrack:
 // 1. check if `sclique.back().size()` is the largest so far.
-// 2. last elem of `sclique` is always is the best, so skip.
 void TrimLeaf_(ln::vecvu& sclique,
                ln::vecvu& nodes) {
 
@@ -136,8 +135,6 @@ void BackSkipLeaf_(ln::vecvu& sclique,
 }
 
 
-
-
 // find one clique by search the left tree
 void SearchLeaf_(ln::vecvu& sclique,
                  ln::vecvu& nodes,
@@ -157,7 +154,6 @@ void SearchLeaf_(ln::vecvu& sclique,
   // step3: recursion
   SearchLeaf_(sclique, nodes, g);
 }
-
 
 void NextLeaf_(ln::vecvu& sclique,
                ln::vecvu& nodes,
