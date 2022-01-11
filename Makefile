@@ -1,9 +1,10 @@
 SHELL := /bin/sh
 
 SRC_DIR := src
-OBJ_DIR := obj
+OBJ_DIR := build
+BIN_DIR := bin
 
-EXE := hello
+EXE := ${BIN_DIR}/tests
 SRC := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC))
 
@@ -17,17 +18,17 @@ LDLIBS		:= -larmadillo
 
 all: $(EXE)
 
-$(EXE): $(OBJ)
+$(EXE): $(OBJ) | $(BIN_DIR)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
-${OBJ_DIR}:
+$(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
 
 clean:
-	@$(RM) -rv $(OBJ_DIR)
+	@$(RM) -rv $(BIN_DIR) $(OBJ_DIR)
 
 -include $(OBJ:.o=.d)
 

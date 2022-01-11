@@ -1,6 +1,6 @@
 # ignore files
 test/
-obj/
+build/
 bin/
 *~
 .Rhistory
