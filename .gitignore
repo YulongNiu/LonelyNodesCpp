@@ -1,4 +1,7 @@
 # ignore files
+test/
+obj/
+bin/
 *~
 .Rhistory
 .Rbuildignore
@@ -6,12 +9,6 @@
 .directory
 *.pyc
 *.DS_Store
-*.bam
-*.bam.bai
-tests/
 *.out
 *.dSYM
 *.o
-GPATH
-GRTAGS
-GTAGS
