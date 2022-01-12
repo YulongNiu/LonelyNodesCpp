@@ -2,6 +2,8 @@
 test/
 build/
 bin/
+.cache/
+compile_commands.json
 *~
 .Rhistory
 .Rbuildignore

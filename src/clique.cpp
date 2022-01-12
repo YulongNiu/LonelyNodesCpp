@@ -1,104 +1,118 @@
 #include <unordered_map>
-#include <vector>
-#include <algorithm> //std::stable_sort
-#include <iostream> // std::cout std::endl
-#include <numeric> // std::iota
+#include <algorithm> //std::stable_sort std::sort std::includes
 
 #include "util.h"
 #include "init.h"
 #include "clique.h"
+#include <iostream>
 
 using namespace std;
 using namespace lonelynodes;
 
-// find maximum clique(s) by a given `node` in graph `g`.
-ln::vecvu MaxCliques(const ln::gumap& g,
-                     const unsigned int node) {
+// // find maximum clique(s) by a given `node` in graph `g`.
+// ln::vecvu MaxCliques(const ln::gumap& g,
+//                      const unsigned int node) {
 
-  // step1: sort nodes according to degree by decreasing order.
-  // auto lnodes = SortNodes_(g.at(node), g);
-  auto lnodes = g.at(node);
-  vecvu cliques{{}};
-  vecvu sclique = {{node}};
-  vecvu nodes = {lnodes};
+//   // step1: sort nodes according to degree by decreasing order.
+//   // auto lnodes = SortNodes_(g.at(node), g);
+//   auto lnodes = g.at(node);
+//   vecvu cliques{{}};
+//   vecvu sclique = {{node}};
+//   vecvu nodes = {lnodes};
 
-  // step2: search
-  SearchTree_(cliques, sclique, nodes, g);
+//   // step2: search
+//   SearchTree_(cliques, sclique, nodes, g);
 
-  return cliques;
-}
+//   return cliques;
+// }
 
-
-void SearchTree_(ln::vecvu& cliques,
-                 ln::vecvu& sclique,
-                 ln::vecvu& nodes,
-                 const ln::gumap& g) {
+void SearchTree_(ln::vecvu &cliques,
+                 ln::vecvu &sclique, ln::vecvu &nodes,
+                 ln::vecvu &xnodes, ln::vecu &srdnodes,
+                 const ln::gumap &g) {
 
   do {
     // step1: search left leaf.
-    SearchLeaf_(sclique, nodes, g);
-    cliques.push_back(sclique.back());
-    // CompareClique_(cliques, sclique);
+    SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
 
-    // step2: compare best clique (last elem of `cliques`) with potentials.
-    // Then trim leaves, if exist.
-    TrimLeaf_(sclique, nodes);
 
-    cout << "1st nodes size: " << nodes.front().size() <<
-      "; last size: " << sclique.back().size() <<
-      "|" << nodes.back().size() <<
-      "; #cliques: " << cliques.size() <<
-      "; maximum clique size: " << cliques.back().size() <<
-      endl;
+    // cout << "------\n"
+    //      << "srdnodes: \n";
+    // Printvecu(srdnodes);
+    // cout << "xnodes: \n";
+    // Printvecvu(xnodes);
+    // cout << "end"
+    //      << "sclique: \n";
+    // Printvecvu(sclique);
+    // cout << "end\n"
+    //      << "nodes: \n";
+    // Printvecvu(nodes);
+    // cout << "end \n"
+    //      << "is maximal clique: " << isMaximalClique_(sclique.back(), srdnodes, g)
+    //      << "\n------\n" << endl;
+
+    // step2: check if latest clique is maximal.
+    auto eachClique = sclique.back();
+    if (isMaximalClique_(eachClique, srdnodes, g)) {
+      cliques.push_back(eachClique);
+      // CompareClique_(cliques, sclique);
+    } else {}
+
+    // step3: trim leaves, if exist.
+    TrimLeaf_(sclique, nodes, xnodes);
+    srdnodes = xnodes.back();
+
+    cout << "1st nodes size: " << nodes.front().size()
+         << "; #cliques: " << cliques.size() << endl;
 
   } while (!nodes.empty());
-
 }
 
 
+// Check if one clique is maximal.
+bool isMaximalClique_(const ln::vecu &clique, const ln::vecu &srdnodes,
+                      const ln::gumap &g) {
 
-// if new cliques is larger, then replace all old cliques.
-// if new cliques' size is equal with old cliques, then append.
-void CompareClique_(ln::vecvu& cliques,
-                    ln::vecvu& sclique) {
+  vecu cliqueSort = clique;
+  sort(cliqueSort.begin(), cliqueSort.end());
 
-  auto existSize = cliques.back().size();
-  auto newSize = sclique.back().size();
+  // if `srdnodes` is empty
+  if (srdnodes.empty()) {
+    return true;
+  } else {}
 
-  if (newSize == existSize) {
-    cliques.push_back(sclique.back());
+  for (auto elem : srdnodes) {
+    // `cliqueSort` a subset of linked nodes of `elem`.
+    vecu lnodes = g.at(elem);
+    sort(lnodes.begin(), lnodes.end());
+
+    if (includes(lnodes.begin(), lnodes.end(), cliqueSort.begin(),
+                 cliqueSort.end())) {
+      return false;
+    } else {}
   }
-  else if (newSize > existSize) {
-    cliques.erase(cliques.begin(), cliques.end());
-    cliques.push_back(sclique.back());
-  }
-  else {}
 
+  return true;
 }
 
+// // for maximum clique
+// // if new cliques is larger, then replace all old cliques.
+// // if new cliques' size is equal with old cliques, then append.
+// void CompareClique_(ln::vecvu& cliques,
+//                     ln::vecvu& sclique) {
 
-// void SearchTree_(ln::vecvu& cliques,
-//                  ln::vecvu& sclique,
-//                  ln::vecvu& nodes,
-//                  const ln::gumap& g) {
+//   auto existSize = cliques.back().size();
+//   auto newSize = sclique.back().size();
 
-//   if (nodes.empty()) {
-//     return;
-//   } else {}
+//   if (newSize == existSize) {
+//     cliques.push_back(sclique.back());
+//   }
+//   else if (newSize > existSize) {
+//     cliques.erase(cliques.begin(), cliques.end());
+//     cliques.push_back(sclique.back());
+//   }
+//   else {}
 
-//   // step1: search left leaf, then trim if leaf exist.
-//   SearchLeaf_(sclique, nodes, g);
-//   cliques.push_back(sclique.back());
-
-//   TrimLeaf_(sclique, nodes);
-
-//   cout << "1st nodes size: " << nodes.front().size() <<
-//     "; sclique size: " << sclique.size() <<
-//     "; nodes size: " << nodes.size() <<
-//     "; cliques size: " << cliques.size() << endl;
-
-//   // step2: recursion
-//   SearchTree_(cliques, sclique, nodes, g);
 // }
 
 
@@ -107,37 +121,39 @@ void CompareClique_(ln::vecvu& cliques,
 // optimization:
 // 1. backtrack:
 // 1. check if `sclique.back().size()` is the largest so far.
-void TrimLeaf_(ln::vecvu& sclique,
-               ln::vecvu& nodes) {
+void TrimLeaf_(ln::vecvu &sclique, ln::vecvu &nodes, ln::vecvu &xnodes) {
 
-  BackSkipLeaf_(sclique, nodes);
+  BackSkipLeaf_(sclique, nodes, xnodes);
 }
 
-
-void BackSkipLeaf_(ln::vecvu& sclique,
-                   ln::vecvu& nodes) {
+void BackSkipLeaf_(ln::vecvu &sclique, ln::vecvu &nodes, ln::vecvu &xnodes) {
 
   auto ps = next(sclique.rbegin());
   auto pn = next(nodes.rbegin());
+  auto px = next(xnodes.rbegin());
+
   auto bestSize = sclique.back().size();
 
-  for (; pn != nodes.rend(); ++ps, ++pn) {
+  for (; pn != nodes.rend(); ++ps, ++pn, ++px) {
 
     auto eachSize = (*ps).size() + (*pn).size();
 
     if (eachSize >= bestSize) {
       break;
-    } else {}
+    } else {
+    }
   }
 
   sclique.erase(ps.base(), sclique.end());
   nodes.erase(pn.base(), nodes.end());
+  xnodes.erase(px.base(), xnodes.end());
 }
-
 
 // find one clique by search the left tree
 void SearchLeaf_(ln::vecvu& sclique,
                  ln::vecvu& nodes,
+                 ln::vecvu& xnodes,
+                 const ln::vecu& srdnodes,
                  const ln::gumap& g) {
 
   if (nodes.back().empty()) {
@@ -146,14 +162,16 @@ void SearchLeaf_(ln::vecvu& sclique,
   } else {}
 
   // step1: push head and generate new clique
-  PushHead_(sclique, nodes);
+  PushHead_(sclique, nodes, xnodes, srdnodes);
 
   // step2: migrate common elems of `nodes` to end, then delete common elems in previous end.
   NextLeaf_(sclique, nodes, g);
 
   // step3: recursion
-  SearchLeaf_(sclique, nodes, g);
+  SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
 }
+
+
 
 void NextLeaf_(ln::vecvu& sclique,
                ln::vecvu& nodes,
@@ -167,22 +185,27 @@ void NextLeaf_(ln::vecvu& sclique,
 }
 
 
+
 void PushHead_(ln::vecvu& sclique,
-               ln::vecvu& nodes) {
+               ln::vecvu& nodes,
+               ln::vecvu& xnodes,
+               const ln::vecu& srdnodes) {
 
-  vecu lastNodes = nodes.back();
-  vecu lastClique = sclique.back(); // never empty!
+  auto searchNode = nodes.back().front();
 
-  // push 1st nodes of `lastNodes` to
-  // the end of `lastClique`;
-  // push `lastClique` to
-  // the end of `clique`.
-  lastClique.push_back(lastNodes.front());
+  // push `searchNode` to the end of `lastClique`;
+  // push `lastClique` to the end of `clique`.
+  auto lastClique = sclique.back(); // never empty!
+  lastClique.push_back(searchNode);
   sclique.push_back(lastClique);
 
-  // erase 1st node of `lastNodes`
-  nodes.back().erase(nodes.back().begin());
+  // push `searchNode` to the end of last elem in `xnodes`;
+  // push `srdnodes` to the end of `xnodes`.
+  xnodes.back().push_back(searchNode);
+  xnodes.push_back(srdnodes);
 
+  // erase 1st node of `searchNodes`
+  nodes.back().erase(nodes.back().begin());
 }
 
 

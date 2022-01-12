@@ -25,28 +25,37 @@ void TestDiffIntersect(ln::vecu& fv,
 
 
 void TestPushHead() {
-  vecvu sclique = {{1, 2, 3},
-                   {2, 3, 4}};
+  vecvu sclique = {{}, {1}};
+  vecvu nodes = {{2, 3, 4, 5, 6, 7},
+                 {2, 3, 4}};
+  vecvu xnodes = {{1}, {}};
+  vecu srdnodes = {};
 
-  vecvu nodes = {{5, 7},
-                 {9}};
+  PushHead_(sclique, nodes, xnodes, srdnodes);
 
-  PushHead_(sclique, nodes);
-
+  cout << "sclique is: \n";
   Printvecvu(sclique);
+  cout << "nodes is: \n";
   Printvecvu(nodes);
+  cout << "xnodes is: \n";
+  Printvecvu(xnodes);
+  cout << "end. \n" << endl;
 
-  vecvu sclique2 = {{}};
-  vecvu nodes2 = {{1, 10},
-                  {2, 10, 12}};
+  vecvu sclique2 = {{}, {1}};
+  vecvu nodes2 = {{2, 3, 4, 5, 6, 7},
+                  {4}};
+  vecvu xnodes2 = {{1}, {2, 3}};
+  vecu srdnodes2 = {2, 3};
 
-  PushHead_(sclique2, nodes2);
+  PushHead_(sclique2, nodes2, xnodes2, srdnodes2);
 
   cout << "sclique2 is: \n";
   Printvecvu(sclique2);
-  cout << "nodes2 is : \n";
+  cout << "nodes2 is: \n";
   Printvecvu(nodes2);
-
+  cout << "xnodes2 is: \n";
+  Printvecvu(xnodes2);
+  cout << "end. \n" << endl;
 }
 
 
@@ -55,13 +64,18 @@ ln::vecvu TestSearchLeaf(const ln::gumap& g,
 
   vecvu sclique = {{node}};
   vecvu nodes = {g.at(node)};
+  vecvu xnodes = {{}};
+  vecu srdnodes = {};
 
-  SearchLeaf_(sclique, nodes, g);
+  SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
 
   cout << "sclique are: \n";
   Printvecvu(sclique);
   cout << "nodes are: \n";
   Printvecvu(nodes);
+  cout << "xnodes is: \n";
+  Printvecvu(xnodes);
+  cout << "end. \n" << endl;
 
   return nodes;
 }
@@ -71,12 +85,14 @@ ln::vecvu TestSearchTree(const ln::gumap& g,
                          const unsigned int node) {
 
   vecvu cliques{{}};
-  vecvu sclique = {{node}};
+  vecvu sclique = {{}};
   vecvu nodes = {g.at(node)};
+  vecvu xnodes = {{}};
+  vecu srdnodes = {};
 
   cout << "raw first nodes size is: " << nodes.front().size() << endl;
 
-  SearchTree_(cliques, sclique, nodes, g);
+  SearchTree_(cliques, sclique, nodes, xnodes, srdnodes, g);
 
   return cliques;
 }
@@ -183,7 +199,8 @@ int main() {
   auto gblog = gumapInit(testblog);
   testblog.brief_print("gblog is: ");
 
-  TestSearchLeaf(gblog, 0);
+  // TestSearchLeaf(gblog, 0);
+
   auto cliqueblog = TestSearchTree(gblog, 0);
   Printvecvu(cliqueblog);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
