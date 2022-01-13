@@ -63,6 +63,8 @@ void SearchTree_(ln::vecvu &cliques,
     srdnodes = xnodes.back();
 
     cout << "1st nodes size: " << nodes.front().size()
+         << "; nodes size: " << nodes.size()
+         << "; last node size: " << nodes.back().size()
          << "; #cliques: " << cliques.size() << endl;
 
   } while (!nodes.empty());
