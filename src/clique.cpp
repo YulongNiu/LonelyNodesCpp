@@ -1,9 +1,9 @@
-#include <unordered_map>
 #include <algorithm> //std::stable_sort std::sort std::includes
+#include <unordered_map>
 
-#include "util.h"
-#include "init.h"
 #include "clique.h"
+#include "init.h"
+#include "util.h"
 #include <iostream>
 
 using namespace std;
@@ -26,15 +26,16 @@ using namespace lonelynodes;
 //   return cliques;
 // }
 
-void SearchTree_(ln::vecvu &cliques,
-                 ln::vecvu &sclique, ln::vecvu &nodes,
-                 ln::vecvu &xnodes, ln::vecu &srdnodes,
-                 const ln::gumap &g) {
+void SearchTree_(ln::vecvu&       cliques,
+                 ln::vecvu&       sclique,
+                 ln::vecvu&       nodes,
+                 ln::vecvu&       xnodes,
+                 ln::vecu&        srdnodes,
+                 const ln::gumap& g) {
 
   do {
     // step1: search left leaf.
     SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
-
 
     // cout << "------\n"
     //      << "srdnodes: \n";
@@ -48,7 +49,8 @@ void SearchTree_(ln::vecvu &cliques,
     //      << "nodes: \n";
     // Printvecvu(nodes);
     // cout << "end \n"
-    //      << "is maximal clique: " << isMaximalClique_(sclique.back(), srdnodes, g)
+    //      << "is maximal clique: " << isMaximalClique_(sclique.back(),
+    //      srdnodes, g)
     //      << "\n------\n" << endl;
 
     // step2: check if latest clique is maximal.
@@ -56,7 +58,8 @@ void SearchTree_(ln::vecvu &cliques,
     if (isMaximalClique_(eachClique, srdnodes, g)) {
       cliques.push_back(eachClique);
       // CompareClique_(cliques, sclique);
-    } else {}
+    } else {
+    }
 
     // step3: trim leaves, if exist.
     TrimLeaf_(sclique, nodes, xnodes);
@@ -70,10 +73,10 @@ void SearchTree_(ln::vecvu &cliques,
   } while (!nodes.empty());
 }
 
-
 // Check if one clique is maximal.
-bool isMaximalClique_(const ln::vecu &clique, const ln::vecu &srdnodes,
-                      const ln::gumap &g) {
+bool isMaximalClique_(const ln::vecu&  clique,
+                      const ln::vecu&  srdnodes,
+                      const ln::gumap& g) {
 
   vecu cliqueSort = clique;
   sort(cliqueSort.begin(), cliqueSort.end());
@@ -81,17 +84,21 @@ bool isMaximalClique_(const ln::vecu &clique, const ln::vecu &srdnodes,
   // if `srdnodes` is empty
   if (srdnodes.empty()) {
     return true;
-  } else {}
+  } else {
+  }
 
   for (auto elem : srdnodes) {
     // `cliqueSort` a subset of linked nodes of `elem`.
     vecu lnodes = g.at(elem);
     sort(lnodes.begin(), lnodes.end());
 
-    if (includes(lnodes.begin(), lnodes.end(), cliqueSort.begin(),
+    if (includes(lnodes.begin(),
+                 lnodes.end(),
+                 cliqueSort.begin(),
                  cliqueSort.end())) {
       return false;
-    } else {}
+    } else {
+    }
   }
 
   return true;
@@ -117,18 +124,17 @@ bool isMaximalClique_(const ln::vecu &clique, const ln::vecu &srdnodes,
 
 // }
 
-
 // case1 (1 node): TrimLeaf_({{0}, {0, 1}}, {{}, {}})
-// case2 (typical): TrimLeaf_({{0}, {0, 3}, {0, 3, 4}, {0, 3, 4, 5}}, {{4, 5}, {5}, {}, {}}
-// optimization:
+// case2 (typical): TrimLeaf_({{0}, {0, 3}, {0, 3, 4}, {0, 3, 4, 5}}, {{4, 5},
+// {5}, {}, {}} optimization:
 // 1. backtrack:
 // 1. check if `sclique.back().size()` is the largest so far.
-void TrimLeaf_(ln::vecvu &sclique, ln::vecvu &nodes, ln::vecvu &xnodes) {
+void TrimLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes) {
 
   BackSkipLeaf_(sclique, nodes, xnodes);
 }
 
-void BackSkipLeaf_(ln::vecvu &sclique, ln::vecvu &nodes, ln::vecvu &xnodes) {
+void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes) {
 
   auto ps = next(sclique.rbegin());
   auto pn = next(nodes.rbegin());
@@ -152,45 +158,41 @@ void BackSkipLeaf_(ln::vecvu &sclique, ln::vecvu &nodes, ln::vecvu &xnodes) {
 }
 
 // find one clique by search the left tree
-void SearchLeaf_(ln::vecvu& sclique,
-                 ln::vecvu& nodes,
-                 ln::vecvu& xnodes,
-                 const ln::vecu& srdnodes,
+void SearchLeaf_(ln::vecvu&       sclique,
+                 ln::vecvu&       nodes,
+                 ln::vecvu&       xnodes,
+                 const ln::vecu&  srdnodes,
                  const ln::gumap& g) {
 
   if (nodes.back().empty()) {
     // no nodes left, then end.
     return;
-  } else {}
+  } else {
+  }
 
   // step1: push head and generate new clique
   PushHead_(sclique, nodes, xnodes, srdnodes);
 
-  // step2: migrate common elems of `nodes` to end, then delete common elems in previous end.
+  // step2: migrate common elems of `nodes` to end, then delete common elems in
+  // previous end.
   NextLeaf_(sclique, nodes, g);
 
   // step3: recursion
   SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
 }
 
+void NextLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, const ln::gumap& g) {
 
-
-void NextLeaf_(ln::vecvu& sclique,
-               ln::vecvu& nodes,
-               const ln::gumap& g) {
-
-  auto searchNode = sclique.back().back();
+  auto searchNode    = sclique.back().back();
   auto nextLinkNodes = g.at(searchNode);
 
   auto nextNodes = Intersection(nodes.back(), nextLinkNodes);
   nodes.push_back(nextNodes);
 }
 
-
-
-void PushHead_(ln::vecvu& sclique,
-               ln::vecvu& nodes,
-               ln::vecvu& xnodes,
+void PushHead_(ln::vecvu&      sclique,
+               ln::vecvu&      nodes,
+               ln::vecvu&      xnodes,
                const ln::vecu& srdnodes) {
 
   auto searchNode = nodes.back().front();
@@ -210,10 +212,8 @@ void PushHead_(ln::vecvu& sclique,
   nodes.back().erase(nodes.back().begin());
 }
 
-
 // sort linked nodes by the degree in decreasing order.
-ln::vecu SortNodes_(const ln::vecu& nodes,
-                    const ln::gumap& g) {
+ln::vecu SortNodes_(const ln::vecu& nodes, const ln::gumap& g) {
 
   // step1: count degree
   vecu degree(nodes.size(), 0);
@@ -227,18 +227,14 @@ ln::vecu SortNodes_(const ln::vecu& nodes,
 
   vecu res(nodes.size());
   auto pres = res.begin();
-  auto pdi = degreeIdx.rbegin();
-  for (;
-       pdi != degreeIdx.rend();
-       *pres = nodes.at(*pdi), ++pres, ++pdi) {}
+  auto pdi  = degreeIdx.rbegin();
+  for (; pdi != degreeIdx.rend(); *pres = nodes.at(*pdi), ++pres, ++pdi) {
+  }
 
   return res;
 }
 
-
-void Count_(ln::vecu& degree,
-            const ln::vecu& nodes,
-            const ln::vecu& tnodes) {
+void Count_(ln::vecu& degree, const ln::vecu& nodes, const ln::vecu& tnodes) {
 
   for (unsigned int i = 0; i < nodes.size(); ++i) {
 
@@ -247,9 +243,9 @@ void Count_(ln::vecu& degree,
       if (snode == *p) {
         ++degree.at(i);
         break;
-      } else {}
+      } else {
+      }
     }
-
   }
 }
 
@@ -259,14 +255,12 @@ ln::vecu SortIdx_(const ln::vecu& v) {
   vecu idx(v.size());
   iota(idx.begin(), idx.end(), 0);
 
-  stable_sort(idx.begin(), idx.end(),
-              [&v](size_t i1, size_t i2) {
-                return v[i1] < v[i2];
-              });
+  stable_sort(idx.begin(), idx.end(), [&v](size_t i1, size_t i2) {
+    return v[i1] < v[i2];
+  });
 
   return idx;
 }
-
 
 // // expand nodes into children nodes
 // // @keywords internal
@@ -296,8 +290,6 @@ ln::vecu SortIdx_(const ln::vecu& v) {
 //     Printvecu(newBranch);
 //   } while (b.size() > 0);
 // }
-
-
 
 // // [[Rcpp::export]]
 // void TestExpandLeaf(const arma::umat& m,
