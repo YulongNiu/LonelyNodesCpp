@@ -37,6 +37,7 @@ void SearchTree_(ln::vecvu&       cliques,
     // step1: search left leaf.
     SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
 
+
     // cout << "------\n"
     //      << "srdnodes: \n";
     // Printvecu(srdnodes);
@@ -66,12 +67,11 @@ void SearchTree_(ln::vecvu&       cliques,
     srdnodes = xnodes.back();
 
     cout << "1st nodes size: " << nodes.front().size()
-         << "; nodes size: " << nodes.size()
-         << "; last node size: " << nodes.back().size()
          << "; #cliques: " << cliques.size() << endl;
 
   } while (!nodes.empty());
 }
+
 
 // Check if one clique is maximal.
 bool isMaximalClique_(const ln::vecu&  clique,
@@ -123,6 +123,7 @@ bool isMaximalClique_(const ln::vecu&  clique,
 //   else {}
 
 // }
+
 
 // case1 (1 node): TrimLeaf_({{0}, {0, 1}}, {{}, {}})
 // case2 (typical): TrimLeaf_({{0}, {0, 3}, {0, 3, 4}, {0, 3, 4, 5}}, {{4, 5},
@@ -181,6 +182,7 @@ void SearchLeaf_(ln::vecvu&       sclique,
   SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
 }
 
+
 void NextLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, const ln::gumap& g) {
 
   auto searchNode    = sclique.back().back();
@@ -189,6 +191,7 @@ void NextLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, const ln::gumap& g) {
   auto nextNodes = Intersection(nodes.back(), nextLinkNodes);
   nodes.push_back(nextNodes);
 }
+
 
 void PushHead_(ln::vecvu&      sclique,
                ln::vecvu&      nodes,
@@ -212,6 +215,7 @@ void PushHead_(ln::vecvu&      sclique,
   nodes.back().erase(nodes.back().begin());
 }
 
+
 // sort linked nodes by the degree in decreasing order.
 ln::vecu SortNodes_(const ln::vecu& nodes, const ln::gumap& g) {
 
@@ -233,6 +237,7 @@ ln::vecu SortNodes_(const ln::vecu& nodes, const ln::gumap& g) {
 
   return res;
 }
+
 
 void Count_(ln::vecu& degree, const ln::vecu& nodes, const ln::vecu& tnodes) {
 
@@ -262,6 +267,7 @@ ln::vecu SortIdx_(const ln::vecu& v) {
   return idx;
 }
 
+
 // // expand nodes into children nodes
 // // @keywords internal
 // void ExpandLeaf_(const vecu& stem,
@@ -290,6 +296,7 @@ ln::vecu SortIdx_(const ln::vecu& v) {
 //     Printvecu(newBranch);
 //   } while (b.size() > 0);
 // }
+
 
 // // [[Rcpp::export]]
 // void TestExpandLeaf(const arma::umat& m,

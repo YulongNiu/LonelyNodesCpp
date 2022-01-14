@@ -1,15 +1,14 @@
 #include <iostream>
 
-#include "util.h"
-#include "init.h"
 #include "clique.h"
+#include "init.h"
+#include "util.h"
 
 using namespace std;
 using namespace lonelynodes;
 using namespace arma;
 
-void TestDiffIntersect(ln::vecu& fv,
-                       ln::vecu& tv) {
+void TestDiffIntersect(ln::vecu& fv, ln::vecu& tv) {
   cout << "original fv is: " << '\n';
   Printvecu(fv);
   cout << "original tv is: " << '\n';
@@ -25,11 +24,10 @@ void TestDiffIntersect(ln::vecu& fv,
 
 
 void TestPushHead() {
-  vecvu sclique = {{}, {1}};
-  vecvu nodes = {{2, 3, 4, 5, 6, 7},
-                 {2, 3, 4}};
-  vecvu xnodes = {{1}, {}};
-  vecu srdnodes = {};
+  vecvu sclique  = { {}, { 1 } };
+  vecvu nodes    = { { 2, 3, 4, 5, 6, 7 }, { 2, 3, 4 } };
+  vecvu xnodes   = { { 1 }, {} };
+  vecu  srdnodes = {};
 
   PushHead_(sclique, nodes, xnodes, srdnodes);
 
@@ -41,11 +39,10 @@ void TestPushHead() {
   Printvecvu(xnodes);
   cout << "end. \n" << endl;
 
-  vecvu sclique2 = {{}, {1}};
-  vecvu nodes2 = {{2, 3, 4, 5, 6, 7},
-                  {4}};
-  vecvu xnodes2 = {{1}, {2, 3}};
-  vecu srdnodes2 = {2, 3};
+  vecvu sclique2  = { {}, { 1 } };
+  vecvu nodes2    = { { 2, 3, 4, 5, 6, 7 }, { 4 } };
+  vecvu xnodes2   = { { 1 }, { 2, 3 } };
+  vecu  srdnodes2 = { 2, 3 };
 
   PushHead_(sclique2, nodes2, xnodes2, srdnodes2);
 
@@ -59,13 +56,12 @@ void TestPushHead() {
 }
 
 
-ln::vecvu TestSearchLeaf(const ln::gumap& g,
-                         const unsigned int node) {
+ln::vecvu TestSearchLeaf(const ln::gumap& g, const unsigned int node) {
 
-  vecvu sclique = {{node}};
-  vecvu nodes = {g.at(node)};
-  vecvu xnodes = {{}};
-  vecu srdnodes = {};
+  vecvu sclique  = { { node } };
+  vecvu nodes    = { g.at(node) };
+  vecvu xnodes   = { {} };
+  vecu  srdnodes = {};
 
   SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
 
@@ -81,14 +77,13 @@ ln::vecvu TestSearchLeaf(const ln::gumap& g,
 }
 
 
-ln::vecvu TestSearchTree(const ln::gumap& g,
-                         const unsigned int node) {
+ln::vecvu TestSearchTree(const ln::gumap& g, const unsigned int node) {
 
-  vecvu cliques{{}};
-  vecvu sclique = {{}};
-  vecvu nodes = {g.at(node)};
-  vecvu xnodes = {{}};
-  vecu srdnodes = {};
+  vecvu cliques  = { {} };
+  vecvu sclique  = { {} };
+  vecvu nodes    = { g.at(node) };
+  vecvu xnodes   = { {} };
+  vecu  srdnodes = {};
 
   cout << "raw first nodes size is: " << nodes.front().size() << endl;
 
@@ -96,7 +91,6 @@ ln::vecvu TestSearchTree(const ln::gumap& g,
 
   return cliques;
 }
-
 
 
 int main() {
@@ -163,12 +157,12 @@ int main() {
   // Printvecvu(mcm);
 
   // umat testg; // median graph
-  // testg.load("/Users/yulong/RESEARCH/LonelyNodesCpp/test/testg.bin", arma_binary);
+  // testg.load("../test/testg.bin", arma_binary);
   // auto gg = gumapInit(testg);
   // testg.brief_print("gg is: ");
 
-  // unsigned int nodeIdx = 309;
-  // // TestSearchLeaf(gg, nodeIdx);
+  // unsigned int nodeIdx = 366;
+  // TestSearchLeaf(gg, nodeIdx);
   // cout << "vertex number is: " << gg.size() << '\n' << endl;
   // auto treeg = TestSearchTree(gg, nodeIdx);
   // Printvecvu(treeg);
@@ -190,13 +184,10 @@ int main() {
   // umat testblog = {{1, 2}, {1, 3}, {2, 3}, {2, 4},
   //                  {0, 1}, {0, 2}, {0, 3}, {0, 4}};
 
-  umat testblog = {{1, 2}, {1, 3}, {1, 4},
-                   {2, 3}, {2, 4}, {3, 4},
-                   {2, 5}, {4, 5},
-                   {5, 7}, {4, 6},
-                   {0, 1}, {0, 2}, {0, 3}, {0, 4},
-                   {0, 5}, {0, 6}, {0, 7}};
-  auto gblog = gumapInit(testblog);
+  umat testblog = { { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 }, { 3, 4 },
+                    { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 }, { 0, 1 }, { 0, 2 },
+                    { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 } };
+  auto gblog    = gumapInit(testblog);
   testblog.brief_print("gblog is: ");
 
   // TestSearchLeaf(gblog, 0);
@@ -207,5 +198,3 @@ int main() {
 
   return 0;
 }
-
-
