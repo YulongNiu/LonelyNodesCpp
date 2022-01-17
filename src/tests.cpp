@@ -24,10 +24,10 @@ void TestDiffIntersect(ln::vecu& fv, ln::vecu& tv) {
 
 
 void TestPushHead() {
-  vecvu sclique  = { {}, { 1 } };
-  vecvu nodes    = { { 2, 3, 4, 5, 6, 7 }, { 2, 3, 4 } };
-  vecvu xnodes   = { { 1 }, {} };
-  vecu  srdnodes = {};
+  vecvu sclique{ {}, { 1 } };
+  vecvu nodes{ { 2, 3, 4, 5, 6, 7 }, { 2, 3, 4 } };
+  vecvu xnodes{ { 1 }, {} };
+  vecu  srdnodes{};
 
   PushHead_(sclique, nodes, xnodes, srdnodes);
 
@@ -39,10 +39,10 @@ void TestPushHead() {
   Printvecvu(xnodes);
   cout << "end. \n" << endl;
 
-  vecvu sclique2  = { {}, { 1 } };
-  vecvu nodes2    = { { 2, 3, 4, 5, 6, 7 }, { 4 } };
-  vecvu xnodes2   = { { 1 }, { 2, 3 } };
-  vecu  srdnodes2 = { 2, 3 };
+  vecvu sclique2{ {}, { 1 } };
+  vecvu nodes2{ { 2, 3, 4, 5, 6, 7 }, { 4 } };
+  vecvu xnodes2{ { 1 }, { 2, 3 } };
+  vecu  srdnodes2{ 2, 3 };
 
   PushHead_(sclique2, nodes2, xnodes2, srdnodes2);
 
@@ -58,10 +58,10 @@ void TestPushHead() {
 
 ln::vecvu TestSearchLeaf(const ln::gumap& g, const unsigned int node) {
 
-  vecvu sclique  = { { node } };
-  vecvu nodes    = { g.at(node) };
-  vecvu xnodes   = { {} };
-  vecu  srdnodes = {};
+  vecvu sclique{ { node } };
+  vecvu nodes{ g.at(node) };
+  vecvu xnodes{ {} };
+  vecu  srdnodes{};
 
   SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
 
@@ -79,11 +79,11 @@ ln::vecvu TestSearchLeaf(const ln::gumap& g, const unsigned int node) {
 
 ln::vecvu TestSearchTree(const ln::gumap& g, const unsigned int node) {
 
-  vecvu cliques  = { {} };
-  vecvu sclique  = { {} };
-  vecvu nodes    = { g.at(node) };
-  vecvu xnodes   = { {} };
-  vecu  srdnodes = {};
+  vecvu cliques{ {} };
+  vecvu sclique{ {} };
+  vecvu nodes{ g.at(node) };
+  vecvu xnodes{ {} };
+  vecu  srdnodes{};
 
   cout << "raw first nodes size is: " << nodes.front().size() << endl;
 
@@ -195,6 +195,11 @@ int main() {
   auto cliqueblog = TestSearchTree(gblog, 0);
   Printvecvu(cliqueblog);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~
+  Leaf firstLeaf;
+  firstLeaf.print();
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   return 0;
 }

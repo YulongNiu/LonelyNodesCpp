@@ -8,22 +8,32 @@
 
 namespace lonelynodes {
 
-class Seed {
+class Leaf {
 public:
-  vecu         stem;     // known cliques
-  vecu         branches; // nodes for next search
-  unsigned int level;    // record level
+  Leaf();
+  Leaf(vecu, vecu, vecu);
+  void print();
 
-  void print() {
-    std::cout << "stem is: ";
-    Printvecu(stem);
+private:
+  // searched nodes, each of which has been completely searched
+  // for maximal cliques.
+  vecu seeds;
 
-    std::cout << "branch is: ";
-    Printvecu(branches);
-
-    std::cout << "level is: " << level << std::endl;
-  }
+  vecu branches; // nodes for next search.
+  vecu stem;     // known cliques in current search.
 };
+
+// print `Leaf` obj
+inline void Leaf::print() {
+  std::cout << "seeds are: ";
+  Printvecu(seeds);
+
+  std::cout << "stem is: ";
+  Printvecu(stem);
+
+  std::cout << "branch is: ";
+  Printvecu(branches);
+}
 
 } // namespace lonelynodes
 
