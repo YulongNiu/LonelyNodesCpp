@@ -8,22 +8,22 @@
 
 namespace lonelynodes {
 
-  class Seed {
-  public:
-    vecu         stem;     // known cliques
-    vecu         branches; // nodes for next search
-    unsigned int level;    // record level
+class Seed {
+public:
+  vecu         stem;     // known cliques
+  vecu         branches; // nodes for next search
+  unsigned int level;    // record level
 
-    void print() {
-      std::cout << "stem is: ";
-      Printvecu(stem);
+  void print() {
+    std::cout << "stem is: ";
+    Printvecu(stem);
 
-      std::cout << "branch is: ";
-      Printvecu(branches);
+    std::cout << "branch is: ";
+    Printvecu(branches);
 
-      std::cout << "level is: " << level << std::endl;
-    }
-  };
+    std::cout << "level is: " << level << std::endl;
+  }
+};
 
 } // namespace lonelynodes
 

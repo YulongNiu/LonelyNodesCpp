@@ -287,7 +287,7 @@ MaxEmptyLinesToKeep: 2
 #   NI_All (in configuration: All)
 #     Indent in all namespaces.
 #
-NamespaceIndentation: All
+NamespaceIndentation: None
 
 # Pointer and reference alignment style.
 #
