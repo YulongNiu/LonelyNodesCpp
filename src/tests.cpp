@@ -197,8 +197,9 @@ int main() {
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~
-  Leaf firstLeaf;
+  Leaf firstLeaf{ { 1 }, { 2, 3 }, { 4 } };
   firstLeaf.print();
+  Printvecu(firstLeaf.next_seeds());
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   return 0;

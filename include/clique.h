@@ -10,18 +10,37 @@ namespace lonelynodes {
 
 class Leaf {
 public:
-  Leaf();
-  Leaf(vecu, vecu, vecu);
+  //`snode`: next searched node.
+  unsigned int snode;
+
+  Leaf(const vecu seeds, const vecu branches, const vecu stem)
+      : seeds{ seeds }, branches{ branches }, stem{ stem } {
+    snode = branches.front();
+  }
+
+  vecu get_seeds() const { return seeds; };
+  vecu get_branches() const { return branches; };
+  vecu get_stem() const { return stem; };
+
+  // next leaf functions
+  vecu next_seeds() const;
+  // vecu next_branches() const;
+  // vecu next_stem() const;
+  // Leaf next_leaf(const gumap& g) const;
+
   void print();
 
 private:
-  // searched nodes, each of which has been completely searched
+  // `seeds`: searched nodes, each of which has been completely searched
   // for maximal cliques.
-  vecu seeds;
-
-  vecu branches; // nodes for next search.
-  vecu stem;     // known cliques in current search.
+  // `branches`: nodes for next search.
+  // `stem`: known cliques in current leaf.
+  const vecu seeds, branches, stem;
 };
+
+
+Leaf NextLeaf(const Leaf& leaf, const gumap& g);
+
 
 // print `Leaf` obj
 inline void Leaf::print() {
