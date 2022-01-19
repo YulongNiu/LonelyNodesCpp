@@ -86,6 +86,8 @@ void PushHead_(ln::vecvu&      sclique,
                ln::vecvu&      xnodes,
                const ln::vecu& srdnodes);
 
+ln::gumap TrimGraph_(const ln::vecu& nodes, const ln::gumap& g);
+
 ln::vecu SortNodes_(const ln::vecu& nodes, const ln::gumap& g);
 
 void Count_(ln::vecu& degree, const ln::vecu& nodes, const ln::vecu& tnodes);

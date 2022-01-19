@@ -37,7 +37,6 @@ void SearchTree_(ln::vecvu&       cliques,
     // step1: search left leaf.
     SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
 
-
     // cout << "------\n"
     //      << "srdnodes: \n";
     // Printvecu(srdnodes);
@@ -50,9 +49,9 @@ void SearchTree_(ln::vecvu&       cliques,
     //      << "nodes: \n";
     // Printvecvu(nodes);
     // cout << "end \n"
-    //      << "is maximal clique: " << isMaximalClique_(sclique.back(),
-    //      srdnodes, g)
-    //      << "\n------\n" << endl;
+    //      << "is maximal clique: "
+    //      << isMaximalClique_(sclique.back(), srdnodes, g) << "\n------\n"
+    //      << endl;
 
     // step2: check if latest clique is maximal.
     auto eachClique = sclique.back();
@@ -67,7 +66,8 @@ void SearchTree_(ln::vecvu&       cliques,
     srdnodes = xnodes.back();
 
     cout << "1st nodes size: " << nodes.front().size()
-         << "; #cliques: " << cliques.size() << endl;
+         << "; node size: " << nodes.size() << "; #cliques: " << cliques.size()
+         << endl;
 
   } while (!nodes.empty());
 }
@@ -213,6 +213,20 @@ void PushHead_(ln::vecvu&      sclique,
 
   // erase 1st node of `searchNodes`
   nodes.back().erase(nodes.back().begin());
+}
+
+
+// shrinkage raw graph,
+// than only choosing the intersection of `g.at(elem)` and `nodes`.
+ln::gumap TrimGraph_(const ln::vecu& nodes, const ln::gumap& g) {
+
+  gumap res = g;
+
+  for (auto elem : nodes) {
+    res.at(elem) = Intersection(g.at(elem), nodes);
+  }
+
+  return res;
 }
 
 
