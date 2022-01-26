@@ -205,7 +205,7 @@ void NextLeaf_(ln::vecvu&       sclique,
   sclique.push_back(nextClique);
 
   // step4: next nodes
-  auto nextNodes = NextLeaf_(nodes.back(), searchNode, g);
+  auto nextNodes = Intersection(nodes.back(), g.at(searchNode));
   nodes.push_back(nextNodes);
 }
 

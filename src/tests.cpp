@@ -25,13 +25,13 @@ void TestDiffIntersect(ln::vecu& fv, ln::vecu& tv) {
 }
 
 
-void TestPushHead(const ln::gumap& g) {
+void TestNextLeaf(const ln::gumap& g) {
   vecvu sclique{ {}, { 1 } };
   vecvu nodes{ { 2, 3, 4, 5, 6, 7 }, { 2, 3, 4 } };
   vecvu xnodes{ { 1 }, {} };
   vecu  srdnodes{};
 
-  PushHead_(sclique, nodes, xnodes, srdnodes, g);
+  NextLeaf_(sclique, nodes, xnodes, srdnodes, g);
 
   cout << "sclique is: \n";
   Printvecvu(sclique);
@@ -46,7 +46,7 @@ void TestPushHead(const ln::gumap& g) {
   vecvu xnodes2{ { 1 }, { 2 } };
   vecu  srdnodes2{ 2 };
 
-  PushHead_(sclique2, nodes2, xnodes2, srdnodes2, g);
+  NextLeaf_(sclique2, nodes2, xnodes2, srdnodes2, g);
 
   cout << "sclique2 is: \n";
   Printvecvu(sclique2);
@@ -163,7 +163,7 @@ int main() {
                     { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 }, { 0, 1 }, { 0, 2 },
                     { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 } };
   auto gblog    = gumapInit(testblog);
-  TestPushHead(gblog);
+  TestNextLeaf(gblog);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~

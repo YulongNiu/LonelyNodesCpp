@@ -62,11 +62,3 @@ ln::vecu NextIdc_(const ln::vecu&  eachNodes,
 
   return res;
 }
-
-
-ln::vecu NextLeaf_(const ln::vecu     eachNodes,
-                   const unsigned int searchNode,
-                   const ln::gumap&   g) {
-
-  return Intersection(eachNodes, g.at(searchNode));
-}
