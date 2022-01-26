@@ -93,7 +93,7 @@ AllowAllParametersOfDeclarationOnNextLine: false
 # Allows contracting simple braced statements to a single line.
 #
 # E.g., this allows if (a) { return; } to be put on a single line.
-AllowShortBlocksOnASingleLine: false
+AllowShortBlocksOnASingleLine: true
 
 # If true, short case labels will be contracted to a single line.
 AllowShortCaseLabelsOnASingleLine: false
@@ -109,7 +109,7 @@ AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Inline
 
 # If true, if (a) return; can be put on a single line.
-AllowShortIfStatementsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: true
 
 # If true, while (true) continue; can be put on a single line.
 AllowShortLoopsOnASingleLine: false

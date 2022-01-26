@@ -79,12 +79,11 @@ void SearchLeaf_(ln::vecvu&       sclique,
                  const ln::vecu&  srdnodes,
                  const ln::gumap& g);
 
-void NextLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, const ln::gumap& g);
-
-void PushHead_(ln::vecvu&      sclique,
-               ln::vecvu&      nodes,
-               ln::vecvu&      xnodes,
-               const ln::vecu& srdnodes);
+void NextLeaf_(ln::vecvu&       sclique,
+               ln::vecvu&       nodes,
+               ln::vecvu&       xnodes,
+               const ln::vecu&  srdnodes,
+               const ln::gumap& g);
 
 ln::gumap TrimGraph_(const ln::vecu& nodes, const ln::gumap& g);
 
