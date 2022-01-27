@@ -46,7 +46,7 @@ ln::vecu NextIdc_(const ln::vecu&  eachNodes,
                   const ln::gumap& g) {
   size_t maximumSize = eachNodes.size();
   size_t maximalSize = 0;
-  vecu   res(maximalSize, 0);
+  vecu   res(maximumSize, 0);
 
   if (eachXnodes.empty()) { return res; }
 

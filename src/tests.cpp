@@ -195,9 +195,9 @@ int main() {
   auto gg = gumapInit(testg);
   testg.brief_print("gg is: ");
 
-  size_t nodeIdx = 366;
+  size_t nodeIdx = 332;
   auto   ggtrim  = TrimGraph_(gg.at(nodeIdx), gg);
-  TestSearchTree(gg, 366);
+  TestSearchTree(gg, nodeIdx);
 
   // vecvu cliques;
   // vecvu sclique{ { 366 } };
