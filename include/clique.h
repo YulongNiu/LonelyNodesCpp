@@ -80,6 +80,10 @@ void BackTrimLeaf_(ln::vecvu&       sclique,
 
 void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes);
 
+bool isSkippable(const ln::vecu&   eachSclique,
+                 const ln::vecu&   eachNodes,
+                 unsigned long int bestSize);
+
 void SearchLeaf_(ln::vecvu&       sclique,
                  ln::vecvu&       nodes,
                  ln::vecvu&       xnodes,

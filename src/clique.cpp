@@ -84,7 +84,7 @@ void SearchTree_(ln::vecvu&       cliques,
 //                  ln::vecu&        srdnodes,
 //                  const ln::gumap& g) {
 
-//   for (size_t i = 0; i < 119; ++i) {
+//   for (size_t i = 0; i < 118; ++i) {
 
 //     cout << "First node size is: \n" << nodes.front().size() << endl;
 //     cout << "First node is: \n";
@@ -134,7 +134,7 @@ void SearchTree_(ln::vecvu&       cliques,
 
 //     // step3: trim leaves, if exist.
 //     TrimLeaf_(sclique, nodes, xnodes, g);
-//     srdnodes = xnodes.back();
+//     if (!nodes.empty()) { srdnodes = xnodes.back(); }
 
 //     cout << "1st nodes size: " << nodes.front().size()
 //          << "; node size: " << nodes.size() << "; #cliques: " <<
@@ -157,54 +157,69 @@ void SearchTree_(ln::vecvu&       cliques,
 //     cout << "--------------------\n\n\n";
 //   }
 
-//   // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//   // cout << "First node size is: \n" << nodes.front().size() << endl;
-//   // cout << "First node is: \n";
-//   // Printvecu(nodes.front());
+//   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//   cout << "First node size is: \n" << nodes.front().size() << endl;
+//   cout << "First node is: \n";
+//   Printvecu(nodes.front());
 
-//   // SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
-//   // auto eachClique = sclique.back();
+//   SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
+//   auto eachClique = sclique.back();
 
-//   // if (isMaximalClique_(eachClique, srdnodes, g)) {
-//   //   cliques.push_back(eachClique);
-//   //   // CompareClique_(cliques, sclique);
-//   // } else {
-//   // }
+//   if (isMaximalClique_(eachClique, srdnodes, g)) {
+//     cliques.push_back(eachClique);
+//     // CompareClique_(cliques, sclique);
+//   } else {
+//   }
 
-//   // cout << "~~~~~~~~~~~~~~~~~~~\n";
-//   // cout << "before trim \n";
-//   // cout << "cliques are: \n";
-//   // Printvecvu(cliques);
-//   // cout << "scliques are: \n";
-//   // Printvecvu(sclique);
-//   // cout << "nodes are: \n";
-//   // Printvecvu(nodes);
-//   // cout << "xnodes are: \n";
-//   // Printvecvu(xnodes);
-//   // cout << "srdnodes are: \n";
-//   // Printvecu(srdnodes);
-//   // cout << "end." << endl;
-//   // cout << "~~~~~~~~~~~~~~~~~~~~\n\n\n";
+//   cout << "~~~~~~~~~~~~~~~~~~~\n";
+//   cout << "before trim \n";
+//   cout << "cliques are: \n";
+//   Printvecvu(cliques);
+//   cout << "sclique are: \n";
+//   Printvecvu(sclique);
+//   cout << "nodes are: \n";
+//   Printvecvu(nodes);
+//   cout << "xnodes are: \n";
+//   Printvecvu(xnodes);
+//   cout << "srdnodes are: \n";
+//   Printvecu(srdnodes);
+//   cout << "end." << endl;
+//   cout << "~~~~~~~~~~~~~~~~~~~~\n\n\n";
 
 //   // TrimLeaf_(sclique, nodes, xnodes, g);
-//   // // BackSkipLeaf_(sclique, nodes, xnodes);
+//   BackSkipLeaf_(sclique, nodes, xnodes);
+
+//   auto lastNodes = nodes.back();
+
+//   auto lastIdc = NextIdc_(lastNodes, xnodes.back(), g);
+//   auto pnode   = NextPnode_(lastNodes, lastIdc);
+//   cout << "Is sclique empty: " << sclique.empty() << "\n"
+//        << "Is pnode end: " << (pnode != lastNodes.end()) << "\n";
+
+//   sclique.pop_back();
+//   nodes.pop_back();
+//   xnodes.pop_back();
+
+//   cout << "Is nodes empty: " << nodes.empty() << "\n";
+
+//   // BackTrimLeaf_(sclique, nodes, xnodes, g);
 //   // srdnodes = xnodes.back();
 
-//   // cout << "--------------------\n";
-//   // cout << "after trim \n";
-//   // cout << "cliques are: \n";
-//   // Printvecvu(cliques);
-//   // cout << "scliques are: \n";
-//   // Printvecvu(sclique);
-//   // cout << "nodes are: \n";
-//   // Printvecvu(nodes);
-//   // cout << "xnodes are: \n";
-//   // Printvecvu(xnodes);
-//   // cout << "srdnodes are: \n";
-//   // Printvecu(srdnodes);
-//   // cout << "end." << endl;
-//   // cout << "--------------------\n\n\n";
-//   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//   cout << "--------------------\n";
+//   cout << "after trim \n";
+//   cout << "cliques are: \n";
+//   Printvecvu(cliques);
+//   cout << "sclique are: \n";
+//   Printvecvu(sclique);
+//   cout << "nodes are: \n";
+//   Printvecvu(nodes);
+//   cout << "xnodes are: \n";
+//   Printvecvu(xnodes);
+//   cout << "srdnodes are: \n";
+//   Printvecu(srdnodes);
+//   cout << "end." << endl;
+//   cout << "--------------------\n\n\n";
+//   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // }
 
 
@@ -285,11 +300,11 @@ void BackTrimLeaf_(ln::vecvu&       sclique,
                    ln::vecvu&       xnodes,
                    const ln::gumap& g) {
 
-  auto lastNodes = nodes.back();
-  if (lastNodes.empty()) { return; }
+  if (nodes.empty()) { return; }
 
-  auto lastIdc = NextIdc_(lastNodes, xnodes.back(), g);
-  auto pnode   = NextPnode_(lastNodes, lastIdc);
+  auto lastNodes = nodes.back();
+  auto lastIdc   = NextIdc_(lastNodes, xnodes.back(), g);
+  auto pnode     = NextPnode_(lastNodes, lastIdc);
 
   if (pnode != lastNodes.end()) {
     // swap
@@ -310,26 +325,28 @@ void BackTrimLeaf_(ln::vecvu&       sclique,
 // `BackSkipLeaf_()` is a quick skip method.
 void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes) {
 
+  if (nodes.empty()) { return; }
+
   auto ps = next(sclique.rbegin());
   auto pn = next(nodes.rbegin());
   auto px = next(xnodes.rbegin());
 
-  auto bestSize = sclique.back().size();
-
-  for (; pn != nodes.rend(); ++ps, ++pn, ++px) {
-
-    auto eachSize = (*ps).size() + (*pn).size();
-
-    if (eachSize >= bestSize) {
-      break;
-    } else {
-    }
-  }
+  for (auto bestSize = sclique.back().size();
+       (pn != nodes.rend()) && isSkippable(*ps, *pn, bestSize);
+       ++ps, ++pn, ++px) {}
 
   sclique.erase(ps.base(), sclique.end());
   nodes.erase(pn.base(), nodes.end());
   xnodes.erase(px.base(), xnodes.end());
 }
+
+
+bool isSkippable(const ln::vecu&   eachSclique,
+                 const ln::vecu&   eachNodes,
+                 unsigned long int bestSize) {
+  return (eachSclique.size() + eachNodes.size()) < bestSize;
+}
+
 
 // find one clique by search the left tree
 void SearchLeaf_(ln::vecvu&       sclique,
