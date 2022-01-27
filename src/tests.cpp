@@ -58,41 +58,41 @@ void TestNextLeaf(const ln::gumap& g) {
 }
 
 
-// ln::vecvu TestSearchLeaf(const ln::gumap& g, const unsigned int node) {
+ln::vecvu TestSearchLeaf(const ln::gumap& g, const unsigned int node) {
 
-//   vecvu sclique{ { node } };
-//   vecvu nodes{ g.at(node) };
-//   vecvu xnodes{ {} };
-//   vecu  srdnodes{};
+  vecvu sclique{ { node } };
+  vecvu nodes{ g.at(node) };
+  vecvu xnodes{ {} };
+  vecu  srdnodes{};
 
-//   SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
+  SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
 
-//   cout << "sclique are: \n";
-//   Printvecvu(sclique);
-//   cout << "nodes are: \n";
-//   Printvecvu(nodes);
-//   cout << "xnodes is: \n";
-//   Printvecvu(xnodes);
-//   cout << "end. \n" << endl;
+  cout << "sclique are: \n";
+  Printvecvu(sclique);
+  cout << "nodes are: \n";
+  Printvecvu(nodes);
+  cout << "xnodes is: \n";
+  Printvecvu(xnodes);
+  cout << "end. \n" << endl;
 
-//   return nodes;
-// }
+  return nodes;
+}
 
 
-// ln::vecvu TestSearchTree(const ln::gumap& g, const unsigned int node) {
+ln::vecvu TestSearchTree(const ln::gumap& g, const unsigned int node) {
 
-//   vecvu cliques{ {} };
-//   vecvu sclique{ {} };
-//   vecvu nodes{ g.at(node) };
-//   vecvu xnodes{ {} };
-//   vecu  srdnodes{};
+  vecvu cliques;
+  vecvu sclique{ {} };
+  vecvu nodes{ g.at(node) };
+  vecvu xnodes{ {} };
+  vecu  srdnodes{};
 
-//   cout << "raw first nodes size is: " << nodes.front().size() << endl;
+  cout << "raw first nodes size is: " << nodes.front().size() << endl;
 
-//   SearchTree_(cliques, sclique, nodes, xnodes, srdnodes, g);
+  SearchTree_(cliques, sclique, nodes, xnodes, srdnodes, g);
 
-//   return cliques;
-// }
+  return cliques;
+}
 
 
 int main() {
@@ -147,9 +147,11 @@ int main() {
   // Printvecu(IntersectionIdc_(fv, tv));
 
   // // blog graph test
-  // umat testblog = { { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 }, { 3, 4
+  // umat testblog = { { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 }, { 3,
+  // 4
   // },
-  //                   { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 }, { 0, 1 }, { 0, 2
+  //                   { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 }, { 0, 1 }, { 0,
+  //                   2
   //                   }, { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 } };
   // auto gblog    = gumapInit(testblog);
   // testblog.brief_print("gblog is: ");
@@ -157,14 +159,22 @@ int main() {
   // Printvecu(NextIdc_(fv, tv, gblog));
   // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  //~~~~~~~~~~~~~~~~~test TestPushHead~~~~~~~~~~~~~~~~~~~
-  // blog graph test
-  umat testblog = { { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 }, { 3, 4 },
-                    { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 }, { 0, 1 }, { 0, 2 },
-                    { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 } };
-  auto gblog    = gumapInit(testblog);
-  TestNextLeaf(gblog);
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // //~~~~~~~~~~~~~~~~~test TestNextLeaf~~~~~~~~~~~~~~~~~~~
+  // // blog graph test
+  // umat testblog = { { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 }, { 3,
+  // 4
+  // },
+  //                   { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 }, { 0, 1 }, { 0,
+  //                   2
+  //                   }, { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 } };
+
+  // // umat testblog = { { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 },
+  // //                   { 3, 4 }, { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 } };
+  // auto gblog = gumapInit(testblog);
+  // TestNextLeaf(gblog);
+  // TestSearchLeaf(gblog, 2);
+  // Printvecvu(TestSearchTree(gblog, 0));
+  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
   // umat testm; // small graph
@@ -179,14 +189,15 @@ int main() {
   // auto mcm = MaxCliques(gm, 0);
   // Printvecvu(mcm);
 
-  // umat testg; // median graph
-  // testg.load("/Users/yulong/RESEARCH/LonelyNodesCpp/test/testg.bin",
-  //            arma_binary);
-  // auto gg = gumapInit(testg);
-  // testg.brief_print("gg is: ");
+  umat testg; // median graph
+  testg.load("/Users/yulong/RESEARCH/LonelyNodesCpp/test/testg.bin",
+             arma_binary);
+  auto gg = gumapInit(testg);
+  testg.brief_print("gg is: ");
 
-  // size_t nodeIdx = 366;
-  // auto   ggtrim  = TrimGraph_(gg.at(nodeIdx), gg);
+  size_t nodeIdx = 366;
+  auto   ggtrim  = TrimGraph_(gg.at(nodeIdx), gg);
+  TestSearchTree(gg, 366);
 
   // vecvu cliques;
   // vecvu sclique{ { 366 } };

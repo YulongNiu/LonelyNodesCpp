@@ -29,8 +29,7 @@ ln::vecu IntersectionIdc_(const ln::vecu& fv, const ln::vecu& tv) {
 // first non-intersection node
 // `nodes` and `indicator`.
 // `indicator` is a bit vector
-ln::citerv NextPnode_(const ln::vecu& eachNodes,
-                      const ln::vecu& eachIndicators) {
+ln::iterv NextPnode_(ln::vecu& eachNodes, const ln::vecu& eachIndicators) {
   auto pnode = eachNodes.begin();
 
   for (auto i = eachIndicators.begin();
@@ -45,20 +44,30 @@ ln::citerv NextPnode_(const ln::vecu& eachNodes,
 ln::vecu NextIdc_(const ln::vecu&  eachNodes,
                   const ln::vecu&  eachXnodes,
                   const ln::gumap& g) {
-  size_t maxSize = 0;
-  vecu   res(eachNodes.size(), 0);
+  size_t maximumSize = eachNodes.size();
+  size_t maximalSize = 0;
+  vecu   res(maximalSize, 0);
 
   if (eachXnodes.empty()) { return res; }
 
   for (auto elem : eachXnodes) {
     auto eachIdc  = IntersectionIdc_(eachNodes, g.at(elem));
     auto eachSize = accumulate(eachIdc.begin(), eachIdc.end(), 0);
-    if (eachSize > maxSize) {
-      res     = eachIdc;
-      maxSize = eachSize;
+
+
+    if (eachSize == maximumSize) {
+      return eachIdc;
+    } else if (eachSize > maximalSize) {
+      res         = eachIdc;
+      maximalSize = eachSize;
     } else {
     }
   }
 
   return res;
 }
+
+// // swap
+// ln::vecu UpdateNodes_(const ln::vecu&  eachNodes,
+//                       const ln::vecu&  eachXnodes,
+//                       const ln::gumap& g) {}

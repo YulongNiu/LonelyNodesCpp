@@ -41,7 +41,6 @@ private:
 
 Leaf NextLeaf(const Leaf& leaf, const gumap& g);
 
-
 // print `Leaf` obj
 inline void Leaf::print() {
   std::cout << "seeds are: ";
@@ -69,7 +68,15 @@ bool isMaximalClique_(const ln::vecu&  clique,
 
 // void CompareClique_(ln::vecvu &cliques, ln::vecvu &sclique);
 
-void TrimLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes);
+void TrimLeaf_(ln::vecvu&       sclique,
+               ln::vecvu&       nodes,
+               ln::vecvu&       xnodes,
+               const ln::gumap& g);
+
+void BackTrimLeaf_(ln::vecvu&       sclique,
+                   ln::vecvu&       nodes,
+                   ln::vecvu&       xnodes,
+                   const ln::gumap& g);
 
 void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes);
 
