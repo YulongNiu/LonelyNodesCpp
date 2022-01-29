@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <iostream>
 #include <numeric>
 #include <vector>
@@ -51,9 +52,8 @@ ln::vecu NextIdc_(const ln::vecu&  eachNodes,
   if (eachXnodes.empty()) { return res; }
 
   for (auto elem : eachXnodes) {
-    auto eachIdc  = IntersectionIdc_(eachNodes, g.at(elem));
-    auto eachSize = accumulate(eachIdc.begin(), eachIdc.end(), 0);
-
+    auto   eachIdc  = IntersectionIdc_(eachNodes, g.at(elem));
+    size_t eachSize = accumulate(eachIdc.begin(), eachIdc.end(), 0);
 
     if (eachSize == maximumSize) {
       return eachIdc;

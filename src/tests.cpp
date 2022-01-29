@@ -1,4 +1,6 @@
+#include <chrono>
 #include <cstddef>
+#include <ctime>
 #include <iostream>
 
 #include "clique.h"
@@ -195,51 +197,29 @@ int main() {
   auto gg = gumapInit(testg);
   testg.brief_print("gg is: ");
 
-  size_t nodeIdx = 332;
-  auto   ggtrim  = TrimGraph_(gg.at(nodeIdx), gg);
+  auto   start      = chrono::system_clock::now();
+  auto   start_time = chrono::system_clock::to_time_t(start);
+  size_t nodeIdx    = 332;
+  auto   ggtrim     = TrimGraph_(gg.at(nodeIdx), gg);
   TestSearchTree(gg, nodeIdx);
+  auto end      = chrono::system_clock::now();
+  auto end_time = chrono::system_clock::to_time_t(end);
 
-  // vecvu cliques;
-  // vecvu sclique{ { 366 } };
-  // vecvu nodes{ ggtrim.at(nodeIdx) };
-  // vecvu xnodes{ {} };
-  // vecu  srdnodes{};
-
-  // SearchLeaf_(sclique, nodes, xnodes, srdnodes, ggtrim);
-  // cliques.push_back(sclique.back());
-  // TrimLeaf_(sclique, nodes, xnodes);
-  // srdnodes = xnodes.back();
-
-  // cout << "different nodes are: \n";
-  // Printvecu(Difference(nodes.back(), cliques.back()));
-
-  // cout << "Search space is: \n";
-  // Printvecu(ggtrim.at(nodeIdx));
-  // cout << "cliques are: \n";
-  // Printvecvu(cliques);
-  // cout << "srdnodes are: \n";
-  // Printvecu(srdnodes);
-  // cout << "next search nodes are: \n";
-  // Printvecu(nodes.back());
-  // cout << "end." << endl;
-
-  // TestSearchLeaf(ggtrim, nodeIdx);
-  // cout << "vertex number is: " << gg.size() << '\n' << endl;
-  // auto treeg = TestSearchTree(gg, nodeIdx);
-  // Printvecvu(treeg);
-
-  // auto mcg = MaxCliques(gg, nodeIdx);
-  // Printvecvu(mcg);
+  std::chrono::duration<double> elapsed_seconds = end - start;
+  cout << "start computation at " << std::ctime(&start_time)
+       << "end computation at " << std::ctime(&end_time)
+       << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
   // // large graph
   // umat testgbig;
-  // testgbig.load("../tests/testgbig.bin", arma_binary);
+  // testgbig.load("/Users/yulong/RESEARCH/LonelyNodesCpp/test/testgbig.bin",
+  //               arma_binary);
   // auto gbig = gumapInit(testgbig);
   // testgbig.brief_print("gbig is: ");
 
-  // unsigned int nodeIdx = 9117;
-  // auto mcbig = MaxCliques(gbig, nodeIdx);
-  // Printvecvu(mcbig);
+  // size_t nodeIdx  = 9116;
+  // auto   gbigtrim = TrimGraph_(gbig.at(nodeIdx), gbig);
+  // TestSearchTree(gbigtrim, nodeIdx);
 
   // blog graph test
   // umat testblog = {{1, 2}, {1, 3}, {2, 3}, {2, 4},
