@@ -1,22 +1,21 @@
 #ifndef _INIT_H_
 #define _INIT_H_
 
-#include <vector>
-#include <unordered_map>
+#include <algorithm>
 #include <armadillo>
+#include <cstddef>
+#include <unordered_map>
+#include <vector>
 
 #include "util.h"
 
 namespace lonelynodes {
 
-  using gumap = std::unordered_map<unsigned int, vecu>;
-
+using gumap = std::unordered_map<unsigned int, vecu>;
 }
 
 
-
-void gFillEach_(const unsigned int tidx,
-                ln::vecu& fillNodes);
+void gFillEach_(const size_t tidx, ln::vecu& fillNodes);
 
 ln::gumap gumapInit(const arma::umat& m);
 
