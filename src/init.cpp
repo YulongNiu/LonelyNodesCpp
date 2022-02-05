@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "init.h"
+#include "util.h"
 
 using namespace arma;
 using namespace std;
@@ -27,7 +28,7 @@ using namespace lonelynodes;
 //\code{gNodeCount_()}: A \code{std::vector<arma::uword>}. ' } ' @author Yulong
 // Niu \email{yulong.niu@@hotmail.com} ' @rdname initg ' @keywords internal
 // [[Rcpp::export]]
-void gFillEach_(const size_t tidx, ln::vecu& fillNodes) {
+void gFillEach_(const arma::uword tidx, ln::vecu& fillNodes) {
   fillNodes.emplace_back(tidx);
 }
 
@@ -42,17 +43,14 @@ ln::gumap gumapInit(const arma::umat& m) {
   // get edges number
   auto edgeNum = gNodeCount_(m);
 
-  for (size_t i = 0; i < edgeNum.size(); ++i) {
-    if (edgeNum[i] > 0) {
-      vecu eachNode;
-      eachNode.reserve(edgeNum[i]);
-      g[i] = eachNode;
-    } else {
-    }
+  for (uword i = 0; i < edgeNum.size(); ++i) {
+    vecu eachNode;
+    eachNode.reserve(edgeNum[i]);
+    g[i] = eachNode;
   }
 
   // fill
-  for (size_t i = 0; i < m.n_rows; ++i) {
+  for (uword i = 0; i < m.n_rows; ++i) {
     auto eachf = m(i, 0);
     auto eacht = m(i, 1);
 
@@ -83,14 +81,14 @@ ln::vecu gNodeCount_(const arma::umat& m) {
 }
 
 
+// init graph by a symmetrical matrix
 arma::umat gidcInit(const ln::gumap& g) {
 
   auto gsize = g.size();
   umat gidc(gsize, gsize);
 
-  for (size_t i = 0; i < gsize; ++i) {
-    // uvec eachIdc(g.at(i).data(), g.at(i).size(), false);
-    uvec eachIdc = conv_to<uvec>::from(g.at(i));
+  for (uword i = 0; i < gsize; ++i) {
+    uvec eachIdc(g.at(i));
     uvec eachCol(gsize, fill::zeros);
     eachCol.elem(eachIdc).ones();
     gidc.col(i) = eachCol;

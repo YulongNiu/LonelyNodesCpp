@@ -194,13 +194,17 @@ int main() {
   umat testg; // median graph
   testg.load("/Users/yulong/RESEARCH/LonelyNodesCpp/test/testg.bin",
              arma_binary);
-  auto gg = gumapInit(testg);
   testg.brief_print("gg is: ");
 
-  auto   start      = chrono::system_clock::now();
-  auto   start_time = chrono::system_clock::to_time_t(start);
-  size_t nodeIdx    = 332;
-  auto   ggtrim     = TrimGraph_(gg.at(nodeIdx), gg);
+
+  auto gg   = gumapInit(testg);
+  auto gidc = gidcInit(gg);
+  gidc.brief_print("gidc is: ");
+
+  auto  start      = chrono::system_clock::now();
+  auto  start_time = chrono::system_clock::to_time_t(start);
+  uword nodeIdx    = 332;
+  auto  ggtrim     = TrimGraph_(gg.at(nodeIdx), gg);
   TestSearchTree(gg, nodeIdx);
   auto end      = chrono::system_clock::now();
   auto end_time = chrono::system_clock::to_time_t(end);

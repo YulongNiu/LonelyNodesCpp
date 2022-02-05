@@ -14,7 +14,7 @@ using gumap = std::unordered_map<unsigned int, vecu>;
 } // namespace lonelynodes
 
 
-void gFillEach_(const size_t tidx, ln::vecu& fillNodes);
+void gFillEach_(const arma::uword tidx, ln::vecu& fillNodes);
 
 ln::gumap gumapInit(const arma::umat& m);
 
