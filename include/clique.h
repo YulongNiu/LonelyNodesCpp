@@ -55,12 +55,13 @@ inline void Leaf::print() {
 
 } // namespace lonelynodes
 
-void SearchTree_(ln::vecvu&       cliques,
-                 ln::vecvu&       sclique,
-                 ln::vecvu&       nodes,
-                 ln::vecvu&       xnodes,
-                 ln::vecu&        srdnodes,
-                 const ln::gumap& g);
+void SearchTree_(ln::vecvu&        cliques,
+                 ln::vecvu&        sclique,
+                 ln::vecvu&        nodes,
+                 ln::vecvu&        xnodes,
+                 ln::vecu&         srdnodes,
+                 const ln::gumap&  g,
+                 const arma::umat& gidc);
 
 bool isMaximalClique_(const ln::vecu&  clique,
                       const ln::vecu&  srdnodes,
@@ -79,6 +80,10 @@ void BackTrimLeaf_(ln::vecvu&       sclique,
                    const ln::gumap& g);
 
 void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes);
+
+bool IsMaximalClique_(const ln::vecu&   clique,
+                      const ln::vecu&   srdnodes,
+                      const arma::umat& gidc);
 
 bool isSkippable(const ln::vecu&   eachSclique,
                  const ln::vecu&   eachNodes,

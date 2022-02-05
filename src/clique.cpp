@@ -8,6 +8,7 @@
 #include "pivot.h"
 #include "util.h"
 
+using namespace arma;
 using namespace std;
 using namespace lonelynodes;
 
@@ -29,12 +30,13 @@ using namespace lonelynodes;
 // }
 
 
-void SearchTree_(ln::vecvu&       cliques,
-                 ln::vecvu&       sclique,
-                 ln::vecvu&       nodes,
-                 ln::vecvu&       xnodes,
-                 ln::vecu&        srdnodes,
-                 const ln::gumap& g) {
+void SearchTree_(ln::vecvu&        cliques,
+                 ln::vecvu&        sclique,
+                 ln::vecvu&        nodes,
+                 ln::vecvu&        xnodes,
+                 ln::vecu&         srdnodes,
+                 const ln::gumap&  g,
+                 const arma::umat& gidc) {
 
   do {
     // step1: search left leaf.
@@ -58,7 +60,7 @@ void SearchTree_(ln::vecvu&       cliques,
 
     // step2: check if latest clique is maximal.
     auto eachClique = sclique.back();
-    if (isMaximalClique_(eachClique, srdnodes, g)) {
+    if (IsMaximalClique_(eachClique, srdnodes, gidc)) {
       cliques.push_back(eachClique);
       // CompareClique_(cliques, sclique);
     } else {
@@ -224,6 +226,23 @@ void SearchTree_(ln::vecvu&       cliques,
 
 
 // Check if one clique is maximal.
+bool IsMaximalClique_(const ln::vecu&   clique,
+                      const ln::vecu&   srdnodes,
+                      const arma::umat& gidc) {
+
+  // if `srdnodes` is empty
+  if (srdnodes.empty()) { return true; }
+
+  uvec rowIdc(clique);
+  uvec colIdc(srdnodes);
+  umat splitIdc = gidc.submat(rowIdc, colIdc);
+
+  uword i = 0;
+  for (; i != splitIdc.n_cols && (!arma::all(splitIdc.col(i))); ++i) {}
+
+  return i == splitIdc.n_cols;
+}
+
 bool isMaximalClique_(const ln::vecu&  clique,
                       const ln::vecu&  srdnodes,
                       const ln::gumap& g) {

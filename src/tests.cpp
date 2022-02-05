@@ -81,7 +81,9 @@ ln::vecvu TestSearchLeaf(const ln::gumap& g, const unsigned int node) {
 }
 
 
-ln::vecvu TestSearchTree(const ln::gumap& g, const unsigned int node) {
+ln::vecvu TestSearchTree(const ln::gumap&  g,
+                         const arma::umat& gidc,
+                         const arma::uword node) {
 
   vecvu cliques;
   vecvu sclique{ {} };
@@ -91,7 +93,7 @@ ln::vecvu TestSearchTree(const ln::gumap& g, const unsigned int node) {
 
   cout << "raw first nodes size is: " << nodes.front().size() << endl;
 
-  SearchTree_(cliques, sclique, nodes, xnodes, srdnodes, g);
+  SearchTree_(cliques, sclique, nodes, xnodes, srdnodes, g, gidc);
 
   return cliques;
 }
@@ -205,7 +207,7 @@ int main() {
   auto  start_time = chrono::system_clock::to_time_t(start);
   uword nodeIdx    = 332;
   auto  ggtrim     = TrimGraph_(gg.at(nodeIdx), gg);
-  TestSearchTree(gg, nodeIdx);
+  TestSearchTree(gg, gidc, nodeIdx);
   auto end      = chrono::system_clock::now();
   auto end_time = chrono::system_clock::to_time_t(end);
 
