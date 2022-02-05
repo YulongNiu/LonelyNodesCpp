@@ -438,13 +438,7 @@ void Count_(ln::vecu& degree, const ln::vecu& nodes, const ln::vecu& tnodes) {
   for (unsigned int i = 0; i < nodes.size(); ++i) {
 
     auto snode = nodes.at(i);
-    for (auto p = tnodes.begin(); p != tnodes.end(); ++p) {
-      if (snode == *p) {
-        ++degree.at(i);
-        break;
-      } else {
-      }
-    }
+    for (auto p = tnodes.begin(); (p != tnodes.end()) && (*p != snode); ++p) {}
   }
 }
 
@@ -461,51 +455,3 @@ ln::vecu SortIdx_(const ln::vecu& v) {
 
   return idx;
 }
-
-
-// // expand nodes into children nodes
-// // @keywords internal
-// void ExpandLeaf_(const vecu& stem,
-//                  const vecu& branches,
-//                  const gumap& g) {
-
-//   vecu b = branches;
-
-//   do {
-//     // step1: add first node to stem.
-//     auto node = b.front();
-//     b.erase(b.begin());
-
-//     vecu newSteam = stem;
-//     newSteam.push_back(node);
-
-//     // step2: common nodes as new branch.
-//     vecu newBranch = Intersection(branches, g.at(node));
-
-//     // step3: remove searched nodes.
-//     b = Difference(b, newBranch);
-
-//     cout << "stem is: ";
-//     Printvecu(newSteam);
-//     cout << "branch is: ";
-//     Printvecu(newBranch);
-//   } while (b.size() > 0);
-// }
-
-
-// // [[Rcpp::export]]
-// void TestExpandLeaf(const arma::umat& m,
-//                     const arma::uword node) {
-
-//   auto g = gumapInit(m);
-
-//   vecu stem = {node};
-//   vecu branches = g.at(node);
-
-//   ExpandLeaf_(stem, branches, g);
-
-//   Seed firstSeed;
-//   firstSeed.stem = {node};
-//   firstSeed.branches = g.at(node);
-//   firstSeed.print();
-// }

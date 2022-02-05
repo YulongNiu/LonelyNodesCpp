@@ -210,16 +210,25 @@ int main() {
        << "end computation at " << std::ctime(&end_time)
        << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-  // // large graph
-  // umat testgbig;
+  // umat testgbig; // large graph
   // testgbig.load("/Users/yulong/RESEARCH/LonelyNodesCpp/test/testgbig.bin",
   //               arma_binary);
   // auto gbig = gumapInit(testgbig);
   // testgbig.brief_print("gbig is: ");
 
-  // size_t nodeIdx  = 9116;
-  // auto   gbigtrim = TrimGraph_(gbig.at(nodeIdx), gbig);
+  // auto   start      = chrono::system_clock::now();
+  // auto   start_time = chrono::system_clock::to_time_t(start);
+  // size_t nodeIdx    = 9116;
+  // auto   gbigtrim   = TrimGraph_(gbig.at(nodeIdx), gbig);
   // TestSearchTree(gbigtrim, nodeIdx);
+
+  // auto end      = chrono::system_clock::now();
+  // auto end_time = chrono::system_clock::to_time_t(end);
+
+  // std::chrono::duration<double> elapsed_seconds = end - start;
+  // cout << "start computation at " << std::ctime(&start_time)
+  //      << "end computation at " << std::ctime(&end_time)
+  //      << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
   // blog graph test
   // umat testblog = {{1, 2}, {1, 3}, {2, 3}, {2, 4},

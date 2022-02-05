@@ -1,3 +1,4 @@
+#include <armadillo>
 #include <cstddef>
 #include <iostream>
 #include <numeric>
@@ -7,6 +8,7 @@
 #include "util.h"
 
 using namespace std;
+using namespace arma;
 using namespace lonelynodes;
 
 
@@ -16,9 +18,9 @@ ln::vecu IntersectionIdc_(const ln::vecu& fv, const ln::vecu& tv) {
   auto tvsize = tv.size();
   vecu res(fvsize, 0);
 
-  for (size_t i = 0; i < fvsize; ++i) {
+  for (uword i = 0; i < fvsize; ++i) {
 
-    size_t j = 0;
+    uword j = 0;
     for (; (j < tvsize) && (fv.at(i) != tv.at(j)); ++j) {}
     if (j != tvsize) { res.at(i) = 1; }
   }
@@ -45,15 +47,15 @@ ln::iterv NextPnode_(ln::vecu& eachNodes, const ln::vecu& eachIndicators) {
 ln::vecu NextIdc_(const ln::vecu&  eachNodes,
                   const ln::vecu&  eachXnodes,
                   const ln::gumap& g) {
-  size_t maximumSize = eachNodes.size();
-  size_t maximalSize = 0;
-  vecu   res(maximumSize, 0);
+  uword maximumSize = eachNodes.size();
+  uword maximalSize = 0;
+  vecu  res(maximumSize, 0);
 
   if (eachXnodes.empty()) { return res; }
 
   for (auto elem : eachXnodes) {
-    auto   eachIdc  = IntersectionIdc_(eachNodes, g.at(elem));
-    size_t eachSize = accumulate(eachIdc.begin(), eachIdc.end(), 0);
+    auto  eachIdc  = IntersectionIdc_(eachNodes, g.at(elem));
+    uword eachSize = accumulate(eachIdc.begin(), eachIdc.end(), 0);
 
     if (eachSize == maximumSize) {
       return eachIdc;
