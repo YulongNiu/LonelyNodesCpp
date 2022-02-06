@@ -19,6 +19,8 @@ using citervv = vecvu::const_iterator;
 
 namespace ln = lonelynodes;
 
+arma::uvec STD2ARMAuv(const ln::vecu& v);
+
 ln::vecu Intersection(const ln::vecu& fv, const ln::vecu& tv);
 
 ln::vecu Difference(const ln::vecu& fv, const ln::vecu& tv);

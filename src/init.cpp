@@ -88,9 +88,8 @@ arma::umat gidcInit(const ln::gumap& g) {
   umat gidc(gsize, gsize);
 
   for (uword i = 0; i < gsize; ++i) {
-    uvec eachIdc(g.at(i));
     uvec eachCol(gsize, fill::zeros);
-    eachCol.elem(eachIdc).ones();
+    eachCol.elem(STD2ARMAuv(g.at(i))).ones();
     gidc.col(i) = eachCol;
   }
 

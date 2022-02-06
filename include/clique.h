@@ -63,9 +63,9 @@ void SearchTree_(ln::vecvu&        cliques,
                  const ln::gumap&  g,
                  const arma::umat& gidc);
 
-bool isMaximalClique_(const ln::vecu&  clique,
-                      const ln::vecu&  srdnodes,
-                      const ln::gumap& g);
+bool isMaximalClique_(const ln::vecu&   clique,
+                      const ln::vecu&   srdnodes,
+                      const arma::umat& gidc);
 
 // void CompareClique_(ln::vecvu &cliques, ln::vecvu &sclique);
 
@@ -80,10 +80,6 @@ void BackTrimLeaf_(ln::vecvu&       sclique,
                    const ln::gumap& g);
 
 void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes);
-
-bool IsMaximalClique_(const ln::vecu&   clique,
-                      const ln::vecu&   srdnodes,
-                      const arma::umat& gidc);
 
 bool isSkippable(const ln::vecu&   eachSclique,
                  const ln::vecu&   eachNodes,

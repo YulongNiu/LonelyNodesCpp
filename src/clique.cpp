@@ -60,7 +60,7 @@ void SearchTree_(ln::vecvu&        cliques,
 
     // step2: check if latest clique is maximal.
     auto eachClique = sclique.back();
-    if (IsMaximalClique_(eachClique, srdnodes, gidc)) {
+    if (isMaximalClique_(eachClique, srdnodes, gidc)) {
       cliques.push_back(eachClique);
       // CompareClique_(cliques, sclique);
     } else {
@@ -226,49 +226,20 @@ void SearchTree_(ln::vecvu&        cliques,
 
 
 // Check if one clique is maximal.
-bool IsMaximalClique_(const ln::vecu&   clique,
+bool isMaximalClique_(const ln::vecu&   clique,
                       const ln::vecu&   srdnodes,
                       const arma::umat& gidc) {
 
-  // if `srdnodes` is empty
   if (srdnodes.empty()) { return true; }
 
-  uvec rowIdc(clique);
-  uvec colIdc(srdnodes);
-  umat splitIdc = gidc.submat(rowIdc, colIdc);
+  umat splitIdc = gidc.submat(STD2ARMAuv(clique), STD2ARMAuv(srdnodes));
 
   uword i = 0;
-  for (; i != splitIdc.n_cols && (!arma::all(splitIdc.col(i))); ++i) {}
+  for (; i != splitIdc.n_cols && (!all(splitIdc.col(i))); ++i) {}
 
   return i == splitIdc.n_cols;
 }
 
-bool isMaximalClique_(const ln::vecu&  clique,
-                      const ln::vecu&  srdnodes,
-                      const ln::gumap& g) {
-
-  // if `srdnodes` is empty
-  if (srdnodes.empty()) { return true; }
-
-  vecu cliqueSort = clique;
-  sort(cliqueSort.begin(), cliqueSort.end());
-
-  for (auto elem : srdnodes) {
-    // `cliqueSort` a subset of linked nodes of `elem`.
-    vecu lnodes = g.at(elem);
-    sort(lnodes.begin(), lnodes.end());
-
-    if (includes(lnodes.begin(),
-                 lnodes.end(),
-                 cliqueSort.begin(),
-                 cliqueSort.end())) {
-      return false;
-    } else {
-    }
-  }
-
-  return true;
-}
 
 // // for maximum clique
 // // if new cliques is larger, then replace all old cliques.

@@ -6,8 +6,15 @@
 
 #include "util.h"
 
+using namespace arma;
 using namespace std;
 using namespace lonelynodes;
+
+// convert `ln::vecu` to `arma::uvec`
+arma::uvec STD2ARMAuv(const ln::vecu& v) {
+  uvec res(v.data(), v.size());
+  return res;
+}
 
 ln::vecu Intersection(const ln::vecu& fv, const ln::vecu& tv) {
   vecu res;
