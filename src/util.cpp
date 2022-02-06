@@ -16,6 +16,7 @@ arma::uvec STD2ARMAuv(const ln::vecu& v) {
   return res;
 }
 
+
 ln::vecu Intersection(const ln::vecu& fv, const ln::vecu& tv) {
   vecu res;
   vecu f = fv;

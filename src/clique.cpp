@@ -68,7 +68,7 @@ void SearchTree_(ln::vecvu&        cliques,
 
     // step3: trim leaves, if exist.
     // May be empty after trim.
-    TrimLeaf_(sclique, nodes, xnodes, g);
+    TrimLeaf_(sclique, nodes, xnodes, gidc);
     if (!nodes.empty()) { srdnodes = xnodes.back(); }
 
     cout << "1st nodes size: " << nodes.front().size()
@@ -271,30 +271,29 @@ bool isMaximalClique_(const ln::vecu&   clique,
 
 // optimization:
 // 1. backtrack: check if `sclique.back().size()` is the largest so far.
-void TrimLeaf_(ln::vecvu&       sclique,
-               ln::vecvu&       nodes,
-               ln::vecvu&       xnodes,
-               const ln::gumap& g) {
+void TrimLeaf_(ln::vecvu&        sclique,
+               ln::vecvu&        nodes,
+               ln::vecvu&        xnodes,
+               const arma::umat& gidc) {
 
   // quick back skip
   BackSkipLeaf_(sclique, nodes, xnodes);
 
   // skip longest maximal clique
-  BackTrimLeaf_(sclique, nodes, xnodes, g);
+  BackTrimLeaf_(sclique, nodes, xnodes, gidc);
 }
 
 
 // `BackTrimLeaf_()` jump over nodes all in **one** maximal clique
-void BackTrimLeaf_(ln::vecvu&       sclique,
-                   ln::vecvu&       nodes,
-                   ln::vecvu&       xnodes,
-                   const ln::gumap& g) {
+void BackTrimLeaf_(ln::vecvu&        sclique,
+                   ln::vecvu&        nodes,
+                   ln::vecvu&        xnodes,
+                   const arma::umat& gidc) {
 
   if (nodes.empty()) { return; }
 
   auto lastNodes = nodes.back();
-  auto lastIdc   = NextIdc_(lastNodes, xnodes.back(), g);
-  auto pnode     = NextPnode_(lastNodes, lastIdc);
+  auto pnode     = NextPnode_(lastNodes, xnodes.back(), gidc);
 
   if (pnode != lastNodes.end()) {
     // swap
@@ -308,7 +307,7 @@ void BackTrimLeaf_(ln::vecvu&       sclique,
     xnodes.pop_back();
   }
 
-  BackTrimLeaf_(sclique, nodes, xnodes, g);
+  BackTrimLeaf_(sclique, nodes, xnodes, gidc);
 }
 
 

@@ -81,7 +81,7 @@ ln::vecu gNodeCount_(const arma::umat& m) {
 }
 
 
-// init graph by a symmetrical matrix
+// init graph as a symmetrical matrix
 arma::umat gidcInit(const ln::gumap& g) {
 
   auto gsize = g.size();

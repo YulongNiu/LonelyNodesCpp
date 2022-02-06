@@ -1,75 +1,37 @@
 #include <armadillo>
-#include <cstddef>
-#include <iostream>
-#include <numeric>
 #include <vector>
 
-#include "init.h"
 #include "util.h"
 
 using namespace std;
 using namespace arma;
-using namespace lonelynodes;
+using namespace ln;
 
 
-// indicator of intersection in `fv`
-ln::vecu IntersectionIdc_(const ln::vecu& fv, const ln::vecu& tv) {
-  auto fvsize = fv.size();
-  auto tvsize = tv.size();
-  vecu res(fvsize, 0);
-
-  for (uword i = 0; i < fvsize; ++i) {
-
-    uword j = 0;
-    for (; (j < tvsize) && (fv.at(i) != tv.at(j)); ++j) {}
-    if (j != tvsize) { res.at(i) = 1; }
-  }
-
-  return res;
-}
-
-
-// first non-intersection node
+// first index of non-intersection node
 // `nodes` and `indicator`.
 // `indicator` is a bit vector
-ln::iterv NextPnode_(ln::vecu& eachNodes, const ln::vecu& eachIndicators) {
+ln::iterv FirstPnode_(ln::vecu& eachNodes, const arma::uvec& eachIdc) {
+
   auto pnode = eachNodes.begin();
 
-  for (auto i = eachIndicators.begin();
-       (i != eachIndicators.end() && (*i == 1));
-       ++i, ++pnode) {}
+  for (uword i = 0; i != eachIdc.n_elem && (eachIdc[i] == 1); ++i, ++pnode) {}
 
   return pnode;
 }
 
 
 // longest intersection
-ln::vecu NextIdc_(const ln::vecu&  eachNodes,
-                  const ln::vecu&  eachXnodes,
-                  const ln::gumap& g) {
-  uword maximumSize = eachNodes.size();
-  uword maximalSize = 0;
-  vecu  res(maximumSize, 0);
+ln::iterv NextPnode_(ln::vecu&         eachNodes,
+                     const ln::vecu&   eachXnodes,
+                     const arma::umat& gidc) {
 
-  if (eachXnodes.empty()) { return res; }
+  if (eachXnodes.empty()) { return eachNodes.begin(); }
 
-  for (auto elem : eachXnodes) {
-    auto  eachIdc  = IntersectionIdc_(eachNodes, g.at(elem));
-    uword eachSize = accumulate(eachIdc.begin(), eachIdc.end(), 0);
+  umat splitIdc = gidc.submat(STD2ARMAuv(eachNodes), STD2ARMAuv(eachXnodes));
 
-    if (eachSize == maximumSize) {
-      return eachIdc;
-    } else if (eachSize > maximalSize) {
-      res         = eachIdc;
-      maximalSize = eachSize;
-    } else {
-    }
-  }
+  // column contains max searched linked-nodes
+  auto maxCol = sum(splitIdc, 0).index_max();
 
-  return res;
+  return FirstPnode_(eachNodes, splitIdc.col(maxCol));
 }
-
-// // swap
-// ln::vecu UpdateNodes_(const ln::vecu&  eachNodes,
-//                       const ln::vecu&  eachXnodes,
-//                       const ln::gumap& g) {}

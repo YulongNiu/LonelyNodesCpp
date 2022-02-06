@@ -193,28 +193,42 @@ int main() {
   // auto mcm = MaxCliques(gm, 0);
   // Printvecvu(mcm);
 
-  umat testg; // median graph
-  testg.load("/Users/yulong/RESEARCH/LonelyNodesCpp/test/testg.bin",
-             arma_binary);
-  testg.brief_print("gg is: ");
+
+  umat testblog = {
+    { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 }, { 3, 4 },
+    { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 }, { 0, 1 }, { 0, 2 },
+    { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 }
+  }; // blog graph
+  testblog.print();
+
+  auto gblog    = gumapInit(testblog);
+  auto gblogidc = gidcInit(gblog);
+  gblogidc.brief_print("gblogidc is: ");
+
+  Printvecvu(TestSearchTree(gblog, gblogidc, 0));
+
+  // umat testg; // median graph
+  // testg.load("/Users/yulong/RESEARCH/LonelyNodesCpp/test/testg.bin",
+  //            arma_binary);
+  // testg.brief_print("gg is: ");
 
 
-  auto gg   = gumapInit(testg);
-  auto gidc = gidcInit(gg);
-  gidc.brief_print("gidc is: ");
+  // auto gg   = gumapInit(testg);
+  // auto gidc = gidcInit(gg);
+  // gidc.brief_print("gidc is: ");
 
-  auto  start      = chrono::system_clock::now();
-  auto  start_time = chrono::system_clock::to_time_t(start);
-  uword nodeIdx    = 332;
-  auto  ggtrim     = TrimGraph_(gg.at(nodeIdx), gg);
-  TestSearchTree(gg, gidc, nodeIdx);
-  auto end      = chrono::system_clock::now();
-  auto end_time = chrono::system_clock::to_time_t(end);
+  // auto  start      = chrono::system_clock::now();
+  // auto  start_time = chrono::system_clock::to_time_t(start);
+  // uword nodeIdx    = 332;
+  // auto  ggtrim     = TrimGraph_(gg.at(nodeIdx), gg);
+  // TestSearchTree(gg, gidc, nodeIdx);
+  // auto end      = chrono::system_clock::now();
+  // auto end_time = chrono::system_clock::to_time_t(end);
 
-  std::chrono::duration<double> elapsed_seconds = end - start;
-  cout << "start computation at " << std::ctime(&start_time)
-       << "end computation at " << std::ctime(&end_time)
-       << "elapsed time: " << elapsed_seconds.count() << "s\n";
+  // std::chrono::duration<double> elapsed_seconds = end - start;
+  // cout << "start computation at " << std::ctime(&start_time)
+  //      << "end computation at " << std::ctime(&end_time)
+  //      << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
   // umat testgbig; // large graph
   // testgbig.load("/Users/yulong/RESEARCH/LonelyNodesCpp/test/testgbig.bin",
@@ -222,11 +236,14 @@ int main() {
   // auto gbig = gumapInit(testgbig);
   // testgbig.brief_print("gbig is: ");
 
+  // auto gbigidc = gidcInit(gbig);
+  // gbigidc.brief_print("gbigidc is: ");
+
   // auto   start      = chrono::system_clock::now();
   // auto   start_time = chrono::system_clock::to_time_t(start);
   // size_t nodeIdx    = 9116;
   // auto   gbigtrim   = TrimGraph_(gbig.at(nodeIdx), gbig);
-  // TestSearchTree(gbigtrim, nodeIdx);
+  // TestSearchTree(gbigtrim, gbigidc, nodeIdx);
 
   // auto end      = chrono::system_clock::now();
   // auto end_time = chrono::system_clock::to_time_t(end);
@@ -246,7 +263,7 @@ int main() {
   //                   { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 }, { 0, 1 }, { 0,
   //                   2
   //                   }, { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 } };
-  // Auto gblog    = gumapInit(testblog);
+  // auto gblog    = gumapInit(testblog);
   // testblog.brief_print("gblog is: ");
 
   // // TestSearchLeaf(gblog, 0);

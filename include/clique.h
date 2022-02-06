@@ -69,15 +69,15 @@ bool isMaximalClique_(const ln::vecu&   clique,
 
 // void CompareClique_(ln::vecvu &cliques, ln::vecvu &sclique);
 
-void TrimLeaf_(ln::vecvu&       sclique,
-               ln::vecvu&       nodes,
-               ln::vecvu&       xnodes,
-               const ln::gumap& g);
+void TrimLeaf_(ln::vecvu&        sclique,
+               ln::vecvu&        nodes,
+               ln::vecvu&        xnodes,
+               const arma::umat& gidc);
 
-void BackTrimLeaf_(ln::vecvu&       sclique,
-                   ln::vecvu&       nodes,
-                   ln::vecvu&       xnodes,
-                   const ln::gumap& g);
+void BackTrimLeaf_(ln::vecvu&        sclique,
+                   ln::vecvu&        nodes,
+                   ln::vecvu&        xnodes,
+                   const arma::umat& gidc);
 
 void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes);
 
