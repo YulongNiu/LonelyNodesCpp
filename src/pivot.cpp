@@ -9,15 +9,13 @@ using namespace ln;
 
 
 // first index of non-intersection node
-// `nodes` and `indicator`.
 // `indicator` is a bit vector
-ln::iterv FirstPnode_(ln::vecu& eachNodes, const arma::uvec& eachIdc) {
+arma::uword First0Idx_(const arma::uvec& idc) {
 
-  auto pnode = eachNodes.begin();
+  uword i = 0;
+  for (; i != idc.n_elem && (idc[i] == 1); ++i) {}
 
-  for (uword i = 0; i != eachIdc.n_elem && (eachIdc[i] == 1); ++i, ++pnode) {}
-
-  return pnode;
+  return i;
 }
 
 
@@ -32,6 +30,7 @@ ln::iterv NextPnode_(ln::vecu&         eachNodes,
 
   // column contains max searched linked-nodes
   auto maxCol = sum(splitIdc, 0).index_max();
+  auto idx    = First0Idx_(splitIdc.col(maxCol));
 
-  return FirstPnode_(eachNodes, splitIdc.col(maxCol));
+  return eachNodes.begin() + idx;
 }

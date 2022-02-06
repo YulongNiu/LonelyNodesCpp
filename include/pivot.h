@@ -3,7 +3,8 @@
 
 #include "util.h"
 
-ln::iterv FirstPnode_(ln::vecu& eachNodes, const arma::uvec& eachIdc);
+// `indicator` is a bit vector
+arma::uword First0Idx_(const arma::uvec& idc);
 
 ln::iterv NextPnode_(ln::vecu&         eachNodes,
                      const ln::vecu&   eachXnodes,
