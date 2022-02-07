@@ -20,17 +20,16 @@ arma::uword First0Idx_(const arma::uvec& idc) {
 
 
 // longest intersection
-ln::iterv NextPnode_(ln::vecu&         eachNodes,
-                     const ln::vecu&   eachXnodes,
-                     const arma::umat& gidc) {
+arma::uword NextNodeIdx_(const ln::vecu&   eachNodes,
+                         const ln::vecu&   eachXnodes,
+                         const arma::umat& gidc) {
 
-  if (eachXnodes.empty()) { return eachNodes.begin(); }
+  if (eachXnodes.empty()) { return 0; }
 
   umat splitIdc = gidc.submat(STD2ARMAuv(eachNodes), STD2ARMAuv(eachXnodes));
 
   // column contains max searched linked-nodes
   auto maxCol = sum(splitIdc, 0).index_max();
-  auto idx    = First0Idx_(splitIdc.col(maxCol));
 
-  return eachNodes.begin() + idx;
+  return First0Idx_(splitIdc.col(maxCol));
 }

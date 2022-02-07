@@ -21,6 +21,12 @@ namespace ln = lonelynodes;
 
 arma::uvec STD2ARMAuv(const ln::vecu& v);
 
+ln::vecu IntersectNodes_(const ln::vecu&   nodes,
+                         const arma::uword idx,
+                         const arma::umat& gidc);
+
+ln::vecu SelectInterset_(const ln::vecu& nodes, const arma::uvec& idc);
+
 ln::vecu Intersection(const ln::vecu& fv, const ln::vecu& tv);
 
 ln::vecu Difference(const ln::vecu& fv, const ln::vecu& tv);

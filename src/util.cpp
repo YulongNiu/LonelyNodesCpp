@@ -17,6 +17,29 @@ arma::uvec STD2ARMAuv(const ln::vecu& v) {
 }
 
 
+ln::vecu IntersectNodes_(const ln::vecu&   nodes,
+                         const arma::uword idx,
+                         const arma::umat& gidc) {
+
+  uvec idc = gidc.col(idx);
+
+  return SelectInterset_(nodes, idc);
+}
+
+
+ln::vecu SelectInterset_(const ln::vecu& nodes, const arma::uvec& idc) {
+
+  vecu res;
+
+  for (uword i = 0; i != nodes.size(); ++i) {
+    auto eachNode = nodes.at(i);
+    if (idc.at(eachNode) == 1) { res.push_back(eachNode); }
+  }
+
+  return res;
+}
+
+
 ln::vecu Intersection(const ln::vecu& fv, const ln::vecu& tv) {
   vecu res;
   vecu f = fv;

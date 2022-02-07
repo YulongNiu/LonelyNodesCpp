@@ -7,7 +7,7 @@
 
 using namespace arma;
 using namespace std;
-using namespace lonelynodes;
+using namespace ln;
 
 
 //' Initiate graph as node-linked_nodes

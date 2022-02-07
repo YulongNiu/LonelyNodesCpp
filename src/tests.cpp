@@ -27,13 +27,13 @@ void TestDiffIntersect(ln::vecu& fv, ln::vecu& tv) {
 }
 
 
-void TestNextLeaf(const ln::gumap& g) {
+void TestNextLeaf(const arma::umat& gidc) {
   vecvu sclique{ {}, { 1 } };
   vecvu nodes{ { 2, 3, 4, 5, 6, 7 }, { 2, 3, 4 } };
   vecvu xnodes{ { 1 }, {} };
   vecu  srdnodes{};
 
-  NextLeaf_(sclique, nodes, xnodes, srdnodes, g);
+  NextLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
 
   cout << "sclique is: \n";
   Printvecvu(sclique);
@@ -48,7 +48,7 @@ void TestNextLeaf(const ln::gumap& g) {
   vecvu xnodes2{ { 1 }, { 2 } };
   vecu  srdnodes2{ 2 };
 
-  NextLeaf_(sclique2, nodes2, xnodes2, srdnodes2, g);
+  NextLeaf_(sclique2, nodes2, xnodes2, srdnodes2, gidc);
 
   cout << "sclique2 is: \n";
   Printvecvu(sclique2);
@@ -60,14 +60,16 @@ void TestNextLeaf(const ln::gumap& g) {
 }
 
 
-ln::vecvu TestSearchLeaf(const ln::gumap& g, const unsigned int node) {
+ln::vecvu TestSearchLeaf(const ln::gumap&   g,
+                         const arma::umat&  gidc,
+                         const unsigned int node) {
 
   vecvu sclique{ { node } };
   vecvu nodes{ g.at(node) };
   vecvu xnodes{ {} };
   vecu  srdnodes{};
 
-  SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
+  SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
 
   cout << "sclique are: \n";
   Printvecvu(sclique);
@@ -93,13 +95,16 @@ ln::vecvu TestSearchTree(const ln::gumap&  g,
 
   cout << "raw first nodes size is: " << nodes.front().size() << endl;
 
-  SearchTree_(cliques, sclique, nodes, xnodes, srdnodes, g, gidc);
+  SearchTree_(cliques, sclique, nodes, xnodes, srdnodes, gidc);
 
   return cliques;
 }
 
 
 int main() {
+
+  string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
+
   // //~~~~~~~~~~test DiffIntersect~~~~~~~~~~~~~~~~~~~
   // vecu fv = {1, 2, 3, 7, 4};
   // vecu tv = {9, 2, 10};
@@ -108,17 +113,10 @@ int main() {
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~test read csv to umat~~~~~~~~~~~~~~~~
-  // umat testm;
-  // testm.load("../test/testm.bin", arma_binary);
-  // testm.print("testm is: ");
-
-  // umat testg;
-  // testg.load("../test/testg.bin", arma_binary);
-  // testg.brief_print("testg is: ");
-
-  // umat testgbig;
-  // testgbig.load("../test/testgbig.bin", arma_binary);
-  // testgbig.brief_print("testgbig is: ");
+  // umat testblog;
+  // testblog.load(basepath + "testblog.csv", csv_ascii);
+  // testblog.brief_print("testblog is: ");
+  // testblog.save(basepath + "testblog.bin", arma_binary);
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~test init gumap~~~~~~~~~~~~~~~~~~~
@@ -181,47 +179,29 @@ int main() {
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
-  // umat testm; // small graph
-  // testm.load("../test/testm.bin", arma_binary);
-  // auto gm = gumapInit(testm);
-  // testm.print("gm is: ");
+  // string gfile = "testm.bin"; // small graph
+  // uword  nodeIdx   = 0;
 
-  // TestSearchLeaf(gm, 0);
-  // auto treem = TestSearchTree(gm, 0);
-  // Printvecvu(treem);
+  // string gfile = "testg.bin"; // median graph
+  // uword  nodeIdx   = 332;
 
-  // auto mcm = MaxCliques(gm, 0);
-  // Printvecvu(mcm);
+  // string gfile = "testgbig.bin"; // large graph
+  // uword  nodeIdx   = 9116;
 
+  string gfile   = "testblog.bin"; // blog graph
+  uword  nodeIdx = 0;
 
-  umat testblog = {
-    { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 }, { 3, 4 },
-    { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 }, { 0, 1 }, { 0, 2 },
-    { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 }
-  }; // blog graph
-  testblog.print();
-
-  auto gblog    = gumapInit(testblog);
-  auto gblogidc = gidcInit(gblog);
-  gblogidc.brief_print("gblogidc is: ");
-
-  Printvecvu(TestSearchTree(gblog, gblogidc, 0));
-
-  umat testg; // median graph
-  testg.load("/Users/yulong/RESEARCH/LonelyNodesCpp/test/testg.bin",
-             arma_binary);
+  umat testg;
+  testg.load(basepath + gfile, arma_binary);
   testg.brief_print("gg is: ");
-
 
   auto gg   = gumapInit(testg);
   auto gidc = gidcInit(gg);
   gidc.brief_print("gidc is: ");
 
-  auto  start      = chrono::system_clock::now();
-  auto  start_time = chrono::system_clock::to_time_t(start);
-  uword nodeIdx    = 332;
-  auto  ggtrim     = TrimGraph_(gg.at(nodeIdx), gg);
-  TestSearchTree(gg, gidc, nodeIdx);
+  auto start      = chrono::system_clock::now();
+  auto start_time = chrono::system_clock::to_time_t(start);
+  Printvecvu(TestSearchTree(gg, gidc, nodeIdx));
   auto end      = chrono::system_clock::now();
   auto end_time = chrono::system_clock::to_time_t(end);
 
@@ -229,47 +209,6 @@ int main() {
   cout << "start computation at " << std::ctime(&start_time)
        << "end computation at " << std::ctime(&end_time)
        << "elapsed time: " << elapsed_seconds.count() << "s\n";
-
-  // umat testgbig; // large graph
-  // testgbig.load("/Users/yulong/RESEARCH/LonelyNodesCpp/test/testgbig.bin",
-  //               arma_binary);
-  // auto gbig = gumapInit(testgbig);
-  // testgbig.brief_print("gbig is: ");
-
-  // auto gbigidc = gidcInit(gbig);
-  // gbigidc.brief_print("gbigidc is: ");
-
-  // auto   start      = chrono::system_clock::now();
-  // auto   start_time = chrono::system_clock::to_time_t(start);
-  // size_t nodeIdx    = 9116;
-  // auto   gbigtrim   = TrimGraph_(gbig.at(nodeIdx), gbig);
-  // TestSearchTree(gbigtrim, gbigidc, nodeIdx);
-
-  // auto end      = chrono::system_clock::now();
-  // auto end_time = chrono::system_clock::to_time_t(end);
-
-  // std::chrono::duration<double> elapsed_seconds = end - start;
-  // cout << "start computation at " << std::ctime(&start_time)
-  //      << "end computation at " << std::ctime(&end_time)
-  //      << "elapsed time: " << elapsed_seconds.count() << "s\n";
-
-  // blog graph test
-  // umat testblog = {{1, 2}, {1, 3}, {2, 3}, {2, 4},
-  //                  {0, 1}, {0, 2}, {0, 3}, {0, 4}};
-
-  // umat testblog = { { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 }, { 3,
-  // 4
-  // },
-  //                   { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 }, { 0, 1 }, { 0,
-  //                   2
-  //                   }, { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 } };
-  // auto gblog    = gumapInit(testblog);
-  // testblog.brief_print("gblog is: ");
-
-  // // TestSearchLeaf(gblog, 0);
-
-  // auto cliqueblog = TestSearchTree(gblog, 0);
-  // Printvecvu(cliqueblog);
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~

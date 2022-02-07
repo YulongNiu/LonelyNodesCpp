@@ -6,8 +6,8 @@
 // `indicator` is a bit vector
 arma::uword First0Idx_(const arma::uvec& idc);
 
-ln::iterv NextPnode_(ln::vecu&         eachNodes,
-                     const ln::vecu&   eachXnodes,
-                     const arma::umat& gidc);
+arma::uword NextNodeIdx_(const ln::vecu&   eachNodes,
+                         const ln::vecu&   eachXnodes,
+                         const arma::umat& gidc);
 
 #endif // _PIVOT_H_

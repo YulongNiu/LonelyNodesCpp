@@ -35,12 +35,11 @@ void SearchTree_(ln::vecvu&        cliques,
                  ln::vecvu&        nodes,
                  ln::vecvu&        xnodes,
                  ln::vecu&         srdnodes,
-                 const ln::gumap&  g,
                  const arma::umat& gidc) {
 
   do {
     // step1: search left leaf.
-    SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
+    SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
 
     // cout << "------\n"
     //      << "srdnodes: \n";
@@ -293,7 +292,8 @@ void BackTrimLeaf_(ln::vecvu&        sclique,
   if (nodes.empty()) { return; }
 
   auto lastNodes = nodes.back();
-  auto pnode     = NextPnode_(lastNodes, xnodes.back(), gidc);
+  auto nextIdx   = NextNodeIdx_(lastNodes, xnodes.back(), gidc);
+  auto pnode     = lastNodes.begin() + nextIdx;
 
   if (pnode != lastNodes.end()) {
     // swap
@@ -332,34 +332,34 @@ void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes) {
 
 bool isSkippable(const ln::vecu&   eachSclique,
                  const ln::vecu&   eachNodes,
-                 unsigned long int bestSize) {
+                 const arma::uword bestSize) {
   return (eachSclique.size() + eachNodes.size()) < bestSize;
 }
 
 
 // find one clique by search the left tree
-void SearchLeaf_(ln::vecvu&       sclique,
-                 ln::vecvu&       nodes,
-                 ln::vecvu&       xnodes,
-                 const ln::vecu&  srdnodes,
-                 const ln::gumap& g) {
+void SearchLeaf_(ln::vecvu&        sclique,
+                 ln::vecvu&        nodes,
+                 ln::vecvu&        xnodes,
+                 const ln::vecu&   srdnodes,
+                 const arma::umat& gidc) {
 
   if (nodes.back().empty()) { return; }
 
   // push head and generate new clique
-  NextLeaf_(sclique, nodes, xnodes, srdnodes, g);
+  NextLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
 
   // recursion
-  SearchLeaf_(sclique, nodes, xnodes, srdnodes, g);
+  SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
 }
 
 
 // always search left node
-void NextLeaf_(ln::vecvu&       sclique,
-               ln::vecvu&       nodes,
-               ln::vecvu&       xnodes,
-               const ln::vecu&  srdnodes,
-               const ln::gumap& g) {
+void NextLeaf_(ln::vecvu&        sclique,
+               ln::vecvu&        nodes,
+               ln::vecvu&        xnodes,
+               const ln::vecu&   srdnodes,
+               const arma::umat& gidc) {
 
   // step1: next search node.
   // `searchNode` is always the most left nodes.
@@ -381,7 +381,7 @@ void NextLeaf_(ln::vecvu&       sclique,
   sclique.push_back(nextClique);
 
   // step4: next nodes
-  auto nextNodes = Intersection(nodes.back(), g.at(searchNode));
+  auto nextNodes = IntersectNodes_(nodes.back(), searchNode, gidc);
   nodes.push_back(nextNodes);
 }
 
