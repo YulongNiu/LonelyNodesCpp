@@ -4,10 +4,13 @@
 #include "util.h"
 
 // `indicator` is a bit vector
+arma::uword NextNodeIdx_(const ln::vecu&   sclique,
+                         const ln::vecu&   nodes,
+                         const ln::vecu&   xnodes,
+                         const arma::umat& gidc);
+
 arma::uword First0Idx_(const arma::uvec& idc);
 
-arma::uword NextNodeIdx_(const ln::vecu&   eachNodes,
-                         const ln::vecu&   eachXnodes,
-                         const arma::umat& gidc);
+arma::uvec MergeNodes_(const ln::vecu& sclique, const ln::vecu& nodes);
 
 #endif // _PIVOT_H_

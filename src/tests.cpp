@@ -9,8 +9,29 @@
 #include "util.h"
 
 using namespace std;
-using namespace lonelynodes;
+using namespace ln;
 using namespace arma;
+
+
+// length of each clique
+ln::vecu Lenvecvu(const ln::vecvu& v) {
+  vecu res;
+
+  for (uword i = 0; i < v.size(); ++i) {
+    res.push_back(v.at(i).size());
+  }
+
+  return res;
+}
+
+
+// sort each clique
+void Sortvecvu(ln::vecvu& v) {
+  for (uword i = 0; i < v.size(); ++i) {
+    sort(v.at(i).begin(), v.at(i).end());
+  }
+}
+
 
 void TestDiffIntersect(ln::vecu& fv, ln::vecu& tv) {
   cout << "original fv is: " << '\n';
@@ -103,13 +124,87 @@ ln::vecvu TestSearchTree(const ln::gumap&  g,
 
 int main() {
 
+  //~~~~~~~~~~~~~~~~load graph~~~~~~~~~~~~~~~~~~~~~~~
   string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
+  // string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
+
+  // string gfile = "testm.bin"; // small graph
+  // uword  nodeIdx   = 0;
+
+  // string gfile   = "testg.bin"; // median graph
+  // uword  nodeIdx = 332;
+
+  string gfile   = "testgbig.bin"; // large graph
+  uword  nodeIdx = 9116;
+
+  // string gfile   = "testblog.bin"; // blog graph
+  // uword  nodeIdx = 0;
+
+  // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
+  // uword  nodeIdx = 99;
+
+  umat testg;
+  testg.load(basepath + gfile, arma_binary);
+  testg.brief_print("gg is: ");
+
+  auto gg   = gumapInit(testg);
+  auto gidc = gidcInit(gg);
+  gidc.brief_print("gidc is: ");
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  // //~~~~~~~~~~~~~~~~~~~test pivot~~~~~~~~~~~~~~~~~~~~~
+  // vecu eachNodes  = { 57,  58,  59,  61,  62,  64,  66,  69,  71,  73,  74,
+  // 75,
+  //                    76,  79,  81,  83,  87,  88,  91,  92,  95,  96,  97,
+  //                    101, 102, 104, 105, 106, 107, 114, 115, 116, 117, 120,
+  //                    122, 125, 126, 128, 130, 131, 132, 135, 136, 137, 142,
+  //                    149, 151, 154, 155, 157, 162, 163, 167, 174, 175, 177,
+  //                    185, 195, 197, 199, 203, 204, 206, 207, 209, 211, 213,
+  //                    215, 218, 221, 225, 226, 228, 230, 234, 235, 237, 238,
+  //                    260, 261, 263, 264, 266, 267, 271, 273, 274, 275, 277,
+  //                    278, 289, 292, 293, 294, 297, 299, 304, 308, 310, 311,
+  //                    313, 314, 316, 318, 319, 320, 321, 324, 326, 332, 333,
+  //                    334, 335, 336, 337, 340, 343, 344, 345, 346, 347, 349,
+  //                    350, 352, 353, 355, 356, 359, 363, 365, 366, 369, 370,
+  //                    374, 376, 378, 379, 380, 385, 406 };
+  // vecu eachNodes2 = {
+  //   12,  13,  15,  19,  20,  22,  24,  25,  28,  30,  31,  34,  37,  40,  42,
+  //   43,  44,  45,  46,  47,  51,  55,  57,  58,  59,  61,  62,  64,  66,  69,
+  //   71,  73,  74,  75,  76,  79,  81,  83,  87,  88,  91,  92,  95,  96,  97,
+  //   101, 102, 104, 105, 106, 107, 114, 115, 116, 117, 120, 122, 125, 126,
+  //   128, 130, 131, 132, 135, 136, 137, 142, 149, 151, 154, 155, 157, 162,
+  //   163, 167, 174, 175, 177, 185, 195, 197, 199, 203, 204, 206, 207, 209,
+  //   211, 213, 215, 218, 221, 225, 226, 228, 230, 234, 235, 237, 238, 260,
+  //   261, 263, 264, 266, 267, 271, 273, 274, 275, 277, 278, 289, 292, 293,
+  //   294, 297, 299, 304, 308, 310, 311, 313, 314, 316, 318, 319, 320, 321,
+  //   324, 326, 332, 333, 334, 335, 336, 337, 340, 343, 344, 345, 346, 347,
+  //   349, 350, 352, 353, 355, 356, 359, 363, 365, 366, 369, 370, 374, 376,
+  //   378, 379, 380, 385, 406
+  // };
+  // vecu eachXnodes = { 14, 56 };
+
+  // umat splitIdc = gidc.submat(STD2ARMAuv(eachNodes2),
+  // STD2ARMAuv(eachXnodes)); splitIdc.print("split idc is: "); cout << "next
+  // node idx is: " << NextNodeIdx_(eachNodes, eachXnodes, gidc)
+  //      << endl;
+  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~test DiffIntersect~~~~~~~~~~~~~~~~~~~
   // vecu fv = {1, 2, 3, 7, 4};
   // vecu tv = {9, 2, 10};
 
   // TestDiffIntersect(fv, tv);
+
+  // umat para3 = { { 0, 1, 1 }, { 1, 0, 1 }, { 1, 1, 0 } };
+  // para3.print("para3 is: ");
+
+  // vecu para1 = { 0, 2 };
+  // // vecu para1 = {};
+  // // vecu para2 = { 1 };
+  // vecu para2 = {};
+  // auto nidx  = NextNodeIdx_(para1, para2, para3);
+  // cout << "nidx is: " << nidx << "\n";
+
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~test read csv to umat~~~~~~~~~~~~~~~~
@@ -161,55 +256,32 @@ int main() {
   // Printvecu(NextIdc_(fv, tv, gblog));
   // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  // //~~~~~~~~~~~~~~~~~test TestNextLeaf~~~~~~~~~~~~~~~~~~~
-  // // blog graph test
-  // umat testblog = { { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 }, { 3,
-  // 4
-  // },
-  //                   { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 }, { 0, 1 }, { 0,
-  //                   2
-  //                   }, { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 } };
+  //~~~~~~~~~~~~~~~~~test TestSearchTree~~~~~~~~~~~~~~~~~
+  // TestSearchLeaf(gg, gidc, nodeIdx);
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  // // umat testblog = { { 1, 2 }, { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 },
-  // //                   { 3, 4 }, { 2, 5 }, { 4, 5 }, { 5, 7 }, { 4, 6 } };
-  // auto gblog = gumapInit(testblog);
-  // TestNextLeaf(gblog);
-  // TestSearchLeaf(gblog, 2);
-  // Printvecvu(TestSearchTree(gblog, 0));
-  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
-  // string gfile = "testm.bin"; // small graph
-  // uword  nodeIdx   = 0;
-
-  // string gfile = "testg.bin"; // median graph
-  // uword  nodeIdx   = 332;
-
-  // string gfile = "testgbig.bin"; // large graph
-  // uword  nodeIdx   = 9116;
-
-  string gfile   = "testblog.bin"; // blog graph
-  uword  nodeIdx = 0;
-
-  umat testg;
-  testg.load(basepath + gfile, arma_binary);
-  testg.brief_print("gg is: ");
-
-  auto gg   = gumapInit(testg);
-  auto gidc = gidcInit(gg);
-  gidc.brief_print("gidc is: ");
-
   auto start      = chrono::system_clock::now();
   auto start_time = chrono::system_clock::to_time_t(start);
-  Printvecvu(TestSearchTree(gg, gidc, nodeIdx));
-  auto end      = chrono::system_clock::now();
-  auto end_time = chrono::system_clock::to_time_t(end);
+  auto cliques    = TestSearchTree(gg, gidc, nodeIdx);
+  auto end        = chrono::system_clock::now();
+  auto end_time   = chrono::system_clock::to_time_t(end);
 
-  std::chrono::duration<double> elapsed_seconds = end - start;
-  cout << "start computation at " << std::ctime(&start_time)
-       << "end computation at " << std::ctime(&end_time)
-       << "elapsed time: " << elapsed_seconds.count() << "s\n";
-  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  chrono::duration<double> elapsed_seconds = end - start;
+  cout << "start computation at " << ctime(&start_time) << "end computation at "
+       << ctime(&end_time) << "elapsed time: " << elapsed_seconds.count()
+       << "s\n";
+
+  cout << "\n"
+       << "cliques are: \n";
+  Sortvecvu(cliques);
+  Printvecvu(cliques);
+
+  cout << "\n"
+       << "cliques size are: \n";
+  Printvecu(Lenvecvu(cliques));
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~
   // Leaf firstLeaf{ { 1 }, { 2, 3 }, { 4 } };

@@ -27,6 +27,22 @@ ln::vecu IntersectNodes_(const ln::vecu&   nodes,
 }
 
 
+// seems faster, but ugly.
+// ln::vecu IntersectNodes_(const ln::vecu&   nodes,
+//                          const arma::uword idx,
+//                          const arma::umat& gidc) {
+
+//   auto nodesv = STD2ARMAuv(nodes);
+
+//   uvec idc     = gidc.col(idx);
+//   uvec nodeidc = idc.elem(nodesv);
+
+//   uvec resv = nodesv.elem(find(nodeidc));
+
+//   return conv_to<vecu>::from(resv);
+// }
+
+
 ln::vecu SelectInterset_(const ln::vecu& nodes, const arma::uvec& idc) {
 
   vecu res;
