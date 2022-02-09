@@ -10,7 +10,8 @@
 
 namespace lonelynodes {
 
-using gumap = std::unordered_map<unsigned int, vecu>;
+using gumap = std::unordered_map<arma::uword, vecu>;
+
 } // namespace lonelynodes
 
 
@@ -21,5 +22,7 @@ ln::gumap gumapInit(const arma::umat& m);
 ln::vecu gNodeCount_(const arma::umat& m);
 
 arma::umat gidcInit(const ln::gumap& g);
+
+ln::gdbit gdbitInit(const ln::gumap& g);
 
 #endif // _INIT_H_

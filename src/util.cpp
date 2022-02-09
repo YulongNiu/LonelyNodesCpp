@@ -114,19 +114,25 @@ void DiffIntersect(ln::vecu& fv, ln::vecu& tv) {
   tv = intersect;
 }
 
-void Printvecu(const ln::vecu& test) {
-  for_each(test.begin(), test.end(), [](auto elem) { cout << elem << ','; });
+void Printvecu(const ln::vecu& v) {
+  for_each(v.begin(), v.end(), [](auto elem) { cout << elem << ','; });
 
   cout << endl;
 }
 
 
-void Printvecvu(const ln::vecvu& test) {
-  for (auto eachv : test) {
+void Printvecvu(const ln::vecvu& v) {
+  for (auto eachv : v) {
     Printvecu(eachv);
   }
 }
 
+
+void Printgdbit(const ln::gdbit& g) {
+  for (auto elem : g) {
+    cout << elem << endl;
+  }
+}
 
 ln::citerv FirstDiff(ln::citerv ffirst,
                      ln::citerv flast,

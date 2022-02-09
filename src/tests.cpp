@@ -1,3 +1,4 @@
+#include <boost/dynamic_bitset.hpp>
 #include <chrono>
 #include <cstddef>
 #include <ctime>
@@ -124,6 +125,14 @@ ln::vecvu TestSearchTree(const ln::gumap&  g,
 
 int main() {
 
+  //~~~~~~~~~~~~~~~~~~test dynamic_bitset~~~~~~~~~~~~~~~~~~~
+  boost::dynamic_bitset<> db1(10, 28); // 101
+  cout << db1 << endl;
+
+  db1.push_back(1);
+  cout << db1 << endl;
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   //~~~~~~~~~~~~~~~~load graph~~~~~~~~~~~~~~~~~~~~~~~
   string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
   // string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
@@ -131,14 +140,14 @@ int main() {
   // string gfile = "testm.bin"; // small graph
   // uword  nodeIdx   = 0;
 
-  string gfile   = "testg.bin"; // median graph
-  uword  nodeIdx = 10;
+  // string gfile   = "testg.bin"; // median graph
+  // uword  nodeIdx = 10;
 
   // string gfile   = "testgbig.bin"; // large graph
   // uword  nodeIdx = 9116;
 
-  // string gfile   = "testblog.bin"; // blog graph
-  // uword  nodeIdx = 0;
+  string gfile   = "testblog.bin"; // blog graph
+  uword  nodeIdx = 0;
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -149,7 +158,10 @@ int main() {
 
   auto gg   = gumapInit(testg);
   auto gidc = gidcInit(gg);
+  auto gbit = gdbitInit(gg);
   gidc.brief_print("gidc is: ");
+  gidc.print("gidc is: ");
+  Printgdbit(gbit);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~test pivot~~~~~~~~~~~~~~~~~~~~~
@@ -261,27 +273,28 @@ int main() {
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-  //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
-  auto start      = chrono::system_clock::now();
-  auto start_time = chrono::system_clock::to_time_t(start);
-  auto cliques    = TestSearchTree(gg, gidc, nodeIdx);
-  auto end        = chrono::system_clock::now();
-  auto end_time   = chrono::system_clock::to_time_t(end);
+  // //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
+  // auto start      = chrono::system_clock::now();
+  // auto start_time = chrono::system_clock::to_time_t(start);
+  // auto cliques    = TestSearchTree(gg, gidc, nodeIdx);
+  // auto end        = chrono::system_clock::now();
+  // auto end_time   = chrono::system_clock::to_time_t(end);
 
-  chrono::duration<double> elapsed_seconds = end - start;
-  cout << "start computation at " << ctime(&start_time) << "end computation at "
-       << ctime(&end_time) << "elapsed time: " << elapsed_seconds.count()
-       << "s\n";
+  // chrono::duration<double> elapsed_seconds = end - start;
+  // cout << "start computation at " << ctime(&start_time) << "end computation
+  // at "
+  //      << ctime(&end_time) << "elapsed time: " << elapsed_seconds.count()
+  //      << "s\n";
 
-  // cout << "\n"
-  //      << "cliques are: \n";
-  // Sortvecvu(cliques);
-  // Printvecvu(cliques);
+  // // cout << "\n"
+  // //      << "cliques are: \n";
+  // // Sortvecvu(cliques);
+  // // Printvecvu(cliques);
 
-  // cout << "\n"
-  //      << "cliques size are: \n";
-  // Printvecu(Lenvecvu(cliques));
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // // cout << "\n"
+  // //      << "cliques size are: \n";
+  // // Printvecu(Lenvecvu(cliques));
+  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~
   // Leaf firstLeaf{ { 1 }, { 2, 3 }, { 4 } };
