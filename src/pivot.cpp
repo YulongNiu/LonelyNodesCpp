@@ -1,73 +1,47 @@
-#include <cstddef>
-#include <iostream>
-#include <numeric>
+#include <armadillo>
 #include <vector>
 
-#include "init.h"
+#include "pivot.h"
 #include "util.h"
 
 using namespace std;
-using namespace lonelynodes;
+using namespace arma;
+using namespace ln;
 
 
-// indicator of intersection in `fv`
-ln::vecu IntersectionIdc_(const ln::vecu& fv, const ln::vecu& tv) {
-  auto fvsize = fv.size();
-  auto tvsize = tv.size();
-  vecu res(fvsize, 0);
-
-  for (size_t i = 0; i < fvsize; ++i) {
-
-    size_t j = 0;
-    for (; (j < tvsize) && (fv.at(i) != tv.at(j)); ++j) {}
-    if (j != tvsize) { res.at(i) = 1; }
-  }
-
-  return res;
-}
-
-
-// first non-intersection node
-// `nodes` and `indicator`.
-// `indicator` is a bit vector
-ln::iterv NextPnode_(ln::vecu& eachNodes, const ln::vecu& eachIndicators) {
-  auto pnode = eachNodes.begin();
-
-  for (auto i = eachIndicators.begin();
-       (i != eachIndicators.end() && (*i == 1));
-       ++i, ++pnode) {}
-
-  return pnode;
-}
-
+// first index of non-intersection node.
+// Because the `SearchLeaf_()` always search the left node without
+// check on each step, the `0` may occur in `sclique`.
 
 // longest intersection
-ln::vecu NextIdc_(const ln::vecu&  eachNodes,
-                  const ln::vecu&  eachXnodes,
-                  const ln::gumap& g) {
-  size_t maximumSize = eachNodes.size();
-  size_t maximalSize = 0;
-  vecu   res(maximumSize, 0);
+arma::uword NextNodeIdx_(const ln::vecu&   sclique,
+                         const ln::vecu&   nodes,
+                         const ln::vecu&   xnodes,
+                         const arma::umat& gidc) {
 
-  if (eachXnodes.empty()) { return res; }
+  if (xnodes.empty() || nodes.empty()) { return 0; }
 
-  for (auto elem : eachXnodes) {
-    auto   eachIdc  = IntersectionIdc_(eachNodes, g.at(elem));
-    size_t eachSize = accumulate(eachIdc.begin(), eachIdc.end(), 0);
+  uvec snodes   = MergeNodes_(sclique, nodes);
+  umat splitIdc = gidc.submat(snodes, STD2ARMAuv(xnodes));
 
-    if (eachSize == maximumSize) {
-      return eachIdc;
-    } else if (eachSize > maximalSize) {
-      res         = eachIdc;
-      maximalSize = eachSize;
-    } else {
-    }
-  }
+  // column contains max searched linked-nodes
+  auto maxCol = sum(splitIdc, 0).index_max();
+  auto idx    = First0Idx_(splitIdc.col(maxCol));
 
-  return res;
+  return idx > sclique.size() ? (idx - sclique.size()) : 0;
 }
 
-// // swap
-// ln::vecu UpdateNodes_(const ln::vecu&  eachNodes,
-//                       const ln::vecu&  eachXnodes,
-//                       const ln::gumap& g) {}
+
+// `indicator` is a bit vector
+arma::uword First0Idx_(const arma::uvec& idc) {
+
+  uword i = 0;
+  for (; i != idc.n_elem && (idc[i] == 1); ++i) {}
+
+  return i;
+}
+
+
+arma::uvec MergeNodes_(const ln::vecu& sclique, const ln::vecu& nodes) {
+  return join_cols(STD2ARMAuv(sclique), STD2ARMAuv(nodes));
+}

@@ -1,15 +1,16 @@
 #ifndef _PIVOT_H_
 #define _PIVOT_H_
 
-#include "init.h"
 #include "util.h"
 
-ln::vecu IntersectionIdc_(const ln::vecu& fv, const ln::vecu& tv);
+// `indicator` is a bit vector
+arma::uword NextNodeIdx_(const ln::vecu&   sclique,
+                         const ln::vecu&   nodes,
+                         const ln::vecu&   xnodes,
+                         const arma::umat& gidc);
 
-ln::iterv NextPnode_(ln::vecu& eachNodes, const ln::vecu& eachIndicators);
+arma::uword First0Idx_(const arma::uvec& idc);
 
-ln::vecu NextIdc_(const ln::vecu&  eachNodes,
-                  const ln::vecu&  eachXnodes,
-                  const ln::gumap& g);
+arma::uvec MergeNodes_(const ln::vecu& sclique, const ln::vecu& nodes);
 
 #endif // _PIVOT_H_

@@ -3,10 +3,11 @@
 #include <vector>
 
 #include "init.h"
+#include "util.h"
 
 using namespace arma;
 using namespace std;
-using namespace lonelynodes;
+using namespace ln;
 
 
 //' Initiate graph as node-linked_nodes
@@ -27,7 +28,7 @@ using namespace lonelynodes;
 //\code{gNodeCount_()}: A \code{std::vector<arma::uword>}. ' } ' @author Yulong
 // Niu \email{yulong.niu@@hotmail.com} ' @rdname initg ' @keywords internal
 // [[Rcpp::export]]
-void gFillEach_(const size_t tidx, ln::vecu& fillNodes) {
+void gFillEach_(const arma::uword tidx, ln::vecu& fillNodes) {
   fillNodes.emplace_back(tidx);
 }
 
@@ -37,30 +38,27 @@ void gFillEach_(const size_t tidx, ln::vecu& fillNodes) {
 // @rdname initg
 // @keywords internal
 ln::gumap gumapInit(const arma::umat& m) {
-  gumap glink;
+  gumap g;
 
   // get edges number
   auto edgeNum = gNodeCount_(m);
 
-  for (size_t i = 0; i < edgeNum.size(); ++i) {
-    if (edgeNum[i] > 0) {
-      vecu eachNode;
-      eachNode.reserve(edgeNum[i]);
-      glink[i] = eachNode;
-    } else {
-    }
+  for (uword i = 0; i < edgeNum.size(); ++i) {
+    vecu eachNode;
+    eachNode.reserve(edgeNum[i]);
+    g[i] = eachNode;
   }
 
   // fill
-  for (size_t i = 0; i < m.n_rows; ++i) {
+  for (uword i = 0; i < m.n_rows; ++i) {
     auto eachf = m(i, 0);
     auto eacht = m(i, 1);
 
-    gFillEach_(eacht, glink.at(eachf));
-    gFillEach_(eachf, glink.at(eacht));
+    gFillEach_(eacht, g.at(eachf));
+    gFillEach_(eachf, g.at(eacht));
   }
 
-  return glink;
+  return g;
 }
 
 
@@ -80,4 +78,20 @@ ln::vecu gNodeCount_(const arma::umat& m) {
   }
 
   return countv;
+}
+
+
+// init graph as a symmetrical matrix
+arma::umat gidcInit(const ln::gumap& g) {
+
+  auto gsize = g.size();
+  umat gidc(gsize, gsize);
+
+  for (uword i = 0; i < gsize; ++i) {
+    uvec eachCol(gsize, fill::zeros);
+    eachCol.elem(STD2ARMAuv(g.at(i))).ones();
+    gidc.col(i) = eachCol;
+  }
+
+  return gidc;
 }

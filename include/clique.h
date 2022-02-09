@@ -55,46 +55,46 @@ inline void Leaf::print() {
 
 } // namespace lonelynodes
 
-void SearchTree_(ln::vecvu&       cliques,
-                 ln::vecvu&       sclique,
-                 ln::vecvu&       nodes,
-                 ln::vecvu&       xnodes,
-                 ln::vecu&        srdnodes,
-                 const ln::gumap& g);
+void SearchTree_(ln::vecvu&        cliques,
+                 ln::vecvu&        sclique,
+                 ln::vecvu&        nodes,
+                 ln::vecvu&        xnodes,
+                 ln::vecu&         srdnodes,
+                 const arma::umat& gidc);
 
-bool isMaximalClique_(const ln::vecu&  clique,
-                      const ln::vecu&  srdnodes,
-                      const ln::gumap& g);
+bool isMaximalClique_(const ln::vecu&   clique,
+                      const ln::vecu&   srdnodes,
+                      const arma::umat& gidc);
 
 // void CompareClique_(ln::vecvu &cliques, ln::vecvu &sclique);
 
-void TrimLeaf_(ln::vecvu&       sclique,
-               ln::vecvu&       nodes,
-               ln::vecvu&       xnodes,
-               const ln::gumap& g);
+void TrimLeaf_(ln::vecvu&        sclique,
+               ln::vecvu&        nodes,
+               ln::vecvu&        xnodes,
+               const arma::umat& gidc);
 
-void BackTrimLeaf_(ln::vecvu&       sclique,
-                   ln::vecvu&       nodes,
-                   ln::vecvu&       xnodes,
-                   const ln::gumap& g);
+void BackTrimLeaf_(ln::vecvu&        sclique,
+                   ln::vecvu&        nodes,
+                   ln::vecvu&        xnodes,
+                   const arma::umat& gidc);
 
 void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes);
 
 bool isSkippable(const ln::vecu&   eachSclique,
                  const ln::vecu&   eachNodes,
-                 unsigned long int bestSize);
+                 const arma::uword bestSize);
 
-void SearchLeaf_(ln::vecvu&       sclique,
-                 ln::vecvu&       nodes,
-                 ln::vecvu&       xnodes,
-                 const ln::vecu&  srdnodes,
-                 const ln::gumap& g);
+void SearchLeaf_(ln::vecvu&        sclique,
+                 ln::vecvu&        nodes,
+                 ln::vecvu&        xnodes,
+                 const ln::vecu&   srdnodes,
+                 const arma::umat& gidc);
 
-void NextLeaf_(ln::vecvu&       sclique,
-               ln::vecvu&       nodes,
-               ln::vecvu&       xnodes,
-               const ln::vecu&  srdnodes,
-               const ln::gumap& g);
+void NextLeaf_(ln::vecvu&        sclique,
+               ln::vecvu&        nodes,
+               ln::vecvu&        xnodes,
+               const ln::vecu&   srdnodes,
+               const arma::umat& gidc);
 
 ln::gumap TrimGraph_(const ln::vecu& nodes, const ln::gumap& g);
 
