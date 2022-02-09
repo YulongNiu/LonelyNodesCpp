@@ -30,52 +30,37 @@ using namespace lonelynodes;
 // }
 
 
-void SearchTree_(ln::vecvu&        cliques,
-                 ln::vecvu&        sclique,
-                 ln::vecvu&        nodes,
-                 ln::vecvu&        xnodes,
-                 ln::vecu&         srdnodes,
-                 const arma::umat& gidc) {
+// void SearchTree_(ln::vecvu&        cliques,
+//                  ln::vecvu&        sclique,
+//                  ln::vecvu&        nodes,
+//                  ln::vecvu&        xnodes,
+//                  ln::vecu&         srdnodes,
+//                  const arma::umat& gidc) {
 
-  do {
-    // step1: search left leaf.
-    SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
+//   do {
+//     // step1: search left leaf.
+//     SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
 
-    // cout << "------\n"
-    //      << "srdnodes: \n";
-    // Printvecu(srdnodes);
-    // cout << "xnodes: \n";
-    // Printvecvu(xnodes);
-    // cout << "end"
-    //      << "sclique: \n";
-    // Printvecvu(sclique);
-    // cout << "end\n"
-    //      << "nodes: \n";
-    // Printvecvu(nodes);
-    // cout << "end \n"
-    //      << "is maximal clique: "
-    //      << isMaximalClique_(sclique.back(), srdnodes, g) << "\n------\n"
-    //      << endl;
+//     // step2: check if latest clique is maximal.
+//     auto eachClique = sclique.back();
+//     if (isMaximalClique_(eachClique, srdnodes, gidc)) {
+//       cliques.push_back(eachClique);
+//       // CompareClique_(cliques, sclique);
+//     } else {
+//     }
 
-    // step2: check if latest clique is maximal.
-    auto eachClique = sclique.back();
-    if (isMaximalClique_(eachClique, srdnodes, gidc)) {
-      cliques.push_back(eachClique);
-      // CompareClique_(cliques, sclique);
-    } else {
-    }
+//     // step3: trim leaves, if exist.
+//     // May be empty after trim.
+//     TrimLeaf_(sclique, nodes, xnodes, gidc);
+//     if (!nodes.empty()) { srdnodes = xnodes.back(); }
 
-    // step3: trim leaves, if exist.
-    // May be empty after trim.
-    TrimLeaf_(sclique, nodes, xnodes, gidc);
-    if (!nodes.empty()) { srdnodes = xnodes.back(); }
-
-    cout << "1st nodes size: " << nodes.front().size()
-         << "; node size: " << nodes.size() << "; #cliques: " << cliques.size()
-         << "; srnodes is: ";
-    Printvecu(srdnodes);
-  } while (!nodes.empty());
-}
+//     cout << "1st nodes size: " << nodes.front().size()
+//          << "; node size: " << nodes.size() << "; #cliques: " <<
+//          cliques.size()
+//          << "; srnodes is: ";
+//     Printvecu(srdnodes);
+//   } while (!nodes.empty());
+// }
 
 
 void PrintTreeInfo_(const ln::vecvu& cliques,
@@ -102,72 +87,71 @@ void PrintTreeInfo_(const ln::vecvu& cliques,
 }
 
 
-// void SearchTree_(ln::vecvu&        cliques,
-//                  ln::vecvu&        sclique,
-//                  ln::vecvu&        nodes,
-//                  ln::vecvu&        xnodes,
-//                  ln::vecu&         srdnodes,
-//                  const arma::umat& gidc) {
+void SearchTree_(ln::vecvu&        cliques,
+                 ln::vecvu&        sclique,
+                 ln::vecvu&        nodes,
+                 ln::vecvu&        xnodes,
+                 ln::vecu&         srdnodes,
+                 const arma::umat& gidc) {
 
-//   for (uword i = 0; i < 5; ++i) {
+  for (uword i = 0; i < 300 && !nodes.empty(); ++i) {
 
-//     cout << "First node size is: \n" << nodes.front().size() << endl;
-//     cout << "First node is: \n";
-//     Printvecu(nodes.front());
+    cout << "First node size is: \n" << nodes.front().size() << endl;
+    cout << "First node is: \n";
+    Printvecu(nodes.front());
 
-//     // step1: search left leaf.
-//     SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
+    // step1: search left leaf.
+    SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
 
-//     // step2: check if latest clique is maximal.
-//     auto eachClique = sclique.back();
-//     if (isMaximalClique_(eachClique, srdnodes, gidc)) {
-//       cliques.push_back(eachClique);
-//     } else {
-//     }
+    // step2: check if latest clique is maximal.
+    auto eachClique = sclique.back();
+    if (isMaximalClique_(eachClique, srdnodes, gidc)) {
+      cliques.push_back(eachClique);
+    } else {
+    }
 
-//     PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "before");
+    PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "before");
 
-//     // step3: trim leaves, if exist.
-//     TrimLeaf_(sclique, nodes, xnodes, gidc);
-//     if (!nodes.empty()) { srdnodes = xnodes.back(); }
+    // step3: trim leaves, if exist.
+    TrimLeaf_(sclique, nodes, xnodes, gidc);
+    if (!nodes.empty()) { srdnodes = xnodes.back(); }
 
-//     cout << "1st nodes size: " << nodes.front().size()
-//          << "; node size: " << nodes.size() << "; #cliques: " <<
-//          cliques.size()
-//          << endl;
+    cout << "1st nodes size: " << nodes.front().size()
+         << "; node size: " << nodes.size() << "; #cliques: " << cliques.size()
+         << endl;
 
-//     PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "after");
-//   }
+    PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "after");
+  }
 
 
-//   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//   // cout << "First node size is: \n" << nodes.front().size() << endl;
-//   // cout << "First node is: \n";
-//   // Printvecu(nodes.front());
+  //   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //   // cout << "First node size is: \n" << nodes.front().size() << endl;
+  //   // cout << "First node is: \n";
+  //   // Printvecu(nodes.front());
 
-//   // SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
-//   // auto eachClique = sclique.back();
+  //   // SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
+  //   // auto eachClique = sclique.back();
 
-//   // if (isMaximalClique_(eachClique, srdnodes, gidc)) {
-//   //   cliques.push_back(eachClique);
-//   // } else {
-//   // }
+  //   // if (isMaximalClique_(eachClique, srdnodes, gidc)) {
+  //   //   cliques.push_back(eachClique);
+  //   // } else {
+  //   // }
 
-//   // PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "before");
+  //   // PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "before");
 
-//   // // BackSkipLeaf_(sclique, nodes, xnodes);
-//   // // BackTrimLeaf_(sclique, nodes, xnodes, gidc);
-//   // TrimLeaf_(sclique, nodes, xnodes, gidc);
-//   // if (!nodes.empty()) { srdnodes = xnodes.back(); }
+  //   // // BackSkipLeaf_(sclique, nodes, xnodes);
+  //   // // BackTrimLeaf_(sclique, nodes, xnodes, gidc);
+  //   // TrimLeaf_(sclique, nodes, xnodes, gidc);
+  //   // if (!nodes.empty()) { srdnodes = xnodes.back(); }
 
-//   // cout << "1st nodes size: " << nodes.front().size()
-//   //      << "; node size: " << nodes.size() << "; #cliques: " <<
-//   cliques.size()
-//   //      << endl;
+  //   // cout << "1st nodes size: " << nodes.front().size()
+  //   //      << "; node size: " << nodes.size() << "; #cliques: " <<
+  //   cliques.size()
+  //   //      << endl;
 
-//   // PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "after");
-//   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// }
+  //   // PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "after");
+  //   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
 
 
 // Check if one clique is maximal.

@@ -131,11 +131,11 @@ int main() {
   // string gfile = "testm.bin"; // small graph
   // uword  nodeIdx   = 0;
 
-  // string gfile   = "testg.bin"; // median graph
-  // uword  nodeIdx = 332;
+  string gfile   = "testg.bin"; // median graph
+  uword  nodeIdx = 10;
 
-  string gfile   = "testgbig.bin"; // large graph
-  uword  nodeIdx = 9116;
+  // string gfile   = "testgbig.bin"; // large graph
+  // uword  nodeIdx = 9116;
 
   // string gfile   = "testblog.bin"; // blog graph
   // uword  nodeIdx = 0;
@@ -273,14 +273,14 @@ int main() {
        << ctime(&end_time) << "elapsed time: " << elapsed_seconds.count()
        << "s\n";
 
-  cout << "\n"
-       << "cliques are: \n";
-  Sortvecvu(cliques);
-  Printvecvu(cliques);
+  // cout << "\n"
+  //      << "cliques are: \n";
+  // Sortvecvu(cliques);
+  // Printvecvu(cliques);
 
-  cout << "\n"
-       << "cliques size are: \n";
-  Printvecu(Lenvecvu(cliques));
+  // cout << "\n"
+  //      << "cliques size are: \n";
+  // Printvecu(Lenvecvu(cliques));
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~
