@@ -16,8 +16,8 @@ using citerv  = vecu::const_iterator;
 using itervv  = vecvu::iterator;
 using citervv = vecvu::const_iterator;
 
-using dbit  = boost::dynamic_bitset<>;
-using gdbit = std::vector<dbit>;
+using dbit    = boost::dynamic_bitset<>;
+using vecdbit = std::vector<dbit>;
 } // namespace lonelynodes
 
 namespace ln = lonelynodes;
@@ -40,7 +40,7 @@ void Printvecu(const ln::vecu& test);
 
 void Printvecvu(const ln::vecvu& test);
 
-void Printgdbit(const ln::gdbit& g);
+void Printvecdbit(const ln::vecdbit& g);
 
 ln::citerv FirstDiff(ln::citerv ffirst,
                      ln::citerv flast,

@@ -10,25 +10,7 @@
 
 using namespace arma;
 using namespace std;
-using namespace lonelynodes;
-
-// // find maximal clique(s) by a given `node` in graph `g`.
-// ln::vecvu MaxCliques(const ln::gumap& g,
-//                      const unsigned int node) {
-
-//   // step1: sort nodes according to degree by decreasing order.
-//   // auto lnodes = SortNodes_(g.at(node), g);
-//   auto lnodes = g.at(node);
-//   vecvu cliques{{}};
-//   vecvu sclique = {{node}};
-//   vecvu nodes = {lnodes};
-
-//   // step2: search
-//   SearchTree_(cliques, sclique, nodes, g);
-
-//   return cliques;
-// }
-
+using namespace ln;
 
 void SearchTree_(ln::vecvu&        cliques,
                  ln::vecvu&        sclique,
@@ -251,7 +233,7 @@ void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes) {
   auto px = next(xnodes.rbegin());
 
   for (auto bestSize = sclique.back().size();
-       (pn != nodes.rend()) && isSkippable(*ps, *pn, bestSize);
+       (pn != nodes.rend()) && isSkippable_(*ps, *pn, bestSize);
        ++ps, ++pn, ++px) {}
 
   sclique.erase(ps.base(), sclique.end());
@@ -260,9 +242,9 @@ void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes) {
 }
 
 
-bool isSkippable(const ln::vecu&   eachSclique,
-                 const ln::vecu&   eachNodes,
-                 const arma::uword bestSize) {
+bool isSkippable_(const ln::vecu&   eachSclique,
+                  const ln::vecu&   eachNodes,
+                  const arma::uword bestSize) {
   return (eachSclique.size() + eachNodes.size()) < bestSize;
 }
 
@@ -271,13 +253,21 @@ bool isSkippable(const ln::vecu&   eachSclique,
 void SearchLeaf_(ln::vecvu&        sclique,
                  ln::vecvu&        nodes,
                  ln::vecvu&        xnodes,
-                 const ln::vecu&   srdnodes,
+                 ln::vecu&         srdnodes,
                  const arma::umat& gidc) {
 
   if (nodes.back().empty()) { return; }
 
   // push head and generate new clique
   NextLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
+
+  //~~~~~~~~~~~check if skippable~~~~~~~~~~~~
+  if (nodes.back().empty()) { return; } // find clique and break
+
+  BackTrimLeaf_(sclique, nodes, xnodes, gidc);
+  if (nodes.empty()) { return; } // trim to top
+  srdnodes = xnodes.back();
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // recursion
   SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
@@ -327,50 +317,4 @@ ln::gumap TrimGraph_(const ln::vecu& nodes, const ln::gumap& g) {
   }
 
   return res;
-}
-
-
-// sort linked nodes by the degree in decreasing order.
-ln::vecu SortNodes_(const ln::vecu& nodes, const ln::gumap& g) {
-
-  // step1: count degree
-  vecu degree(nodes.size(), 0);
-
-  for (auto elem : nodes) {
-    Count_(degree, nodes, g.at(elem));
-  }
-
-  // step2: decreasing order of degree
-  auto degreeIdx = SortIdx_(degree);
-
-  vecu res(nodes.size());
-  auto pres = res.begin();
-  auto pdi  = degreeIdx.rbegin();
-  for (; pdi != degreeIdx.rend(); *pres = nodes.at(*pdi), ++pres, ++pdi) {}
-
-  return res;
-}
-
-
-void Count_(ln::vecu& degree, const ln::vecu& nodes, const ln::vecu& tnodes) {
-
-  for (unsigned int i = 0; i < nodes.size(); ++i) {
-
-    auto snode = nodes.at(i);
-    for (auto p = tnodes.begin(); (p != tnodes.end()) && (*p != snode); ++p) {}
-  }
-}
-
-
-ln::vecu SortIdx_(const ln::vecu& v) {
-
-  // get index in not decreasing order
-  vecu idx(v.size());
-  iota(idx.begin(), idx.end(), 0);
-
-  stable_sort(idx.begin(), idx.end(), [&v](size_t i1, size_t i2) {
-    return v[i1] < v[i2];
-  });
-
-  return idx;
 }

@@ -23,6 +23,6 @@ ln::vecu gNodeCount_(const arma::umat& m);
 
 arma::umat gidcInit(const ln::gumap& g);
 
-ln::gdbit gdbitInit(const ln::gumap& g);
+ln::vecdbit gdbitInit(const ln::gumap& g);
 
 #endif // _INIT_H_

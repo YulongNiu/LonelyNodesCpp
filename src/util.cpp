@@ -10,6 +10,7 @@ using namespace arma;
 using namespace std;
 using namespace lonelynodes;
 
+//~~~~~~~~~~~~~~~~~~~indicator version~~~~~~~~~~~~~~~~~~~~~~~~~
 // convert `ln::vecu` to `arma::uvec`
 arma::uvec STD2ARMAuv(const ln::vecu& v) {
   uvec res(v.data(), v.size());
@@ -54,6 +55,7 @@ ln::vecu SelectInterset_(const ln::vecu& nodes, const arma::uvec& idc) {
 
   return res;
 }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 ln::vecu Intersection(const ln::vecu& fv, const ln::vecu& tv) {
@@ -128,11 +130,12 @@ void Printvecvu(const ln::vecvu& v) {
 }
 
 
-void Printgdbit(const ln::gdbit& g) {
+void Printvecdbit(const ln::vecdbit& g) {
   for (auto elem : g) {
     cout << elem << endl;
   }
 }
+
 
 ln::citerv FirstDiff(ln::citerv ffirst,
                      ln::citerv flast,

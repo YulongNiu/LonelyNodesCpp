@@ -3,11 +3,12 @@
 #include <cstddef>
 #include <ctime>
 #include <iostream>
+#include <type_traits>
 
+#include "bclique.h"
 #include "clique.h"
 #include "init.h"
 #include "pivot.h"
-#include "util.h"
 
 using namespace std;
 using namespace ln;
@@ -82,9 +83,9 @@ void TestNextLeaf(const arma::umat& gidc) {
 }
 
 
-ln::vecvu TestSearchLeaf(const ln::gumap&   g,
-                         const arma::umat&  gidc,
-                         const unsigned int node) {
+ln::vecvu TestSearchLeaf(const ln::gumap&  g,
+                         const arma::umat& gidc,
+                         const arma::uword node) {
 
   vecvu sclique{ { node } };
   vecvu nodes{ g.at(node) };
@@ -97,6 +98,30 @@ ln::vecvu TestSearchLeaf(const ln::gumap&   g,
   Printvecvu(sclique);
   cout << "nodes are: \n";
   Printvecvu(nodes);
+  cout << "xnodes is: \n";
+  Printvecvu(xnodes);
+  cout << "end. \n" << endl;
+
+  return nodes;
+}
+
+ln::vecdbit TestbSearchLeaf(const ln::vecdbit& gdbit, const arma::uword node) {
+
+  auto nnode = gdbit.size();
+  dbit startNode(nnode);
+  startNode.set(node);
+
+  vecdbit sclique{ startNode };
+  vecdbit nodes{ gdbit.at(node) };
+  vecvu   xnodes{ {} };
+  vecu    srdnodes;
+
+  bSearchLeaf_(sclique, nodes, xnodes, srdnodes, gdbit);
+
+  cout << "sclique are: \n";
+  Printvecdbit(sclique);
+  cout << "nodes are: \n";
+  Printvecdbit(nodes);
   cout << "xnodes is: \n";
   Printvecvu(xnodes);
   cout << "end. \n" << endl;
@@ -125,13 +150,13 @@ ln::vecvu TestSearchTree(const ln::gumap&  g,
 
 int main() {
 
-  //~~~~~~~~~~~~~~~~~~test dynamic_bitset~~~~~~~~~~~~~~~~~~~
-  boost::dynamic_bitset<> db1(10, 28); // 101
-  cout << db1 << endl;
+  // //~~~~~~~~~~~~~~~~~~test dynamic_bitset~~~~~~~~~~~~~~~~~~~
+  // boost::dynamic_bitset<> db1(10, 28); // 101
+  // cout << db1 << endl;
 
-  db1.push_back(1);
-  cout << db1 << endl;
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // db1.push_back(1);
+  // cout << db1 << endl;
+  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~load graph~~~~~~~~~~~~~~~~~~~~~~~
   string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
@@ -140,14 +165,15 @@ int main() {
   // string gfile = "testm.bin"; // small graph
   // uword  nodeIdx   = 0;
 
-  // string gfile   = "testg.bin"; // median graph
-  // uword  nodeIdx = 10;
+  string gfile   = "testg.bin"; // median graph
+  uword  nodeIdx = 332;         // #maximal clique 94
+  // uword  nodeIdx = 10;          // #maximal clique 5
 
   // string gfile   = "testgbig.bin"; // large graph
-  // uword  nodeIdx = 9116;
+  // uword  nodeIdx = 9116; // #maximal clique 3764
 
-  string gfile   = "testblog.bin"; // blog graph
-  uword  nodeIdx = 0;
+  // string gfile   = "testblog.bin"; // blog graph
+  // uword  nodeIdx = 0;
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -160,8 +186,9 @@ int main() {
   auto gidc = gidcInit(gg);
   auto gbit = gdbitInit(gg);
   gidc.brief_print("gidc is: ");
-  gidc.print("gidc is: ");
-  Printgdbit(gbit);
+
+  // gidc.print("gidc is: ");
+  // Printvecdbit(gbit);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~test pivot~~~~~~~~~~~~~~~~~~~~~
@@ -180,18 +207,18 @@ int main() {
   //                    350, 352, 353, 355, 356, 359, 363, 365, 366, 369, 370,
   //                    374, 376, 378, 379, 380, 385, 406 };
   // vecu eachNodes2 = {
-  //   12,  13,  15,  19,  20,  22,  24,  25,  28,  30,  31,  34,  37,  40,  42,
-  //   43,  44,  45,  46,  47,  51,  55,  57,  58,  59,  61,  62,  64,  66,  69,
-  //   71,  73,  74,  75,  76,  79,  81,  83,  87,  88,  91,  92,  95,  96,  97,
-  //   101, 102, 104, 105, 106, 107, 114, 115, 116, 117, 120, 122, 125, 126,
-  //   128, 130, 131, 132, 135, 136, 137, 142, 149, 151, 154, 155, 157, 162,
-  //   163, 167, 174, 175, 177, 185, 195, 197, 199, 203, 204, 206, 207, 209,
-  //   211, 213, 215, 218, 221, 225, 226, 228, 230, 234, 235, 237, 238, 260,
-  //   261, 263, 264, 266, 267, 271, 273, 274, 275, 277, 278, 289, 292, 293,
-  //   294, 297, 299, 304, 308, 310, 311, 313, 314, 316, 318, 319, 320, 321,
-  //   324, 326, 332, 333, 334, 335, 336, 337, 340, 343, 344, 345, 346, 347,
-  //   349, 350, 352, 353, 355, 356, 359, 363, 365, 366, 369, 370, 374, 376,
-  //   378, 379, 380, 385, 406
+  //   12,  13,  15,  19,  20,  22,  24,  25,  28,  30,  31,  34,  37,  40,
+  //   42, 43,  44,  45,  46,  47,  51,  55,  57,  58,  59,  61,  62,  64, 66,
+  //   69, 71,  73,  74,  75,  76,  79,  81,  83,  87,  88,  91,  92,  95, 96,
+  //   97, 101, 102, 104, 105, 106, 107, 114, 115, 116, 117, 120, 122, 125,
+  //   126, 128, 130, 131, 132, 135, 136, 137, 142, 149, 151, 154, 155, 157,
+  //   162, 163, 167, 174, 175, 177, 185, 195, 197, 199, 203, 204, 206, 207,
+  //   209, 211, 213, 215, 218, 221, 225, 226, 228, 230, 234, 235, 237, 238,
+  //   260, 261, 263, 264, 266, 267, 271, 273, 274, 275, 277, 278, 289, 292,
+  //   293, 294, 297, 299, 304, 308, 310, 311, 313, 314, 316, 318, 319, 320,
+  //   321, 324, 326, 332, 333, 334, 335, 336, 337, 340, 343, 344, 345, 346,
+  //   347, 349, 350, 352, 353, 355, 356, 359, 363, 365, 366, 369, 370, 374,
+  //   376, 378, 379, 380, 385, 406
   // };
   // vecu eachXnodes = { 14, 56 };
 
@@ -225,12 +252,6 @@ int main() {
   // testblog.brief_print("testblog is: ");
   // testblog.save(basepath + "testblog.bin", arma_binary);
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  // //~~~~~~~~~~~~~~~~~test init gumap~~~~~~~~~~~~~~~~~~~
-  // umat testm;
-  // testm.load("../test/testm.bin", arma_binary);
-  // auto gm = gumapInit(testm);
-  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~test TestSortNodes~~~~~~~~~~~~~~~~~~
   // // vecu ln = {4, 8, 3, 10};
@@ -270,31 +291,31 @@ int main() {
 
   //~~~~~~~~~~~~~~~~~test TestSearchTree~~~~~~~~~~~~~~~~~
   // TestSearchLeaf(gg, gidc, nodeIdx);
+  // TestbSearchLeaf(gbit, nodeIdx);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-  // //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
-  // auto start      = chrono::system_clock::now();
-  // auto start_time = chrono::system_clock::to_time_t(start);
-  // auto cliques    = TestSearchTree(gg, gidc, nodeIdx);
-  // auto end        = chrono::system_clock::now();
-  // auto end_time   = chrono::system_clock::to_time_t(end);
+  //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
+  auto start      = chrono::system_clock::now();
+  auto start_time = chrono::system_clock::to_time_t(start);
+  auto cliques    = TestSearchTree(gg, gidc, nodeIdx);
+  auto end        = chrono::system_clock::now();
+  auto end_time   = chrono::system_clock::to_time_t(end);
 
-  // chrono::duration<double> elapsed_seconds = end - start;
-  // cout << "start computation at " << ctime(&start_time) << "end computation
-  // at "
-  //      << ctime(&end_time) << "elapsed time: " << elapsed_seconds.count()
-  //      << "s\n";
+  chrono::duration<double> elapsed_seconds = end - start;
+  cout << "start computation at " << ctime(&start_time) << "end computation at "
+       << ctime(&end_time) << "elapsed time: " << elapsed_seconds.count()
+       << "s\n";
 
-  // // cout << "\n"
-  // //      << "cliques are: \n";
-  // // Sortvecvu(cliques);
-  // // Printvecvu(cliques);
+  // cout << "\n"
+  //      << "cliques are: \n";
+  // Sortvecvu(cliques);
+  // Printvecvu(cliques);
 
-  // // cout << "\n"
-  // //      << "cliques size are: \n";
-  // // Printvecu(Lenvecvu(cliques));
-  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // cout << "\n"
+  //      << "cliques size are: \n";
+  // Printvecu(Lenvecvu(cliques));
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~
   // Leaf firstLeaf{ { 1 }, { 2, 3 }, { 4 } };

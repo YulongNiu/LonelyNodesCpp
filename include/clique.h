@@ -80,14 +80,14 @@ void BackTrimLeaf_(ln::vecvu&        sclique,
 
 void BackSkipLeaf_(ln::vecvu& sclique, ln::vecvu& nodes, ln::vecvu& xnodes);
 
-bool isSkippable(const ln::vecu&   eachSclique,
-                 const ln::vecu&   eachNodes,
-                 const arma::uword bestSize);
+bool isSkippable_(const ln::vecu&   eachSclique,
+                  const ln::vecu&   eachNodes,
+                  const arma::uword bestSize);
 
 void SearchLeaf_(ln::vecvu&        sclique,
                  ln::vecvu&        nodes,
                  ln::vecvu&        xnodes,
-                 const ln::vecu&   srdnodes,
+                 ln::vecu&         srdnodes,
                  const arma::umat& gidc);
 
 void NextLeaf_(ln::vecvu&        sclique,
@@ -97,11 +97,5 @@ void NextLeaf_(ln::vecvu&        sclique,
                const arma::umat& gidc);
 
 ln::gumap TrimGraph_(const ln::vecu& nodes, const ln::gumap& g);
-
-ln::vecu SortNodes_(const ln::vecu& nodes, const ln::gumap& g);
-
-void Count_(ln::vecu& degree, const ln::vecu& nodes, const ln::vecu& tnodes);
-
-ln::vecu SortIdx_(const ln::vecu& v);
 
 #endif // _CLIQUE_H_

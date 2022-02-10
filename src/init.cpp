@@ -99,9 +99,9 @@ arma::umat gidcInit(const ln::gumap& g) {
 
 
 // init graph as dynamic bitset
-ln::gdbit gdbitInit(const ln::gumap& g) {
-  auto  gsize = g.size();
-  gdbit res(gsize);
+ln::vecdbit gdbitInit(const ln::gumap& g) {
+  auto    gsize = g.size();
+  vecdbit res(gsize);
 
   for (uword i = 0; i < gsize; ++i) {
     dbit eachElem(gsize); // all `0`
