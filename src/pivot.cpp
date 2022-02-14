@@ -28,7 +28,7 @@ arma::uword NextNodeIdx_(const ln::vecu&   sclique,
   auto maxCol = sum(splitIdc, 0).index_max();
   auto idx    = First0Idx_(splitIdc.col(maxCol));
 
-  return idx > sclique.size() ? (idx - sclique.size()) : 0;
+  return (idx > sclique.size()) ? (idx - sclique.size()) : 0;
 }
 
 

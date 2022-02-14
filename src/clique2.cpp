@@ -33,12 +33,24 @@ namespace lonelynodes {
 //   searchNodes leaf = ;
 // }
 
-// search for the next leaf
-vecu Leaf::next_seeds() const {
-  vecu res = seeds;
-  res.push_back(snode);
+
+// test outer paramers
+vecu Leaf::test_oparam(arma::uword a) const {
+  auto res = stem;
+  for (auto& elem : res) {
+    elem += a;
+  }
+
   return res;
 }
+
+
+// // search for the next leaf
+// vecu Leaf::next_seeds() const {
+//   vecu res = seeds;
+//   res.push_back(snode);
+//   return res;
+// }
 
 // Leaf::next_leaf(const gumap& g) const {}
 

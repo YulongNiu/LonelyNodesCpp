@@ -25,11 +25,12 @@ void SearchTree_(ln::vecvu&        cliques,
 
     // step2: check if latest clique is maximal.
     auto eachClique = sclique.back();
-    if (isMaximalClique_(eachClique, srdnodes, gidc)) {
-      cliques.push_back(eachClique);
-      // CompareClique_(cliques, sclique);
-    } else {
-    }
+    if (eachClique.size() > 0) { cliques.push_back(eachClique); };
+    // if (isMaximalClique_(eachClique, srdnodes, gidc)) {
+    //   cliques.push_back(eachClique);
+    //   // CompareClique_(cliques, sclique);
+    // } else {
+    // }
 
     // step3: trim leaves, if exist.
     // May be empty after trim.

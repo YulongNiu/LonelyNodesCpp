@@ -9,6 +9,7 @@
 #include "clique.h"
 #include "init.h"
 #include "pivot.h"
+#include "util.h"
 
 using namespace std;
 using namespace ln;
@@ -191,6 +192,12 @@ int main() {
   // Printvecdbit(gbit);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+  //~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~~~~~
+  Leaf tmp1{ { 1 }, { 2, 3 }, { 4, 6, 9 } };
+  tmp1.print();
+  Printvecu(tmp1.test_oparam(10));
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   // //~~~~~~~~~~~~~~~~~~~test pivot~~~~~~~~~~~~~~~~~~~~~
   // vecu eachNodes  = { 57,  58,  59,  61,  62,  64,  66,  69,  71,  73,  74,
   // 75,
@@ -295,17 +302,18 @@ int main() {
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-  //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
-  auto start      = chrono::system_clock::now();
-  auto start_time = chrono::system_clock::to_time_t(start);
-  auto cliques    = TestSearchTree(gg, gidc, nodeIdx);
-  auto end        = chrono::system_clock::now();
-  auto end_time   = chrono::system_clock::to_time_t(end);
+  // //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
+  // auto start      = chrono::system_clock::now();
+  // auto start_time = chrono::system_clock::to_time_t(start);
+  // auto cliques    = TestSearchTree(gg, gidc, nodeIdx);
+  // auto end        = chrono::system_clock::now();
+  // auto end_time   = chrono::system_clock::to_time_t(end);
 
-  chrono::duration<double> elapsed_seconds = end - start;
-  cout << "start computation at " << ctime(&start_time) << "end computation at "
-       << ctime(&end_time) << "elapsed time: " << elapsed_seconds.count()
-       << "s\n";
+  // chrono::duration<double> elapsed_seconds = end - start;
+  // cout << "start computation at " << ctime(&start_time) << "end computation
+  // at "
+  //      << ctime(&end_time) << "elapsed time: " << elapsed_seconds.count()
+  //      << "s\n";
 
   // cout << "\n"
   //      << "cliques are: \n";
@@ -315,7 +323,7 @@ int main() {
   // cout << "\n"
   //      << "cliques size are: \n";
   // Printvecu(Lenvecvu(cliques));
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~
   // Leaf firstLeaf{ { 1 }, { 2, 3 }, { 4 } };

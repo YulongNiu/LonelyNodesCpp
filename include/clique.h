@@ -10,17 +10,14 @@ namespace lonelynodes {
 
 class Leaf {
 public:
-  //`snode`: next searched node.
-  unsigned int snode;
-
-  Leaf(const vecu seeds, const vecu branches, const vecu stem)
-      : seeds{ seeds }, branches{ branches }, stem{ stem } {
-    snode = branches.front();
-  }
+  Leaf(const vecu& seeds, const vecu& stem, const vecu& branches)
+      : seeds{ seeds }, stem{ stem }, branches{ branches } {}
 
   vecu get_seeds() const { return seeds; };
-  vecu get_branches() const { return branches; };
   vecu get_stem() const { return stem; };
+  vecu get_branches() const { return branches; };
+
+  vecu test_oparam(arma::uword a) const;
 
   // next leaf functions
   vecu next_seeds() const;
@@ -34,8 +31,9 @@ private:
   // `seeds`: searched nodes, each of which has been completely searched
   // for maximal cliques.
   // `branches`: nodes for next search.
-  // `stem`: known cliques in current leaf.
-  const vecu seeds, branches, stem;
+  // `stem`: known cliques nodes in current leaf.
+  // No intersections among `seeds`, `branches`, or `steam`.
+  const vecu seeds, stem, branches;
 };
 
 
