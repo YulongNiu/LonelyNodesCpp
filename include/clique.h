@@ -10,22 +10,24 @@ namespace lonelynodes {
 
 class Leaf {
 public:
+  Leaf() : seeds{}, stem{}, branches{} {}
   Leaf(const vecu& seeds, const vecu& stem, const vecu& branches)
       : seeds{ seeds }, stem{ stem }, branches{ branches } {}
 
   vecu get_seeds() const { return seeds; };
   vecu get_stem() const { return stem; };
   vecu get_branches() const { return branches; };
+  vecu get_crown() const; // concatenate `stem` and `branches`.
 
-  vecu test_oparam(arma::uword a) const;
+  // check whether branches are searched
+  arma::sword next_nodeidx(arma::umat& gidc) const;
 
-  // next leaf functions
-  vecu next_seeds() const;
+  // vecu next_seeds() const;
   // vecu next_branches() const;
   // vecu next_stem() const;
   // Leaf next_leaf(const gumap& g) const;
 
-  void print();
+  void print() const;
 
 private:
   // `seeds`: searched nodes, each of which has been completely searched
@@ -39,8 +41,15 @@ private:
 
 Leaf NextLeaf(const Leaf& leaf, const gumap& g);
 
+inline vecu Leaf::get_crown() const {
+  vecu crown = branches;
+  crown.insert(crown.end(), branches.begin(), branches.end());
+
+  return crown;
+}
+
 // print `Leaf` obj
-inline void Leaf::print() {
+inline void Leaf::print() const {
   std::cout << "seeds are: ";
   Printvecu(seeds);
 
@@ -50,7 +59,6 @@ inline void Leaf::print() {
   std::cout << "branch is: ";
   Printvecu(branches);
 }
-
 } // namespace lonelynodes
 
 void SearchTree_(ln::vecvu&        cliques,

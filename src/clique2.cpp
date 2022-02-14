@@ -33,18 +33,6 @@ namespace lonelynodes {
 //   searchNodes leaf = ;
 // }
 
-
-// test outer paramers
-vecu Leaf::test_oparam(arma::uword a) const {
-  auto res = stem;
-  for (auto& elem : res) {
-    elem += a;
-  }
-
-  return res;
-}
-
-
 // // search for the next leaf
 // vecu Leaf::next_seeds() const {
 //   vecu res = seeds;
@@ -53,6 +41,15 @@ vecu Leaf::test_oparam(arma::uword a) const {
 // }
 
 // Leaf::next_leaf(const gumap& g) const {}
+
+arma::sword Leaf::next_nodeidx(arma::umat& gidc) const {
+  // branches may not need to check
+  if (seeds.empty() || branches.empty()) { return 0; }
+
+  auto crown = get_crown();
+
+  return;
+}
 
 
 } // namespace lonelynodes
