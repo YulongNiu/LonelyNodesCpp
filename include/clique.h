@@ -14,18 +14,22 @@ public:
   Leaf(const vecu& seeds, const vecu& stem, const vecu& branches)
       : seeds{ seeds }, stem{ stem }, branches{ branches } {}
 
-  vecu get_seeds() const { return seeds; };
-  vecu get_stem() const { return stem; };
-  vecu get_branches() const { return branches; };
-  vecu get_crown() const; // concatenate `stem` and `branches`.
+  vecu        get_seeds() const { return seeds; };
+  vecu        get_stem() const { return stem; };
+  vecu        get_branches() const { return branches; };
+  vecu        get_crown() const; // concatenate `stem` and `branches`.
+  arma::uword get_node(const arma::uword idx) const;
 
   // check whether branches are searched
-  arma::sword next_nodeidx(arma::umat& gidc) const;
+  arma::uword next_nodeidx(const arma::umat& gidc) const;
 
-  // vecu next_seeds() const;
-  // vecu next_branches() const;
-  // vecu next_stem() const;
-  // Leaf next_leaf(const gumap& g) const;
+  vecu next_branches(const arma::uword idx, const arma::umat& gidc) const;
+  vecu next_stem(const arma::uword idx) const;
+  vecu next_seeds() const;
+
+  vecu update_branches(arma::uword idx) const;
+  vecu update_stem() const;
+  vecu update_seeds(const arma::uword idx) const;
 
   void print() const;
 
@@ -38,14 +42,46 @@ private:
   const vecu seeds, stem, branches;
 };
 
-
-Leaf NextLeaf(const Leaf& leaf, const gumap& g);
-
 inline vecu Leaf::get_crown() const {
-  vecu crown = branches;
+  vecu crown = stem;
   crown.insert(crown.end(), branches.begin(), branches.end());
 
   return crown;
+}
+
+inline arma::uword Leaf::get_node(const arma::uword idx) const {
+  return branches.at(idx);
+}
+
+inline vecu Leaf::next_branches(const arma::uword idx,
+                                const arma::umat& gidc) const {
+  return IntersectNodes_(branches, this->get_node(idx), gidc);
+}
+
+inline vecu Leaf::next_stem(arma::uword idx) const {
+  vecu res = stem;
+  res.push_back(this->get_node(idx));
+  return res;
+}
+
+inline vecu Leaf::next_seeds() const {
+  return seeds;
+}
+
+inline vecu Leaf::update_branches(arma::uword idx) const {
+  vecu res = branches;
+  res.erase(res.begin() + idx);
+  return res;
+}
+
+inline vecu Leaf::update_stem() const {
+  return stem;
+}
+
+inline vecu Leaf::update_seeds(const arma::uword idx) const {
+  vecu res = seeds;
+  res.push_back(this->get_node(idx));
+  return res;
 }
 
 // print `Leaf` obj
@@ -59,6 +95,8 @@ inline void Leaf::print() const {
   std::cout << "branch is: ";
   Printvecu(branches);
 }
+
+Leaf NextLeaf(const Leaf& leaf, const gumap& g);
 } // namespace lonelynodes
 
 void SearchTree_(ln::vecvu&        cliques,

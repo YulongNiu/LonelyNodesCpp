@@ -4,9 +4,11 @@
 
 #include "clique.h"
 #include "init.h"
+#include "pivot.h"
 #include "util.h"
 
 using namespace std;
+using namespace arma;
 
 namespace lonelynodes {
 
@@ -42,13 +44,18 @@ namespace lonelynodes {
 
 // Leaf::next_leaf(const gumap& g) const {}
 
-arma::sword Leaf::next_nodeidx(arma::umat& gidc) const {
+arma::uword Leaf::next_nodeidx(const arma::umat& gidc) const {
   // branches may not need to check
   if (seeds.empty() || branches.empty()) { return 0; }
 
-  auto crown = get_crown();
+  auto crown    = this->get_crown();
+  umat splitIdc = gidc.submat(STD2ARMAuv(crown), STD2ARMAuv(seeds));
 
-  return;
+  // column contains max searched linked-nodes
+  auto maxCol = sum(splitIdc, 0).index_max();
+  auto idx    = First0Idx_(splitIdc.col(maxCol));
+
+  return (idx > stem.size()) ? (idx - stem.size()) : 0;
 }
 
 

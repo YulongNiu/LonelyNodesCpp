@@ -196,6 +196,7 @@ int main() {
   Leaf tmp1{ { 1 }, { 2, 3 }, { 4, 6, 9 } };
   tmp1.print();
   Printvecu(tmp1.get_crown());
+  cout << "test: " << tmp1.next_nodeidx(gidc) << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~test pivot~~~~~~~~~~~~~~~~~~~~~
