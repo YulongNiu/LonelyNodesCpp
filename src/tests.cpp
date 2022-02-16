@@ -36,21 +36,6 @@ void Sortvecvu(ln::vecvu& v) {
 }
 
 
-void TestDiffIntersect(ln::vecu& fv, ln::vecu& tv) {
-  cout << "original fv is: " << '\n';
-  Printvecu(fv);
-  cout << "original tv is: " << '\n';
-  Printvecu(tv);
-
-  DiffIntersect(fv, tv);
-
-  cout << "processed fv is: " << '\n';
-  Printvecu(fv);
-  cout << "processed tv is: " << '\n';
-  Printvecu(tv);
-}
-
-
 void TestNextLeaf(const arma::umat& gidc) {
   vecvu sclique{ {}, { 1 } };
   vecvu nodes{ { 2, 3, 4, 5, 6, 7 }, { 2, 3, 4 } };
@@ -171,7 +156,7 @@ int main() {
   // uword  nodeIdx = 10;          // #maximal clique 5
 
   // string gfile   = "testgbig.bin"; // large graph
-  // uword  nodeIdx = 9116; // #maximal clique 3764
+  // uword  nodeIdx = 9116;           // #maximal clique 3764
 
   // string gfile   = "testblog.bin"; // blog graph
   // uword  nodeIdx = 0;

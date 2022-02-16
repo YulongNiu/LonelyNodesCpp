@@ -1,8 +1,3 @@
-#include <algorithm> //std::stable_sort std::sort std::includes
-#include <cstddef>
-#include <iostream>
-#include <unordered_map>
-
 #include "clique.h"
 #include "init.h"
 #include "pivot.h"
@@ -26,11 +21,6 @@ void SearchTree_(ln::vecvu&        cliques,
     // step2: check if latest clique is maximal.
     auto eachClique = sclique.back();
     if (eachClique.size() > 0) { cliques.push_back(eachClique); };
-    // if (isMaximalClique_(eachClique, srdnodes, gidc)) {
-    //   cliques.push_back(eachClique);
-    //   // CompareClique_(cliques, sclique);
-    // } else {
-    // }
 
     // step3: trim leaves, if exist.
     // May be empty after trim.
@@ -304,18 +294,4 @@ void NextLeaf_(ln::vecvu&        sclique,
   // step4: next nodes
   auto nextNodes = IntersectNodes_(nodes.back(), searchNode, gidc);
   nodes.push_back(nextNodes);
-}
-
-
-// shrinkage raw graph,
-// than only choosing the intersection of `g.at(elem)` and `nodes`.
-ln::gumap TrimGraph_(const ln::vecu& nodes, const ln::gumap& g) {
-
-  gumap res = g;
-
-  for (auto elem : nodes) {
-    res.at(elem) = Intersection(g.at(elem), nodes);
-  }
-
-  return res;
 }

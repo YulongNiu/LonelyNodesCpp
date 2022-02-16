@@ -135,10 +135,6 @@ void SearchTree_(ln::vecvu&        cliques,
                  ln::vecu&         srdnodes,
                  const arma::umat& gidc);
 
-bool isMaximalClique_(const ln::vecu&   clique,
-                      const ln::vecu&   srdnodes,
-                      const arma::umat& gidc);
-
 // void CompareClique_(ln::vecvu &cliques, ln::vecvu &sclique);
 
 void TrimLeaf_(ln::vecvu&        sclique,
@@ -168,7 +164,5 @@ void NextLeaf_(ln::vecvu&        sclique,
                ln::vecvu&        xnodes,
                const ln::vecu&   srdnodes,
                const arma::umat& gidc);
-
-ln::gumap TrimGraph_(const ln::vecu& nodes, const ln::gumap& g);
 
 #endif // _CLIQUE_H_
