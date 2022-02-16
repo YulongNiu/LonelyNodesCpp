@@ -25,6 +25,7 @@ public:
   bool branches_empty() const { return branches.empty(); }
 
   arma::uword stem_size() const { return stem.size(); }
+  arma::uword branches_size() const { return branches.size(); }
   arma::uword crown_size() const { return stem.size() + branches.size(); }
 
   // find next search node index
@@ -120,7 +121,7 @@ inline void Leaf::print() const {
   Printvecu(branches);
 }
 
-using vecleaf = std::vector<ln::Leaf>;
+using vecleaf = std::list<ln::Leaf>;
 
 vecvu SearchLeafObj(const Leaf& start, const arma::umat& gidc);
 

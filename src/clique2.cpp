@@ -78,8 +78,14 @@ vecvu SearchLeafObj(const Leaf& start, const arma::umat& gidc) {
     // step2: find maximal clique
     if (vleaf.back().branches_empty()) {
       cliques.push_back(vleaf.back().get_stem());
-      // BackSkipLeafObj(vleaf);
-      vleaf.pop_back();
+
+      cout << "1st nodes size: " << vleaf.front().branches_size()
+           << "; node size: " << vleaf.size()
+           << "; #cliques: " << cliques.size() << "; srnodes is: ";
+      Printvecu(vleaf.back().get_seeds());
+
+      BackSkipLeafObj(vleaf);
+      // vleaf.pop_back();
     }
   }
 
@@ -95,8 +101,7 @@ void BackSkipLeafObj(vecleaf& vleaf) {
        (p != vleaf.rend()) && ((*p).crown_size() < bestSize);
        ++p) {}
 
-  // vleaf.erase(p.base());
-  // vleaf.erase(p.base(), vleaf.end());
+  vleaf.erase(p.base(), vleaf.end());
 }
 
 } // namespace lonelynodes
