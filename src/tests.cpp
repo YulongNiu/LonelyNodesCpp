@@ -192,12 +192,18 @@ int main() {
   // Printvecdbit(gbit);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  //~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~~~~~
-  Leaf tmp1{ { 1 }, { 2, 3 }, { 4, 6, 9 } };
-  tmp1.print();
-  Printvecu(tmp1.get_crown());
-  cout << "test: " << tmp1.next_nodeidx(gidc) << endl;
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // //~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~~~~~
+  // Leaf testLeaf{ { 1 }, { 2, 3 }, { 4, 6, 9 } };
+  // testLeaf.print();
+
+  // Leaf startn({}, {}, { gg.at(nodeIdx) });
+  // auto idx     = startn.next_nodeidx(gidc);
+  // auto nextn   = startn.next_leaf(idx, gidc);
+  // auto updaten = startn.update_leaf(idx);
+  // startn.print();
+  // nextn.print();
+  // updaten.print();
+  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~test pivot~~~~~~~~~~~~~~~~~~~~~
   // vecu eachNodes  = { 57,  58,  59,  61,  62,  64,  66,  69,  71,  73,  74,
@@ -303,18 +309,22 @@ int main() {
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-  // //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
-  // auto start      = chrono::system_clock::now();
-  // auto start_time = chrono::system_clock::to_time_t(start);
-  // auto cliques    = TestSearchTree(gg, gidc, nodeIdx);
-  // auto end        = chrono::system_clock::now();
-  // auto end_time   = chrono::system_clock::to_time_t(end);
+  //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
+  auto start      = chrono::system_clock::now();
+  auto start_time = chrono::system_clock::to_time_t(start);
 
-  // chrono::duration<double> elapsed_seconds = end - start;
-  // cout << "start computation at " << ctime(&start_time) << "end computation
-  // at "
-  //      << ctime(&end_time) << "elapsed time: " << elapsed_seconds.count()
-  //      << "s\n";
+  Leaf startn({}, {}, { gg.at(nodeIdx) });
+  auto cliques = SearchLeafObj(startn, gidc);
+
+  // auto cliques = TestSearchTree(gg, gidc, nodeIdx);
+
+  auto end      = chrono::system_clock::now();
+  auto end_time = chrono::system_clock::to_time_t(end);
+
+  chrono::duration<double> elapsed_seconds = end - start;
+  cout << "start computation at " << ctime(&start_time) << "end computation at "
+       << ctime(&end_time) << "elapsed time: " << elapsed_seconds.count()
+       << "s\n";
 
   // cout << "\n"
   //      << "cliques are: \n";
@@ -324,7 +334,7 @@ int main() {
   // cout << "\n"
   //      << "cliques size are: \n";
   // Printvecu(Lenvecvu(cliques));
-  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~
   // Leaf firstLeaf{ { 1 }, { 2, 3 }, { 4 } };
