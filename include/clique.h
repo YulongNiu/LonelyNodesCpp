@@ -30,15 +30,18 @@ public:
 
   // find next search node index
   arma::uword next_nodeidx(const arma::umat& gidc) const;
-  bool        is_skippable(const arma::uword idx) const {
+
+  bool is_skippable(const arma::uword idx) const {
     return idx == branches.size();
   };
 
+  // next elem
   vecu next_branches(const arma::uword idx, const arma::umat& gidc) const;
   vecu next_stem(const arma::uword idx) const;
   vecu next_seeds() const;
   Leaf next_leaf(const arma::uword idx, const arma::umat& gidc) const;
 
+  // update current elem
   vecu update_branches(arma::uword idx) const;
   vecu update_stem() const;
   vecu update_seeds(const arma::uword idx) const;
@@ -58,7 +61,6 @@ private:
 inline vecu Leaf::get_crown() const {
   vecu crown = stem;
   crown.insert(crown.end(), branches.begin(), branches.end());
-
   return crown;
 }
 

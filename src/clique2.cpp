@@ -9,7 +9,9 @@ using namespace arma;
 namespace lonelynodes {
 
 arma::uword Leaf::next_nodeidx(const arma::umat& gidc) const {
-  // branches may not need to check
+
+  // `seeds` check for empty seeds at begin.
+  // `branches` check for end search like cliques.
   if (seeds.empty() || branches.empty()) { return 0; }
 
   auto crown    = this->get_crown();
@@ -48,9 +50,7 @@ vecvu SearchLeafObj(const Leaf& start, const arma::umat& gidc) {
         Printvecu(vleaf.back().get_seeds());
 
         BackSkipLeafObj(vleaf);
-      } else {
       }
-    } else {
     }
   }
 
