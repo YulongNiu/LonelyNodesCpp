@@ -168,8 +168,8 @@ int main() {
   // uword  nodeIdx = 332;         // #maximal clique 94
   // uword nodeIdx = 10; // #maximal clique 5
 
-  // string gfile   = "testgbig.bin"; // large graph
-  // uword  nodeIdx = 9116;           // #maximal clique 3764
+  string gfile   = "testgbig.bin"; // large graph
+  uword  nodeIdx = 9116;           // #maximal clique 3764
 
   // string gfile   = "testblog.bin"; // blog graph
   // uword  nodeIdx = 0;              // #maximal clique 4
