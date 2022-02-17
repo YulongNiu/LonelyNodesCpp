@@ -137,8 +137,18 @@ ln::vecvu TestSearchTree(const ln::gumap&  g,
 int main() {
 
   // //~~~~~~~~~~~~~~~~~~test dynamic_bitset~~~~~~~~~~~~~~~~~~~
-  // boost::dynamic_bitset<> db1(10, 28); // 101
-  // cout << db1 << endl;
+  // dbit db1(10, 28); // 101
+  // cout << "db1 is: " << db1 << "; npos is: " << dbit::npos << endl;
+
+  // dbit a{ string("0101100") };
+  // dbit b{ string("1011101") };
+  // cout << "a is: " << a << "; b is: " << b
+  //      << "; complement a\b is: " << ComplementBit(a, b) << endl;
+
+  // dbit   c{ string{ "0000000" } };
+  // string ghostIdx = (c.find_first() == dbit::npos) ? "yes" : "no";
+  // cout << "ghost 1 index is: " << c.find_first()
+  //      << "; is equal to npos: " << ghostIdx << endl;
 
   // db1.push_back(1);
   // cout << db1 << endl;
@@ -148,8 +158,8 @@ int main() {
   string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
   // string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
 
-  // string gfile = "testm.bin"; // small graph
-  // uword  nodeIdx   = 0;
+  // string gfile   = "testm.bin"; // small graph
+  // uword  nodeIdx = 0;           // #maximal clique 4
 
   string gfile   = "testg.bin"; // median graph
   uword  nodeIdx = 332;         // #maximal clique 94
@@ -159,7 +169,7 @@ int main() {
   // uword  nodeIdx = 9116;           // #maximal clique 3764
 
   // string gfile   = "testblog.bin"; // blog graph
-  // uword  nodeIdx = 0;
+  // uword  nodeIdx = 0;              // #maximal clique 5
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -168,13 +178,13 @@ int main() {
   testg.load(basepath + gfile, arma_binary);
   testg.brief_print("gg is: ");
 
-  auto gg   = gumapInit(testg);
-  auto gidc = gidcInit(gg);
-  auto gbit = gdbitInit(gg);
+  auto gg    = gumapInit(testg);
+  auto gidc  = gidcInit(gg);
+  auto gdbit = gdbitInit(gg);
   gidc.brief_print("gidc is: ");
 
   // gidc.print("gidc is: ");
-  // Printvecdbit(gbit);
+  // Printvecdbit(gdbit);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~~~~~
@@ -288,28 +298,47 @@ int main() {
   // Printvecu(NextIdc_(fv, tv, gblog));
   // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  //~~~~~~~~~~~~~~~~~test TestSearchTree~~~~~~~~~~~~~~~~~
-  // TestSearchLeaf(gg, gidc, nodeIdx);
-  // TestbSearchLeaf(gbit, nodeIdx);
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // //~~~~~~~~~~~~~~~~~test TestSearchTree~~~~~~~~~~~~~~~~~
+  // // TestSearchLeaf(gg, gidc, nodeIdx);
+  // // TestbSearchLeaf(gbit, nodeIdx);
+  // vecvu cliques{ { 1, 2, 3, 4 }, { 5, 4, 2 }, { 5, 7 }, { 6, 4 } };
+  // vecvu sclique{ {} };
+  // vecvu nodes{ { 7, 2, 3, 4 } };
+  // vecvu xnodes{ { 1, 5, 6 } };
+  // vecu  srdnodes{ 1, 5, 6 };
+
+  // // SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
+  // // NextLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
+  // cout << "next node is: "
+  //      << NextNodeIdx_(sclique.back(), nodes.back(), xnodes.back(), gidc)
+  //      << endl;
+  // BackTrimLeaf_(sclique, nodes, xnodes, gidc);
+  // PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "test");
+  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
   //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
   auto start      = chrono::system_clock::now();
   auto start_time = chrono::system_clock::to_time_t(start);
 
-  Leaf startn({}, {}, { gg.at(nodeIdx) });
-  auto cliques = SearchLeafObj(startn, gidc);
+  // dbit    dbitempty(gdbit.size(), 0);
+  // LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
+  // auto    cliques = SearchLeafBit(startn, gdbit);
 
-  // auto cliques = TestSearchTree(gg, gidc, nodeIdx);
+  // Leaf startn({}, {}, { gg.at(nodeIdx) });
+  // auto cliques = SearchLeafObj(startn, gidc);
+
+  auto cliques = TestSearchTree(gg, gidc, nodeIdx);
 
   auto end      = chrono::system_clock::now();
   auto end_time = chrono::system_clock::to_time_t(end);
 
   chrono::duration<double> elapsed_seconds = end - start;
-  cout << "start computation at " << ctime(&start_time) << "end computation at "
-       << ctime(&end_time) << "elapsed time: " << elapsed_seconds.count()
-       << "s\n";
+  cout << "start computation: " << ctime(&start_time)
+       << "end computation: " << ctime(&end_time)
+       << "elapsed time: " << elapsed_seconds.count() << "s\n";
+
+  // Printvecdbit(cliques);
 
   // cout << "\n"
   //      << "cliques are: \n";

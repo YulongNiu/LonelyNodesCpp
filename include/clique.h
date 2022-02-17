@@ -1,8 +1,6 @@
 #ifndef _CLIQUE_H_
 #define _CLIQUE_H_
 
-#include <iostream>
-
 #include "init.h"
 #include "util.h"
 
@@ -119,7 +117,7 @@ inline void Leaf::print() const {
   std::cout << "stem is: ";
   Printvecu(stem);
 
-  std::cout << "branch is: ";
+  std::cout << "branches is: ";
   Printvecu(branches);
 }
 
@@ -138,6 +136,17 @@ void SearchTree_(ln::vecvu&        cliques,
                  const arma::umat& gidc);
 
 // void CompareClique_(ln::vecvu &cliques, ln::vecvu &sclique);
+
+bool isMaximalClique_(const ln::vecu&   clique,
+                      const ln::vecu&   srdnodes,
+                      const arma::umat& gidc);
+
+void PrintTreeInfo_(const ln::vecvu&  cliques,
+                    const ln::vecvu&  sclique,
+                    const ln::vecvu&  nodes,
+                    const ln::vecvu&  xnodes,
+                    const ln::vecu&   srdnodes,
+                    const std::string pos);
 
 void TrimLeaf_(ln::vecvu&        sclique,
                ln::vecvu&        nodes,

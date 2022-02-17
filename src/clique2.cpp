@@ -29,16 +29,22 @@ vecvu SearchLeafObj(const Leaf& start, const arma::umat& gidc) {
   vecvu   cliques;
   vecleaf vleaf{ start };
 
+  // count, will be deleted
+  uword i = 0; // d
+  uword j = 0; // d
+
   for (; !vleaf.empty();) {
 
     auto lastLeaf = vleaf.back();
     vleaf.pop_back();
 
     auto idx = lastLeaf.next_nodeidx(gidc);
+    ++i; // d
     if (!lastLeaf.is_skippable(idx)) {
       // step1: check next node idx for last elem
       vleaf.push_back(lastLeaf.update_leaf(idx));
       vleaf.push_back(lastLeaf.next_leaf(idx, gidc));
+      ++j; // d
 
       // step2: find maximal clique
       if (vleaf.back().branches_empty()) {
@@ -46,10 +52,13 @@ vecvu SearchLeafObj(const Leaf& start, const arma::umat& gidc) {
 
         cout << "1st nodes size: " << vleaf.front().branches_size()
              << "; node size: " << vleaf.size()
-             << "; #cliques: " << cliques.size() << "; srnodes is: ";
-        Printvecu(vleaf.back().get_seeds());
+             << "; #cliques: " << cliques.size() << "; #loop: " << i
+             << "; #search: " << j << "; srnodes is: "; // d
+        Printvecu(vleaf.back().get_seeds());            // d
 
         BackSkipLeafObj(vleaf);
+        i = 0; // d
+        j = 0; // d
       }
     }
   }

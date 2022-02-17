@@ -1,13 +1,9 @@
-#include <armadillo>
-#include <vector>
-
 #include "pivot.h"
 #include "util.h"
 
 using namespace std;
 using namespace arma;
 using namespace ln;
-
 
 // first index of non-intersection node.
 // Because the `SearchLeaf_()` always search the left node without

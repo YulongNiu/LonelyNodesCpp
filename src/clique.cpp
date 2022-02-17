@@ -19,8 +19,15 @@ void SearchTree_(ln::vecvu&        cliques,
     SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
 
     // step2: check if latest clique is maximal.
+    // `eachClique` must be checked, because now we only trim
+    // according to ONE `xnodes`. We do not know the it is a
+    // maximal clique or not, when `nodes.back().empty()` is true.
+    // For example, `nodes` has two searched parts belong
+    // to `xnodes1` and `xnodes2`.
     auto eachClique = sclique.back();
-    if (eachClique.size() > 0) { cliques.push_back(eachClique); };
+    if (isMaximalClique_(eachClique, srdnodes, gidc)) {
+      cliques.push_back(eachClique);
+    }
 
     // step3: trim leaves, if exist.
     // May be empty after trim.
@@ -66,7 +73,7 @@ void PrintTreeInfo_(const ln::vecvu& cliques,
 //                  ln::vecu&         srdnodes,
 //                  const arma::umat& gidc) {
 
-//   for (uword i = 0; i < 300 && !nodes.empty(); ++i) {
+//   for (uword i = 0; i < 10 && !nodes.empty(); ++i) {
 
 //     cout << "First node size is: \n" << nodes.front().size() << endl;
 //     cout << "First node is: \n";
@@ -79,7 +86,6 @@ void PrintTreeInfo_(const ln::vecvu& cliques,
 //     auto eachClique = sclique.back();
 //     if (isMaximalClique_(eachClique, srdnodes, gidc)) {
 //       cliques.push_back(eachClique);
-//     } else {
 //     }
 
 //     PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "before");
@@ -104,10 +110,8 @@ void PrintTreeInfo_(const ln::vecvu& cliques,
 
 //   // SearchLeaf_(sclique, nodes, xnodes, srdnodes, gidc);
 //   // auto eachClique = sclique.back();
-
 //   // if (isMaximalClique_(eachClique, srdnodes, gidc)) {
 //   //   cliques.push_back(eachClique);
-//   // } else {
 //   // }
 
 //   // PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "before");
