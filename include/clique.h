@@ -111,6 +111,9 @@ inline Leaf Leaf::update_leaf(const arma::uword idx) const {
 
 // print `Leaf` obj
 inline void Leaf::print() const {
+
+  std::cout << "\n";
+
   std::cout << "seeds are: ";
   Printvecu(seeds);
 

@@ -30,7 +30,12 @@ dbit First0dbit_(const dbit& crown, const vecu& seed, const vecdbit& gdbit) {
   for (uword i = 0; i < seed.size(); ++i) {
     auto eachIdx   = seed.at(i);
     auto eachInter = crown & gdbit.at(eachIdx);
-    if (eachInter.count() >= lct) { maxIdx = eachIdx; }
+    auto eachCount = eachInter.count();
+
+    if (eachCount >= lct) {
+      lct    = eachCount;
+      maxIdx = eachIdx;
+    }
   }
 
   return ComplementBit(crown, gdbit.at(maxIdx));
@@ -39,7 +44,7 @@ dbit First0dbit_(const dbit& crown, const vecu& seed, const vecdbit& gdbit) {
 arma::uword
 First0IdxBit_(const dbit& stem, const dbit& branches, const dbit& f0) {
 
-  return ((stem & f0).any() > 0) ? branches.find_first() : f0.find_first();
+  return (stem & f0).any() ? branches.find_first() : f0.find_first();
 }
 
 

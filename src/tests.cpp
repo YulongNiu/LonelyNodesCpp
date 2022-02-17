@@ -152,6 +152,9 @@ int main() {
 
   // db1.push_back(1);
   // cout << db1 << endl;
+
+  // dbit a{ string("11111110") };
+  // cout << "~a is: " << ~a << endl;
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~load graph~~~~~~~~~~~~~~~~~~~~~~~
@@ -159,7 +162,7 @@ int main() {
   // string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
 
   // string gfile   = "testm.bin"; // small graph
-  // uword  nodeIdx = 0;           // #maximal clique 4
+  // uword  nodeIdx = 0;           // #maximal clique 5
 
   // string gfile = "testg.bin"; // median graph
   // uword  nodeIdx = 332;         // #maximal clique 94
@@ -168,8 +171,8 @@ int main() {
   // string gfile   = "testgbig.bin"; // large graph
   // uword  nodeIdx = 9116;           // #maximal clique 3764
 
-  string gfile   = "testblog.bin"; // blog graph
-  uword  nodeIdx = 0;              // #maximal clique 5
+  // string gfile   = "testblog.bin"; // blog graph
+  // uword  nodeIdx = 0;              // #maximal clique 4
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -183,7 +186,7 @@ int main() {
   auto gdbit = gdbitInit(gg);
   gidc.brief_print("gidc is: ");
 
-  // gidc.print("gidc is: ");
+  // gidc.print("gidc is: ");'
   // Printvecdbit(gdbit);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -314,6 +317,10 @@ int main() {
   //      << endl;
   // BackTrimLeaf_(sclique, nodes, xnodes, gidc);
   // PrintTreeInfo_(cliques, sclique, nodes, xnodes, srdnodes, "test");
+
+  // dbit crown{ string("00110000") };
+  // vecu seed{ 1, 2, 7 };
+  // cout << "First0dbit_ is: " << First0dbit_(crown, seed, gdbit) << "\n";
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -321,12 +328,12 @@ int main() {
   auto start      = chrono::system_clock::now();
   auto start_time = chrono::system_clock::to_time_t(start);
 
-  // dbit    dbitempty(gdbit.size(), 0);
-  // LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
-  // auto    cliques = SearchLeafBit(startn, gdbit);
+  dbit    dbitempty(gdbit.size(), 0);
+  LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
+  auto    cliques = SearchLeafBit(startn, gdbit);
 
-  Leaf startn({}, {}, { gg.at(nodeIdx) });
-  auto cliques = SearchLeafObj(startn, gidc);
+  // Leaf startn({}, {}, { gg.at(nodeIdx) });
+  // auto cliques = SearchLeafObj(startn, gidc);
 
   // auto cliques = TestSearchTree(gg, gidc, nodeIdx);
 
@@ -338,16 +345,16 @@ int main() {
        << "end computation: " << ctime(&end_time)
        << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-  // Printvecdbit(cliques);
+  Printvecdbit(cliques);
 
-  cout << "\n"
-       << "cliques are: \n";
-  Sortvecvu(cliques);
-  Printvecvu(cliques);
+  // cout << "\n"
+  //      << "cliques are: \n";
+  // Sortvecvu(cliques);
+  // Printvecvu(cliques);
 
-  cout << "\n"
-       << "cliques size are: \n";
-  Printvecu(Lenvecvu(cliques));
+  // cout << "\n"
+  //      << "cliques size are: \n";
+  // Printvecu(Lenvecvu(cliques));
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~

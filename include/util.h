@@ -36,4 +36,6 @@ void Printvecvu(const ln::vecvu& test);
 
 void Printvecdbit(const ln::vecdbit& g);
 
+ln::vecu DBIT2VECU_(const ln::dbit& v);
+
 #endif // _UTIL_H_

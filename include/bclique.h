@@ -105,12 +105,17 @@ inline LeafBit LeafBit::update_leaf(const arma::uword idx) const {
 
 // print `LeafBit` obj
 inline void LeafBit::print() const {
+
+  std::cout << "\n";
+
   std::cout << "seeds are: ";
   Printvecu(seeds);
 
-  std::cout << "stem is: " << stem << '\n';
+  std::cout << "stem is: ";
+  Printvecu(DBIT2VECU_(stem));
 
-  std::cout << "branch is: " << branches << '\n';
+  std::cout << "branches is: ";
+  Printvecu(DBIT2VECU_(branches));
 }
 
 using vecleafbit = std::list<ln::LeafBit>;

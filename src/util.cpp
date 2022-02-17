@@ -60,14 +60,23 @@ void Printvecu(const ln::vecu& v) {
 
 
 void Printvecvu(const ln::vecvu& v) {
-  for (auto eachv : v) {
-    Printvecu(eachv);
+  for (const auto& elem : v) {
+    Printvecu(elem);
   }
 }
 
 
-void Printvecdbit(const ln::vecdbit& g) {
-  for (auto elem : g) {
-    cout << elem << endl;
+void Printvecdbit(const ln::vecdbit& v) {
+  for (const auto& elem : v) {
+    Printvecu(DBIT2VECU_(elem));
   }
+}
+
+vecu DBIT2VECU_(const ln::dbit& v) {
+  vecu res;
+  for (auto i = v.find_first(); i != dbit::npos; i = v.find_next(i)) {
+    res.push_back(i);
+  }
+
+  return res;
 }
