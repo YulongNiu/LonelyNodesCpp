@@ -161,15 +161,15 @@ int main() {
   // string gfile   = "testm.bin"; // small graph
   // uword  nodeIdx = 0;           // #maximal clique 4
 
-  string gfile   = "testg.bin"; // median graph
-  uword  nodeIdx = 332;         // #maximal clique 94
-  // uword  nodeIdx = 10;          // #maximal clique 5
+  // string gfile = "testg.bin"; // median graph
+  // uword  nodeIdx = 332;         // #maximal clique 94
+  // uword nodeIdx = 10; // #maximal clique 5
 
   // string gfile   = "testgbig.bin"; // large graph
   // uword  nodeIdx = 9116;           // #maximal clique 3764
 
-  // string gfile   = "testblog.bin"; // blog graph
-  // uword  nodeIdx = 0;              // #maximal clique 5
+  string gfile   = "testblog.bin"; // blog graph
+  uword  nodeIdx = 0;              // #maximal clique 5
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -325,10 +325,10 @@ int main() {
   // LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
   // auto    cliques = SearchLeafBit(startn, gdbit);
 
-  // Leaf startn({}, {}, { gg.at(nodeIdx) });
-  // auto cliques = SearchLeafObj(startn, gidc);
+  Leaf startn({}, {}, { gg.at(nodeIdx) });
+  auto cliques = SearchLeafObj(startn, gidc);
 
-  auto cliques = TestSearchTree(gg, gidc, nodeIdx);
+  // auto cliques = TestSearchTree(gg, gidc, nodeIdx);
 
   auto end      = chrono::system_clock::now();
   auto end_time = chrono::system_clock::to_time_t(end);
@@ -340,14 +340,14 @@ int main() {
 
   // Printvecdbit(cliques);
 
-  // cout << "\n"
-  //      << "cliques are: \n";
-  // Sortvecvu(cliques);
-  // Printvecvu(cliques);
+  cout << "\n"
+       << "cliques are: \n";
+  Sortvecvu(cliques);
+  Printvecvu(cliques);
 
-  // cout << "\n"
-  //      << "cliques size are: \n";
-  // Printvecu(Lenvecvu(cliques));
+  cout << "\n"
+       << "cliques size are: \n";
+  Printvecu(Lenvecvu(cliques));
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~

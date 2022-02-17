@@ -47,8 +47,12 @@ vecvu SearchLeafObj(const Leaf& start, const arma::umat& gidc) {
       ++j; // d
 
       // step2: find maximal clique
-      if (vleaf.back().branches_empty()) {
-        cliques.push_back(vleaf.back().get_stem());
+      auto possiLeaf = vleaf.back();
+      if (possiLeaf.branches_empty()) {
+        auto eachClique = possiLeaf.get_stem();
+        if (isMaximalClique_(eachClique, possiLeaf.get_seeds(), gidc)) {
+          cliques.push_back(eachClique);
+        }
 
         cout << "1st nodes size: " << vleaf.front().branches_size()
              << "; node size: " << vleaf.size()
