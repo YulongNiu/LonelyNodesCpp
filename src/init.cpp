@@ -1,4 +1,5 @@
 #include <armadillo>
+#include <boost/dynamic_bitset.hpp>
 #include <unordered_map>
 #include <vector>
 
@@ -85,13 +86,31 @@ ln::vecu gNodeCount_(const arma::umat& m) {
 arma::umat gidcInit(const ln::gumap& g) {
 
   auto gsize = g.size();
-  umat gidc(gsize, gsize);
+  umat res(gsize, gsize);
 
   for (uword i = 0; i < gsize; ++i) {
     uvec eachCol(gsize, fill::zeros);
     eachCol.elem(STD2ARMAuv(g.at(i))).ones();
-    gidc.col(i) = eachCol;
+    res.col(i) = eachCol;
   }
 
-  return gidc;
+  return res;
+}
+
+
+// init graph as dynamic bitset
+ln::vecdbit gdbitInit(const ln::gumap& g) {
+  auto    gsize = g.size();
+  vecdbit res(gsize);
+
+  for (uword i = 0; i < gsize; ++i) {
+    dbit eachElem(gsize); // all `0`
+    auto eachIdx = g.at(i);
+    for (uword j = 0; j < eachIdx.size(); ++j) {
+      eachElem.set(eachIdx.at(j), true);
+    }
+    res.at(i) = eachElem;
+  }
+
+  return res;
 }
