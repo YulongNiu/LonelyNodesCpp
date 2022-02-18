@@ -141,7 +141,7 @@ bool isMaximalClique_(const ln::vecu&   clique,
   umat splitIdc = gidc.submat(STD2ARMAuv(clique), STD2ARMAuv(srdnodes));
 
   uword i = 0;
-  for (; i != splitIdc.n_cols && (!all(splitIdc.col(i))); ++i) {}
+  for (; (i != splitIdc.n_cols) && (!all(splitIdc.col(i))); ++i) {}
 
   return i == splitIdc.n_cols;
 }

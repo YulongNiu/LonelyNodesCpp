@@ -137,17 +137,17 @@ int main() {
   // string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
 
   // string gfile   = "testm.bin"; // small graph
-  // uword  nodeIdx = 0;           // #maximal clique 5
+  // uword  nodeIdx = 0;           // #maximal clique 4
 
-  // string gfile = "testg.bin"; // median graph
+  // string gfile   = "testg.bin"; // median graph
   // uword  nodeIdx = 332;         // #maximal clique 94
   // uword nodeIdx = 10; // #maximal clique 5
 
-  // string gfile   = "testgbig.bin"; // large graph
-  // uword  nodeIdx = 9116;           // #maximal clique 3764
+  string gfile   = "testgbig.bin"; // large graph
+  uword  nodeIdx = 9116;           // #maximal clique 3764
 
-  string gfile   = "testblog.bin"; // blog graph
-  uword  nodeIdx = 0;              // #maximal clique 4
+  // string gfile   = "testblog.bin"; // blog graph
+  // uword  nodeIdx = 0;              // #maximal clique 4
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -303,12 +303,12 @@ int main() {
   auto start      = chrono::system_clock::now();
   auto start_time = chrono::system_clock::to_time_t(start);
 
-  // dbit    dbitempty(gdbit.size(), 0);
-  // LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
-  // auto    cliques = SearchLeafBit(startn, gdbit);
+  dbit    dbitempty(gdbit.size(), 0);
+  LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
+  auto    cliques = SearchLeafBit(startn, gdbit);
 
-  Leaf startn({}, {}, { gg.at(nodeIdx) });
-  auto cliques = SearchLeafObj(startn, gidc);
+  // Leaf startn({}, {}, { gg.at(nodeIdx) });
+  // auto cliques = SearchLeafObj(startn, gidc);
 
   // auto cliques = TestSearchTree(gg, gidc, nodeIdx);
 

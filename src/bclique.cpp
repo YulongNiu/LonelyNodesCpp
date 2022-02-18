@@ -3,7 +3,6 @@
 #include "util.h"
 
 using namespace std;
-using namespace arma;
 
 namespace lonelynodes {
 
@@ -23,10 +22,10 @@ dbit ComplementBit(const dbit& a, const dbit& b) {
 }
 
 dbit First0dbit_(const dbit& crown, const vecu& seed, const vecdbit& gdbit) {
-  uword lct    = 0;
-  uword maxIdx = 0;
+  arma::uword lct    = 0;
+  arma::uword maxIdx = 0;
 
-  for (uword i = 0; i < seed.size(); ++i) {
+  for (arma::uword i = 0; i < seed.size(); ++i) {
     auto eachIdx   = seed.at(i);
     auto eachInter = crown & gdbit.at(eachIdx);
     auto eachCount = eachInter.count();
@@ -53,8 +52,8 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
   vecleafbit vleaf{ start };
 
   // count, will be deleted
-  uword i = 0; // d
-  uword j = 0; // d
+  arma::uword i = 0; // d
+  arma::uword j = 0; // d
 
   for (; !vleaf.empty();) {
 
@@ -69,9 +68,19 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
       vleaf.push_back(lastLeaf.next_leaf(idx, gdbit));
       ++j; // d
 
+      // cout << "----------" << endl;
+      // lastLeaf.print();
+      // lastLeaf.update_leaf(idx).print();
+      // lastLeaf.next_leaf(idx, gdbit).print();
+
       // step2: find maximal clique
-      if (vleaf.back().branches_empty()) {
-        cliques.push_back(vleaf.back().get_stem());
+      auto possiLeaf = vleaf.back();
+      if (possiLeaf.branches_empty()) {
+
+        auto eachClique = possiLeaf.get_stem();
+        if (isMaximalCliqueBit_(eachClique, possiLeaf.get_seeds(), gdbit)) {
+          cliques.push_back(eachClique);
+        }
 
         cout << "1st nodes size: " << vleaf.front().branches_size()
              << "; node size: " << vleaf.size()
@@ -101,4 +110,17 @@ void BackSkipLeafBit(vecleafbit& vleaf) {
   vleaf.erase(p.base(), vleaf.end());
 }
 
+
+bool isMaximalCliqueBit_(const dbit&    clique,
+                         const vecu&    seeds,
+                         const vecdbit& gdbit) {
+
+  if (seeds.empty()) { return true; }
+
+  arma::uword i = 0;
+  for (; (i < seeds.size()) && !clique.is_subset_of(gdbit.at(seeds.at(i)));
+       ++i) {}
+
+  return i == seeds.size();
+}
 } // namespace lonelynodes

@@ -133,6 +133,10 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit);
 
 void BackSkipLeafBit(vecleafbit& vleaf);
 
+bool isMaximalCliqueBit_(const dbit&    clique,
+                         const vecu&    seeds,
+                         const vecdbit& gdbit);
+
 } // namespace lonelynodes
 
 #endif // _BCLIQUE_H_
