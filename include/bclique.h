@@ -132,27 +132,7 @@ First0IdxBit_(const dbit& stem, const dbit& branches, const dbit& f0);
 vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit);
 
 void BackSkipLeafBit(vecleafbit& vleaf);
+
 } // namespace lonelynodes
-
-void bBackSkipLeaf_(ln::vecdbit& sclique,
-                    ln::vecdbit& nodes,
-                    ln::vecvu&   xnodes);
-
-bool bisSkippable_(const ln::dbit&   eachSclique,
-                   const ln::dbit&   eachNodes,
-                   const arma::uword bestSize);
-
-void bSearchLeaf_(ln::vecdbit&       sclique,
-                  ln::vecdbit&       nodes,
-                  ln::vecvu&         xnodes,
-                  const ln::vecu&    srdnodes,
-                  const ln::vecdbit& gidc);
-
-
-void bNextLeaf_(ln::vecdbit&       sclique,
-                ln::vecdbit&       nodes,
-                ln::vecvu&         xnodes,
-                const ln::vecu&    srdnodes,
-                const ln::vecdbit& gdbit);
 
 #endif // _BCLIQUE_H_

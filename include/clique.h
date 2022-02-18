@@ -129,6 +129,7 @@ using vecleaf = std::list<ln::Leaf>;
 vecvu SearchLeafObj(const Leaf& start, const arma::umat& gidc);
 
 void BackSkipLeafObj(vecleaf& vleaf);
+
 } // namespace lonelynodes
 
 void SearchTree_(ln::vecvu&        cliques,

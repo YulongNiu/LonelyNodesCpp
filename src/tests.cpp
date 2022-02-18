@@ -91,31 +91,6 @@ ln::vecvu TestSearchLeaf(const ln::gumap&  g,
   return nodes;
 }
 
-ln::vecdbit TestbSearchLeaf(const ln::vecdbit& gdbit, const arma::uword node) {
-
-  auto nnode = gdbit.size();
-  dbit startNode(nnode);
-  startNode.set(node);
-
-  vecdbit sclique{ startNode };
-  vecdbit nodes{ gdbit.at(node) };
-  vecvu   xnodes{ {} };
-  vecu    srdnodes;
-
-  bSearchLeaf_(sclique, nodes, xnodes, srdnodes, gdbit);
-
-  cout << "sclique are: \n";
-  Printvecdbit(sclique);
-  cout << "nodes are: \n";
-  Printvecdbit(nodes);
-  cout << "xnodes is: \n";
-  Printvecvu(xnodes);
-  cout << "end. \n" << endl;
-
-  return nodes;
-}
-
-
 ln::vecvu TestSearchTree(const ln::gumap&  g,
                          const arma::umat& gidc,
                          const arma::uword node) {
@@ -168,11 +143,11 @@ int main() {
   // uword  nodeIdx = 332;         // #maximal clique 94
   // uword nodeIdx = 10; // #maximal clique 5
 
-  string gfile   = "testgbig.bin"; // large graph
-  uword  nodeIdx = 9116;           // #maximal clique 3764
+  // string gfile   = "testgbig.bin"; // large graph
+  // uword  nodeIdx = 9116;           // #maximal clique 3764
 
-  // string gfile   = "testblog.bin"; // blog graph
-  // uword  nodeIdx = 0;              // #maximal clique 4
+  string gfile   = "testblog.bin"; // blog graph
+  uword  nodeIdx = 0;              // #maximal clique 4
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -328,12 +303,12 @@ int main() {
   auto start      = chrono::system_clock::now();
   auto start_time = chrono::system_clock::to_time_t(start);
 
-  dbit    dbitempty(gdbit.size(), 0);
-  LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
-  auto    cliques = SearchLeafBit(startn, gdbit);
+  // dbit    dbitempty(gdbit.size(), 0);
+  // LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
+  // auto    cliques = SearchLeafBit(startn, gdbit);
 
-  // Leaf startn({}, {}, { gg.at(nodeIdx) });
-  // auto cliques = SearchLeafObj(startn, gidc);
+  Leaf startn({}, {}, { gg.at(nodeIdx) });
+  auto cliques = SearchLeafObj(startn, gidc);
 
   // auto cliques = TestSearchTree(gg, gidc, nodeIdx);
 
@@ -345,7 +320,7 @@ int main() {
        << "end computation: " << ctime(&end_time)
        << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-  Printvecdbit(cliques);
+  // Printvecdbit(cliques);
 
   // cout << "\n"
   //      << "cliques are: \n";
