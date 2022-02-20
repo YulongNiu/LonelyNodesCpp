@@ -52,8 +52,7 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
   vecleafbit vleaf{ start };
 
   // count, will be deleted
-  arma::uword i = 0; // d
-  arma::uword j = 0; // d
+  arma::uword i = 0, j = 0; // d
 
   for (; !vleaf.empty();) {
 
@@ -68,10 +67,10 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
       vleaf.push_back(lastLeaf.next_leaf(idx, gdbit));
       ++j; // d
 
-      // cout << "----------" << endl;
-      // lastLeaf.print();
-      // lastLeaf.update_leaf(idx).print();
-      // lastLeaf.next_leaf(idx, gdbit).print();
+      cout << "----------" << endl;
+      lastLeaf.print();
+      lastLeaf.update_leaf(idx).print();
+      lastLeaf.next_leaf(idx, gdbit).print();
 
       // step2: find maximal clique
       auto possiLeaf = vleaf.back();
@@ -89,8 +88,7 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
         Printvecu(vleaf.back().get_seeds());            // d
 
         BackSkipLeafBit(vleaf);
-        i = 0; // d
-        j = 0; // d
+        i = 0, j = 0; // d
       }
     }
   }

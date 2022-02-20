@@ -303,12 +303,12 @@ int main() {
   auto start      = chrono::system_clock::now();
   auto start_time = chrono::system_clock::to_time_t(start);
 
-  // dbit    dbitempty(gdbit.size(), 0);
-  // LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
-  // auto    cliques = SearchLeafBit(startn, gdbit);
+  dbit    dbitempty(gdbit.size(), 0);
+  LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
+  auto    cliques = SearchLeafBit(startn, gdbit);
 
-  Leaf startn({}, {}, { gg.at(nodeIdx) });
-  auto cliques = SearchLeafObj(startn, gidc);
+  // Leaf startn({}, {}, { gg.at(nodeIdx) });
+  // auto cliques = SearchLeafObj(startn, gidc);
 
   // auto cliques = TestSearchTree(gg, gidc, nodeIdx);
 
@@ -320,12 +320,12 @@ int main() {
        << "end computation: " << ctime(&end_time)
        << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-  // Printvecdbit(cliques);
+  Printvecdbit(cliques);
 
-  cout << "\n"
-       << "cliques are: \n";
-  Sortvecvu(cliques);
-  Printvecvu(cliques);
+  // cout << "\n"
+  //      << "cliques are: \n";
+  // Sortvecvu(cliques);
+  // Printvecvu(cliques);
 
   // cout << "\n"
   //      << "cliques size are: \n";
