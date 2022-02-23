@@ -64,7 +64,7 @@ inline dbit LeafBit::next_branches(const arma::uword idx,
 }
 
 inline dbit LeafBit::next_stem(const arma::uword idx) const {
-  dbit res = stem;
+  dbit res{ stem };
   res.set(idx);
   return res;
 }
@@ -74,7 +74,7 @@ inline vecu LeafBit::next_seeds() const {
 }
 
 inline dbit LeafBit::update_branches(arma::uword idx) const {
-  dbit res = branches;
+  dbit res{ branches };
   res.reset(idx);
   return res;
 }
@@ -84,7 +84,7 @@ inline dbit LeafBit::update_stem() const {
 }
 
 inline vecu LeafBit::update_seeds(const arma::uword idx) const {
-  vecu res = seeds;
+  vecu res{ seeds };
   res.push_back(idx);
   return res;
 }

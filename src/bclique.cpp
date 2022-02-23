@@ -8,7 +8,18 @@ namespace lonelynodes {
 
 arma::uword LeafBit::next_nodeidx(const vecdbit& gdbit) const {
 
-  if (seeds.empty() || this->branches_empty()) { return branches.find_first(); }
+  // No need to check branches empty.
+  // Case1: `branches_size() == 1`,
+  // then branches in "next_leaf" is empty and will be checked;
+  // both "next_leaf" and "update_leaf" will be skipped.
+  // Case2: `branches_size() >= 2` and branches in "next_leaf" is empty.
+  // "next_leaf" will be checked and skipped.
+  // But branches in "update_leaf" >= 1,
+  // so case1 will be repeated.
+  // In total, empty branches will not appear here.
+
+  // No need to check seeds empty.
+  // If `seeds.empty()`, `branches.find_first()` always returns.
 
   auto crown = this->get_crown();
   auto f0    = First0dbit_(crown, seeds, gdbit);
@@ -21,24 +32,30 @@ dbit ComplementBit(const dbit& a, const dbit& b) {
   return a & (~b);
 }
 
-dbit First0dbit_(const dbit& crown, const vecu& seed, const vecdbit& gdbit) {
-  arma::uword lct    = 0;
-  arma::uword maxIdx = 0;
+// If `seeds.empty()`, return `crown` that will never be empty.
+dbit First0dbit_(const dbit& crown, const vecu& seeds, const vecdbit& gdbit) {
+  arma::uword maxCt = 0;
 
-  for (arma::uword i = 0; i < seed.size(); ++i) {
-    auto eachIdx   = seed.at(i);
-    auto eachInter = crown & gdbit.at(eachIdx);
+  dbit maxInter(crown.size(), 0);
+
+  for (const auto& elem : seeds) {
+    auto eachInter = crown & gdbit.at(elem);
     auto eachCount = eachInter.count();
 
-    if (eachCount >= lct) {
-      lct    = eachCount;
-      maxIdx = eachIdx;
+    if (eachCount >= maxCt) {
+      maxCt    = eachCount;
+      maxInter = eachInter;
     }
   }
 
-  return ComplementBit(crown, gdbit.at(maxIdx));
+  return crown ^ maxInter;
 }
 
+
+// If `seeds.empty()`, `f0 == crown`. In this case, if `stem.any()`,
+// `branches.find_first()` returns; if `stem.none()`,
+// `f0.find_first()` equal to `branches.find_first()`, returns.
+// In total, if `seeds.empty()`, `branches.find_first()` always returns.
 arma::uword
 First0IdxBit_(const dbit& stem, const dbit& branches, const dbit& f0) {
 
@@ -67,10 +84,10 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
       vleaf.push_back(lastLeaf.next_leaf(idx, gdbit));
       ++j; // d
 
-      cout << "----------" << endl;
-      lastLeaf.print();
-      lastLeaf.update_leaf(idx).print();
-      lastLeaf.next_leaf(idx, gdbit).print();
+      // cout << "----------" << endl;
+      // lastLeaf.print();
+      // lastLeaf.update_leaf(idx).print();
+      // lastLeaf.next_leaf(idx, gdbit).print();
 
       // step2: find maximal clique
       auto possiLeaf = vleaf.back();

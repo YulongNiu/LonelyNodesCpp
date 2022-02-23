@@ -1,3 +1,4 @@
+#include <boost/assert.hpp>
 #include <boost/dynamic_bitset.hpp>
 #include <chrono>
 #include <cstddef>
@@ -143,11 +144,11 @@ int main() {
   // uword  nodeIdx = 332;         // #maximal clique 94
   // uword nodeIdx = 10; // #maximal clique 5
 
-  // string gfile   = "testgbig.bin"; // large graph
-  // uword  nodeIdx = 9116;           // #maximal clique 3764
+  string gfile   = "testgbig.bin"; // large graph
+  uword  nodeIdx = 9116;           // #maximal clique 3764
 
-  string gfile   = "testblog.bin"; // blog graph
-  uword  nodeIdx = 0;              // #maximal clique 4
+  // string gfile   = "testblog.bin"; // blog graph
+  // uword  nodeIdx = 0;              // #maximal clique 4
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -176,6 +177,12 @@ int main() {
   // startn.print();
   // nextn.print();
   // updaten.print();
+
+  dbit    dbitemptyTest(gdbit.size(), 0);
+  LeafBit startnTest({}, dbitemptyTest, gdbit.at(nodeIdx));
+  BOOST_ASSERT_MSG(startnTest.next_nodeidx(gdbit) ==
+                     gdbit.at(nodeIdx).find_first(),
+                   "idx for `seeds.empty()` checked.");
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~test pivot~~~~~~~~~~~~~~~~~~~~~
@@ -320,7 +327,7 @@ int main() {
        << "end computation: " << ctime(&end_time)
        << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-  Printvecdbit(cliques);
+  // Printvecdbit(cliques);
 
   // cout << "\n"
   //      << "cliques are: \n";
