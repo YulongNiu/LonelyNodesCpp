@@ -8,7 +8,7 @@ namespace lonelynodes {
 
 arma::uword LeafBit::next_nodeidx(const vecdbit& gdbit) const {
 
-  if (seeds.empty() || this->branches_empty()) { return branches.find_first(); }
+  if (seeds.empty()) { return branches.find_first(); }
 
   auto crown = this->get_crown();
   auto f0    = First0dbit_(crown, seeds, gdbit);
@@ -36,6 +36,7 @@ dbit First0dbit_(const dbit& crown, const vecu& seeds, const vecdbit& gdbit) {
 
   return ComplementBit(crown, gdbit.at(maxElem));
 }
+
 
 arma::uword
 First0IdxBit_(const dbit& stem, const dbit& branches, const dbit& f0) {
