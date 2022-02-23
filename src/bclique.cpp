@@ -55,7 +55,7 @@ dbit First0dbit_(const dbit& crown, const vecu& seeds, const vecdbit& gdbit) {
 // If `seeds.empty()`, `f0 == crown`. In this case, if `stem.any()`,
 // `branches.find_first()` returns; if `stem.none()`,
 // `f0.find_first()` equal to `branches.find_first()`, returns.
-// In total, if `seeds.empty()`, `branches.find_first() always returns.
+// In total, if `seeds.empty()`, `branches.find_first()` always returns.
 arma::uword
 First0IdxBit_(const dbit& stem, const dbit& branches, const dbit& f0) {
 
