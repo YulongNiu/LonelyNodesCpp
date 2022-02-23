@@ -21,22 +21,20 @@ dbit ComplementBit(const dbit& a, const dbit& b) {
   return a & (~b);
 }
 
-dbit First0dbit_(const dbit& crown, const vecu& seed, const vecdbit& gdbit) {
-  arma::uword lct    = 0;
-  arma::uword maxIdx = 0;
+dbit First0dbit_(const dbit& crown, const vecu& seeds, const vecdbit& gdbit) {
+  arma::uword maxCt   = 0;
+  arma::uword maxElem = seeds.front();
 
-  for (arma::uword i = 0; i < seed.size(); ++i) {
-    auto eachIdx   = seed.at(i);
-    auto eachInter = crown & gdbit.at(eachIdx);
-    auto eachCount = eachInter.count();
+  for (const auto& elem : seeds) {
+    auto eachCount = (crown & gdbit.at(elem)).count();
 
-    if (eachCount >= lct) {
-      lct    = eachCount;
-      maxIdx = eachIdx;
+    if (eachCount >= maxCt) {
+      maxCt   = eachCount;
+      maxElem = elem;
     }
   }
 
-  return ComplementBit(crown, gdbit.at(maxIdx));
+  return ComplementBit(crown, gdbit.at(maxElem));
 }
 
 arma::uword
@@ -67,10 +65,10 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
       vleaf.push_back(lastLeaf.next_leaf(idx, gdbit));
       ++j; // d
 
-      cout << "----------" << endl;
-      lastLeaf.print();
-      lastLeaf.update_leaf(idx).print();
-      lastLeaf.next_leaf(idx, gdbit).print();
+      // cout << "----------" << endl;
+      // lastLeaf.print();
+      // lastLeaf.update_leaf(idx).print();
+      // lastLeaf.next_leaf(idx, gdbit).print();
 
       // step2: find maximal clique
       auto possiLeaf = vleaf.back();
