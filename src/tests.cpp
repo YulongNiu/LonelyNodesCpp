@@ -1,3 +1,4 @@
+#include <boost/assert.hpp>
 #include <boost/dynamic_bitset.hpp>
 #include <chrono>
 #include <cstddef>
@@ -176,6 +177,12 @@ int main() {
   // startn.print();
   // nextn.print();
   // updaten.print();
+
+  dbit    dbitemptyTest(gdbit.size(), 0);
+  LeafBit startnTest({}, dbitemptyTest, gdbit.at(nodeIdx));
+  BOOST_ASSERT_MSG(startnTest.next_nodeidx(gdbit) ==
+                     gdbit.at(nodeIdx).find_first(),
+                   "idx for `seeds.empty()` checked.");
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~test pivot~~~~~~~~~~~~~~~~~~~~~
