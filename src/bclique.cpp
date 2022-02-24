@@ -68,7 +68,7 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
 
   vecdbit     cliques;
   vecpleafbit vpleaf;
-  vpleaf.push_back(make_unique<LeafBit>(start));
+  vpleaf.push_back(make_shared<LeafBit>(start));
 
   // count, will be deleted
   arma::uword i = 0, j = 0; // d
