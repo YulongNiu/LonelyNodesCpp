@@ -68,7 +68,7 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
 
   vecdbit     cliques;
   vecpleafbit vpleaf;
-  vpleaf.push_back(make_shared<LeafBit>(start));
+  vpleaf.push_back(make_unique<LeafBit>(start));
 
   // count, will be deleted
   arma::uword i = 0, j = 0; // d
@@ -89,9 +89,9 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
       ++j; // d
 
       // cout << "----------" << endl;
-      // lastLeaf.print();
-      // lastLeaf.update_leaf(idx).print();
-      // lastLeaf.next_leaf(idx, gdbit).print();
+      // lastLeaf->print();
+      // lastLeaf->update_leaf(idx).print();
+      // lastLeaf->next_leaf(idx, gdbit).print();
 
       // step2: find maximal clique
       if (nLeaf->branches_empty()) {
@@ -103,7 +103,8 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
 
         cout << "1st nodes size: " << vpleaf.front()->branches_size()
              << "; node size: " << vpleaf.size()
-             << "; #cliques: " << cliques.size() << "; #loop: " << i
+             << "; #cliques: " << cliques.size()
+             << "; clique size: " << eachClique.count() << "; #loop: " << i
              << "; #search: " << j << "; srnodes is: "; // d
         Printvecu(vpleaf.back()->get_seeds());          // d
 
