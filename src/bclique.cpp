@@ -25,7 +25,7 @@ arma::uword LeafBit::next_nodeidx(const vecdbit& gdbit) const {
   auto crown = get_crown();
   auto f0    = First0dbit_(crown, seeds, gdbit);
 
-  return First0IdxBit_(stem, branches, f0);
+  return First0IdxBit_(stem, branches, f0, gdbit);
 }
 
 
@@ -43,7 +43,7 @@ dbit First0dbit_(const dbit& crown, const vecu& seeds, const vecdbit& gdbit) {
     auto eachInter = crown & gdbit.at(elem);
     auto eachCount = eachInter.count();
 
-    if (eachCount >= maxCt) {
+    if (eachCount > maxCt) {
       maxCt    = eachCount;
       maxInter = eachInter;
     }
@@ -53,14 +53,40 @@ dbit First0dbit_(const dbit& crown, const vecu& seeds, const vecdbit& gdbit) {
 }
 
 
+arma::uword First0IdxBranchesBit_(const dbit& branches, const vecdbit& gdbit) {
+
+  auto i = branches.find_first();
+
+  arma::uword maxIdx = i;
+  arma::uword maxCt  = 0;
+
+  for (; i != dbit::npos; i = branches.find_next(i)) {
+
+    auto eachCt = (branches & gdbit.at(i)).count();
+
+    if (eachCt > maxCt) {
+      maxCt  = eachCt;
+      maxIdx = i;
+    }
+  }
+
+  return maxIdx;
+}
+
+
 // If `seeds.empty()`, `f0 == crown`. In this case, if `stem.any()`,
 // `branches.find_first()` returns; if `stem.none()`,
 // `f0.find_first()` equal to `branches.find_first()`, returns.
 // In total, if `seeds.empty()`, `branches.find_first()` always returns.
-arma::uword
-First0IdxBit_(const dbit& stem, const dbit& branches, const dbit& f0) {
+//
+arma::uword First0IdxBit_(const dbit&    stem,
+                          const dbit&    branches,
+                          const dbit&    f0,
+                          const vecdbit& gdbit) {
 
-  return (stem & f0).any() ? branches.find_first() : f0.find_first();
+  // return (stem & f0).any() ? branches.find_first() : f0.find_first();
+  return (stem & f0).any() ? First0IdxBranchesBit_(branches, gdbit) :
+                             f0.find_first();
 }
 
 
@@ -101,12 +127,11 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
           cliques.push_back(eachClique);
         }
 
-        cout << "1st nodes size: " << vpleaf.front()->branches_size()
-             << "; node size: " << vpleaf.size()
+        cout << "vleaf size: " << vpleaf.size()
              << "; #cliques: " << cliques.size()
              << "; clique size: " << eachClique.count() << "; #loop: " << i
-             << "; #search: " << j << "; srnodes is: "; // d
-        Printvecu(vpleaf.back()->get_seeds());          // d
+             << "; #search: " << j << "; seeds: "; // d
+        Printvecu(vpleaf.back()->get_seeds());     // d
 
         BackSkipLeafBit_(vpleaf);
         i = 0, j = 0; // d

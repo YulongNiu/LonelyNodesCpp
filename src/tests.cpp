@@ -1,3 +1,5 @@
+#include <bit>
+#include <bitset>
 #include <boost/assert.hpp>
 #include <boost/dynamic_bitset.hpp>
 #include <chrono>
@@ -109,7 +111,6 @@ ln::vecvu TestSearchTree(const ln::gumap&  g,
   return cliques;
 }
 
-
 int main() {
 
   // //~~~~~~~~~~~~~~~~~~test dynamic_bitset~~~~~~~~~~~~~~~~~~~
@@ -121,10 +122,9 @@ int main() {
   // cout << "a is: " << a << "; b is: " << b
   //      << "; complement a\b is: " << ComplementBit(a, b) << endl;
 
-  // dbit   c{ string{ "0000000" } };
-  // string ghostIdx = (c.find_first() == dbit::npos) ? "yes" : "no";
-  // cout << "ghost 1 index is: " << c.find_first()
-  //      << "; is equal to npos: " << ghostIdx << endl;
+  dbit empdbitTest{ string{ "0000000" } };
+  BOOST_ASSERT_MSG(empdbitTest.find_first() == dbit::npos,
+                   "find_first() for no 1 in dbit is checked");
 
   // db1.push_back(1);
   // cout << db1 << endl;
@@ -134,8 +134,8 @@ int main() {
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~load graph~~~~~~~~~~~~~~~~~~~~~~~
-  // string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
-  string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
+  string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
+  // string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
 
   // string gfile   = "testm.bin"; // small graph
   // uword  nodeIdx = 0;           // #maximal clique 4
@@ -166,6 +166,11 @@ int main() {
   // Printvecdbit(gdbit);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+  //~~~~~~~~~~~~~~~~test bitset~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // bitset<tmp1> bitTest1{ "00000010" };
+  // cout << "bitset is: " << bitTest1 << endl;
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   // //~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~~~~~
   // Leaf testLeaf{ { 1 }, { 2, 3 }, { 4, 6, 9 } };
   // testLeaf.print();
@@ -182,7 +187,7 @@ int main() {
   LeafBit startnTest({}, dbitemptyTest, gdbit.at(nodeIdx));
   BOOST_ASSERT_MSG(startnTest.next_nodeidx(gdbit) ==
                      gdbit.at(nodeIdx).find_first(),
-                   "idx for `seeds.empty()` checked.");
+                   "idx for `seeds.empty()` is checked.");
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~test pivot~~~~~~~~~~~~~~~~~~~~~

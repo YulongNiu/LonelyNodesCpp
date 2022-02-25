@@ -127,9 +127,14 @@ dbit ComplementBit(const dbit& a, const dbit& b);
 
 dbit First0dbit_(const dbit& crown, const vecu& seed, const vecdbit& gdbit);
 
+arma::uword First0IdxBranchesBit_(const dbit& branches, const vecdbit& gdbit);
+
 // may equal to `dbit::npos`
-arma::uword
-First0IdxBit_(const dbit& stem, const dbit& branches, const dbit& f0);
+arma::uword First0IdxBit_(const dbit&    stem,
+                          const dbit&    branches,
+                          const dbit&    f0,
+                          const vecdbit& gdbit);
+
 
 vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit);
 

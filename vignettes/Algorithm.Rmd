@@ -1,0 +1,31 @@
+---
+title: "Fast maximal cliques enumeration by locally optimal nodes order"
+author: 
+- Yulong Niu
+date: "`r Sys.Date()`"
+header-includes:
+  - \usepackage{amsmath}
+  - \usepackage{mathtools}
+  - \usepackage{ctex}
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_float: true
+  rticles::ctex:
+    fig_caption: yes
+    number_sections: yes
+    toc: yes
+vignette: |
+  %\VignetteIndexEntry{Global ETF}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+
+# 1. Algorithm
+
+## 1.1 Algorithm design
+
+The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. The optimizations are attributed to "locally optimal nodes order", so we named it as "LONO". 
+
+
