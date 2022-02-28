@@ -11,7 +11,7 @@ OBJ := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC))
 
 CXX				:= clang++
 CPPFLAGS	:= -Iinclude -MMD -MP
-CFLAGS		:= -std=c++11 -g -Wall -O3
+CFLAGS		:= -std=c++17 -g -Wall -O3
 LDFLAGS		:=
 LDLIBS		:= -larmadillo
 

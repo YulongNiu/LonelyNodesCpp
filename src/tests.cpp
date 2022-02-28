@@ -9,7 +9,6 @@
 #include <type_traits>
 
 #include "bclique.h"
-#include "bitscan/bitscan.h"
 #include "clique.h"
 #include "init.h"
 #include "pivot.h"
@@ -145,12 +144,12 @@ int main() {
   // uword  nodeIdx = 332;         // #maximal clique 94
   // uword nodeIdx = 10; // #maximal clique 5
 
-  // string gfile = "testgbig.bin"; // large graph
-  // uword  nodeIdx = 9116;           // #maximal clique 3764
+  string gfile   = "testgbig.bin"; // large graph
+  uword  nodeIdx = 9116;           // #maximal clique 3764
   // uword nodeIdx = 100; // #maximal clique 264
 
-  string gfile   = "testblog.bin"; // blog graph
-  uword  nodeIdx = 0;              // #maximal clique 4
+  // string gfile   = "testblog.bin"; // blog graph
+  // uword  nodeIdx = 0;              // #maximal clique 4
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -175,11 +174,6 @@ int main() {
   cout << "#total nodes: " << gdbitall << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  //~~~~~~~~~~~~~~~~test bitscan~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  bitarray bbi(100);
-  bbi.set_bit(10);
-  cout << bbi;
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~~~~~
   // Leaf testLeaf{ { 1 }, { 2, 3 }, { 4, 6, 9 } };
