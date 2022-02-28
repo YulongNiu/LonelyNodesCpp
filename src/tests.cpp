@@ -1,3 +1,5 @@
+#include <bit>
+#include <bitset>
 #include <boost/assert.hpp>
 #include <boost/dynamic_bitset.hpp>
 #include <chrono>
@@ -7,6 +9,7 @@
 #include <type_traits>
 
 #include "bclique.h"
+#include "bitscan/bitscan.h"
 #include "clique.h"
 #include "init.h"
 #include "pivot.h"
@@ -109,7 +112,6 @@ ln::vecvu TestSearchTree(const ln::gumap&  g,
   return cliques;
 }
 
-
 int main() {
 
   // //~~~~~~~~~~~~~~~~~~test dynamic_bitset~~~~~~~~~~~~~~~~~~~
@@ -121,10 +123,9 @@ int main() {
   // cout << "a is: " << a << "; b is: " << b
   //      << "; complement a\b is: " << ComplementBit(a, b) << endl;
 
-  // dbit   c{ string{ "0000000" } };
-  // string ghostIdx = (c.find_first() == dbit::npos) ? "yes" : "no";
-  // cout << "ghost 1 index is: " << c.find_first()
-  //      << "; is equal to npos: " << ghostIdx << endl;
+  dbit empdbitTest{ string{ "0000000" } };
+  BOOST_ASSERT_MSG(empdbitTest.find_first() == dbit::npos,
+                   "find_first() for no 1 in dbit is checked");
 
   // db1.push_back(1);
   // cout << db1 << endl;
@@ -134,8 +135,8 @@ int main() {
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~load graph~~~~~~~~~~~~~~~~~~~~~~~
-  // string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
-  string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
+  string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
+  // string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
 
   // string gfile   = "testm.bin"; // small graph
   // uword  nodeIdx = 0;           // #maximal clique 4
@@ -144,14 +145,18 @@ int main() {
   // uword  nodeIdx = 332;         // #maximal clique 94
   // uword nodeIdx = 10; // #maximal clique 5
 
-  string gfile   = "testgbig.bin"; // large graph
-  uword  nodeIdx = 9116;           // #maximal clique 3764
+  // string gfile = "testgbig.bin"; // large graph
+  // uword  nodeIdx = 9116;           // #maximal clique 3764
+  // uword nodeIdx = 100; // #maximal clique 264
 
-  // string gfile   = "testblog.bin"; // blog graph
-  // uword  nodeIdx = 0;              // #maximal clique 4
+  string gfile   = "testblog.bin"; // blog graph
+  uword  nodeIdx = 0;              // #maximal clique 4
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
+
+  // string gfile   = "p-hat500-2.bin"; // c-fat200-5 graph
+  // uword  nodeIdx = 10;
 
   umat testg;
   testg.load(basepath + gfile, arma_binary);
@@ -164,7 +169,17 @@ int main() {
 
   // gidc.print("gidc is: ");'
   // Printvecdbit(gdbit);
+
+  // all vertices
+  auto gdbitall = gdbitAll(gdbit);
+  cout << "#total nodes: " << gdbitall << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  //~~~~~~~~~~~~~~~~test bitscan~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  bitarray bbi(100);
+  bbi.set_bit(10);
+  cout << bbi;
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~~~~~
   // Leaf testLeaf{ { 1 }, { 2, 3 }, { 4, 6, 9 } };
@@ -182,7 +197,7 @@ int main() {
   LeafBit startnTest({}, dbitemptyTest, gdbit.at(nodeIdx));
   BOOST_ASSERT_MSG(startnTest.next_nodeidx(gdbit) ==
                      gdbit.at(nodeIdx).find_first(),
-                   "idx for `seeds.empty()` checked.");
+                   "idx for `seeds.empty()` is checked.");
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~test pivot~~~~~~~~~~~~~~~~~~~~~
@@ -242,9 +257,9 @@ int main() {
 
   // //~~~~~~~~~~test read csv to umat~~~~~~~~~~~~~~~~
   // umat testblog;
-  // testblog.load(basepath + "testblog.csv", csv_ascii);
-  // testblog.brief_print("testblog is: ");
-  // testblog.save(basepath + "testblog.bin", arma_binary);
+  // testblog.load(basepath + "p-hat500-2.csv", csv_ascii);
+  // testblog.brief_print("p-hat500-2 is: ");
+  // testblog.save(basepath + "p-hat500-2.bin", arma_binary);
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~test TestSortNodes~~~~~~~~~~~~~~~~~~
@@ -311,8 +326,9 @@ int main() {
   auto start_time = chrono::system_clock::to_time_t(start);
 
   dbit    dbitempty(gdbit.size(), 0);
-  LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
-  auto    cliques = SearchLeafBit(startn, gdbit);
+  LeafBit startn({}, dbitempty, gdbitall);
+  // LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
+  auto cliques = SearchLeafBit(startn, gdbit);
 
   // Leaf startn({}, {}, { gg.at(nodeIdx) });
   // auto cliques = SearchLeafObj(startn, gidc);

@@ -114,3 +114,15 @@ ln::vecdbit gdbitInit(const ln::gumap& g) {
 
   return res;
 }
+
+
+// all nodes in dynamic bitset
+ln::dbit gdbitAll(const ln::vecdbit gdbit) {
+  dbit res(gdbit.size(), 0);
+
+  for (const auto& elem : gdbit) {
+    res |= elem;
+  }
+
+  return res;
+}
