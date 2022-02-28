@@ -13,7 +13,7 @@
 
 <meta name="date" content="2022-02-25" />
 
-<title>Fast maximal cliques enumeration by locally optimal nodes order</title>
+<title>Fast maximal cliques enumeration by locally optimal vertex order</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1858,7 +1858,7 @@ function toggle_visibility(id1) {
 
 
 
-<h1 class="title toc-ignore">Fast maximal cliques enumeration by locally optimal nodes order</h1>
+<h1 class="title toc-ignore">Fast maximal cliques enumeration by locally optimal vertex order</h1>
 <p class="author-name">Yulong Niu</p>
 <h4 class="date">2022-02-25</h4>
 
@@ -1869,7 +1869,11 @@ function toggle_visibility(id1) {
 <h1><span class="header-section-number">1</span> 1. Algorithm</h1>
 <div id="algorithm-design" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> 1.1 Algorithm design</h2>
-<p>The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. The optimizations are attributed to “locally optimal nodes order”, so we named it as “LONO”.</p>
+<p>The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. Most optimizations are attributed to “locally optimal vertex order”, so we named the new algorithm as “LOVO”.</p>
+<p>LOVO is based on Bron-Kerbosch’s algorithm that operating three disjoint sets of vertices during the search for maximal cliques:</p>
+<p><span class="math inline">\(X\)</span>: stores the searched vertices. Maximal cliques that contain every vertex have been found.</p>
+<p><span class="math inline">\(R\)</span>: stores vertices that linked to each other.</p>
+<p><span class="math inline">\(P\)</span>:</p>
 </div>
 </div>
 

@@ -1,5 +1,5 @@
 ---
-title: "Fast maximal cliques enumeration by locally optimal nodes order"
+title: "Fast maximal cliques enumeration by locally optimal vertex order"
 author: 
 - Yulong Niu
 date: "`r Sys.Date()`"
@@ -26,6 +26,14 @@ vignette: |
 
 ## 1.1 Algorithm design
 
-The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. The optimizations are attributed to "locally optimal nodes order", so we named it as "LONO". 
+The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. Most optimizations are attributed to "locally optimal vertex order", so we named the new algorithm as "LOVO". 
+
+LOVO is based on Bron-Kerbosch's algorithm that operating three disjoint sets of vertices during the search for maximal cliques:
+
+$X$: stores the searched vertices. Maximal cliques that contain every vertex have been found.
+
+$R$: stores vertices that linked to each other. 
+    
+$P$: 
 
 

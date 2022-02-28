@@ -25,4 +25,6 @@ arma::umat gidcInit(const ln::gumap& g);
 
 ln::vecdbit gdbitInit(const ln::gumap& g);
 
+ln::dbit gdbitAll(const ln::vecdbit gdbit);
+
 #endif // _INIT_H_

@@ -84,9 +84,9 @@ arma::uword First0IdxBit_(const dbit&    stem,
                           const dbit&    f0,
                           const vecdbit& gdbit) {
 
-  // return (stem & f0).any() ? branches.find_first() : f0.find_first();
-  return (stem & f0).any() ? First0IdxBranchesBit_(branches, gdbit) :
-                             f0.find_first();
+  return (stem & f0).any() ? branches.find_first() : f0.find_first();
+  // return (stem & f0).any() ? First0IdxBranchesBit_(branches, gdbit) :
+  //                            f0.find_first();
 }
 
 

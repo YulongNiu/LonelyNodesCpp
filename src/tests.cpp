@@ -9,6 +9,7 @@
 #include <type_traits>
 
 #include "bclique.h"
+#include "bitscan/bitscan.h"
 #include "clique.h"
 #include "init.h"
 #include "pivot.h"
@@ -144,14 +145,18 @@ int main() {
   // uword  nodeIdx = 332;         // #maximal clique 94
   // uword nodeIdx = 10; // #maximal clique 5
 
-  string gfile   = "testgbig.bin"; // large graph
-  uword  nodeIdx = 9116;           // #maximal clique 3764
+  // string gfile = "testgbig.bin"; // large graph
+  // uword  nodeIdx = 9116;           // #maximal clique 3764
+  // uword nodeIdx = 100; // #maximal clique 264
 
-  // string gfile   = "testblog.bin"; // blog graph
-  // uword  nodeIdx = 0;              // #maximal clique 4
+  string gfile   = "testblog.bin"; // blog graph
+  uword  nodeIdx = 0;              // #maximal clique 4
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
+
+  // string gfile   = "p-hat500-2.bin"; // c-fat200-5 graph
+  // uword  nodeIdx = 10;
 
   umat testg;
   testg.load(basepath + gfile, arma_binary);
@@ -164,11 +169,16 @@ int main() {
 
   // gidc.print("gidc is: ");'
   // Printvecdbit(gdbit);
+
+  // all vertices
+  auto gdbitall = gdbitAll(gdbit);
+  cout << "#total nodes: " << gdbitall << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  //~~~~~~~~~~~~~~~~test bitset~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  // bitset<tmp1> bitTest1{ "00000010" };
-  // cout << "bitset is: " << bitTest1 << endl;
+  //~~~~~~~~~~~~~~~~test bitscan~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  bitarray bbi(100);
+  bbi.set_bit(10);
+  cout << bbi;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~~~~~
@@ -247,9 +257,9 @@ int main() {
 
   // //~~~~~~~~~~test read csv to umat~~~~~~~~~~~~~~~~
   // umat testblog;
-  // testblog.load(basepath + "testblog.csv", csv_ascii);
-  // testblog.brief_print("testblog is: ");
-  // testblog.save(basepath + "testblog.bin", arma_binary);
+  // testblog.load(basepath + "p-hat500-2.csv", csv_ascii);
+  // testblog.brief_print("p-hat500-2 is: ");
+  // testblog.save(basepath + "p-hat500-2.bin", arma_binary);
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   // //~~~~~~~~~~~~~~~~~~~~test TestSortNodes~~~~~~~~~~~~~~~~~~
@@ -316,8 +326,9 @@ int main() {
   auto start_time = chrono::system_clock::to_time_t(start);
 
   dbit    dbitempty(gdbit.size(), 0);
-  LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
-  auto    cliques = SearchLeafBit(startn, gdbit);
+  LeafBit startn({}, dbitempty, gdbitall);
+  // LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
+  auto cliques = SearchLeafBit(startn, gdbit);
 
   // Leaf startn({}, {}, { gg.at(nodeIdx) });
   // auto cliques = SearchLeafObj(startn, gidc);
