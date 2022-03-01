@@ -122,9 +122,6 @@ inline void LeafBit::print() const {
 using pleafbit    = std::shared_ptr<LeafBit>;
 using vecpleafbit = std::vector<pleafbit>;
 
-// complement a \ b
-dbit ComplementBit(const dbit& a, const dbit& b);
-
 dbit First0dbit_(const dbit& crown, const vecu& seed, const vecdbit& gdbit);
 
 arma::uword First0IdxBranchesBit_(const dbit& branches, const vecdbit& gdbit);

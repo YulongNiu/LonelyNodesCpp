@@ -28,11 +28,6 @@ arma::uword LeafBit::next_nodeidx(const vecdbit& gdbit) const {
   return First0IdxBit_(stem, branches, f0, gdbit);
 }
 
-
-dbit ComplementBit(const dbit& a, const dbit& b) {
-  return a & (~b);
-}
-
 // If `seeds.empty()`, return `crown` that will never be empty.
 dbit First0dbit_(const dbit& crown, const vecu& seeds, const vecdbit& gdbit) {
   arma::uword maxCt = 0;
@@ -78,7 +73,6 @@ arma::uword First0IdxBranchesBit_(const dbit& branches, const vecdbit& gdbit) {
 // `branches.find_first()` returns; if `stem.none()`,
 // `f0.find_first()` equal to `branches.find_first()`, returns.
 // In total, if `seeds.empty()`, `branches.find_first()` always returns.
-//
 arma::uword First0IdxBit_(const dbit&    stem,
                           const dbit&    branches,
                           const dbit&    f0,
