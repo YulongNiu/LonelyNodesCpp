@@ -1,39 +1,72 @@
 ---
-title: "Fast maximal cliques enumeration by locally optimal vertex order"
+title: "Fast maximal cliques enumeration by locally optimal vertex ordering"
 author: 
 - Yulong Niu
 date: "`r Sys.Date()`"
+csl: nature.csl
+bibliography: MaximalCliqueRef.bib
 header-includes:
   - \usepackage{amsmath}
   - \usepackage{mathtools}
-  - \usepackage{ctex}
 output:
   BiocStyle::html_document:
     toc: true
     toc_float: true
-  rticles::ctex:
-    fig_caption: yes
-    number_sections: yes
-    toc: yes
+  BiocStyle::pdf_document:
+    toc: true
+    latex_engine: pdflatex
 vignette: |
   %\VignetteIndexEntry{Global ETF}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
+```{r style, echo=FALSE, results='asis', message=FALSE}
+options(tinytex.verbose = TRUE)
+BiocStyle::markdown()
+knitr::opts_chunk$set(tidy = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+```
 
-# 1. Algorithm
+# Algorithm
 
-## 1.1 Algorithm design
+## Preliminaries
 
-The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. Most optimizations are attributed to "locally optimal vertex order", so we named the new algorithm as "LOVO". 
+1.  A simple undirected graph is denoted as $G(V, E)$.
 
-LOVO is based on Bron-Kerbosch's algorithm that operating three disjoint sets of vertices during the search for maximal cliques:
+2.  For a vertex $v \in V$, $\Gamma(v)$ denotes all vertices adjacent to $v$ in $G$.
 
-$X$: stores the searched vertices. Maximal cliques that contain every vertex have been found.
+## Algorithm design
 
-$R$: stores vertices that linked to each other. 
-    
-$P$: 
+The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. Most optimizations are attributed to "locally optimal vertex ordering", so we named the new algorithm as "`LOVO`".
+
+`LOVO` is based on Bron-Kerbosch's algorithm [@bron1973algorithm] that operating three disjoint sets of vertices during the search for maximal cliques:
+
+$X$: $x \in X$ are searched vertices. Maximal cliques that contain $\forall x \in X$ have been found.
+
+$R$: $\forall r \in R$ links to each other.
+
+$P$: $\forall p \in P$ links to all vertices in $R$, but $p \in P$ not necessarily links to each other.
+
+Status $s$ is defined as a combination of $X$, $R$, and $P$.
+
+\begin{equation*}
+\begin{split}
+s &: \{ x \in X \}, \{ r \in R \}, \{ p \in P \} \\
+& X \cup R \cup P = V
+\end{split}
+\end{equation*}
 
 
+In raw Bron-Kerbosch's algorithm:
+
+* Step1: randomly selecting a vertex $p$ in $P$
+
+# Unsolved problems
+
+## Order vertices in $P$.
+
+**Strategy 1**: choose $v \in P$ that maximizes $\Gamma(v) \cap P$, then $v$ will be move to $X$ in the next status $s$. The search number will be reduced.
+
+# References

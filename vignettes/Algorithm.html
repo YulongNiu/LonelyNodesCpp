@@ -11,9 +11,9 @@
 
 <meta name="author" content="Yulong Niu" />
 
-<meta name="date" content="2022-02-25" />
+<meta name="date" content="2022-03-02" />
 
-<title>Fast maximal cliques enumeration by locally optimal vertex order</title>
+<title>Fast maximal cliques enumeration by locally optimal vertex ordering</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1327,6 +1327,29 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <style type="text/css">body {
 margin: 0px auto;
 max-width: 1134px;
@@ -1702,6 +1725,9 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
 </style>
 
 
@@ -1858,22 +1884,68 @@ function toggle_visibility(id1) {
 
 
 
-<h1 class="title toc-ignore">Fast maximal cliques enumeration by locally optimal vertex order</h1>
+<h1 class="title toc-ignore">Fast maximal cliques enumeration by locally optimal vertex ordering</h1>
 <p class="author-name">Yulong Niu</p>
-<h4 class="date">2022-02-25</h4>
+<h4 class="date">2022-03-02</h4>
 
 </div>
 
 
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelector("h1").className = "title";
+});
+</script>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function() {
+  var links = document.links;  
+  for (var i = 0, linksLength = links.length; i < linksLength; i++)
+    if (links[i].hostname != window.location.hostname)
+      links[i].target = '_blank';
+});
+</script>
 <div id="algorithm" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> 1. Algorithm</h1>
-<div id="algorithm-design" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> 1.1 Algorithm design</h2>
-<p>The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. Most optimizations are attributed to “locally optimal vertex order”, so we named the new algorithm as “LOVO”.</p>
-<p>LOVO is based on Bron-Kerbosch’s algorithm that operating three disjoint sets of vertices during the search for maximal cliques:</p>
-<p><span class="math inline">\(X\)</span>: stores the searched vertices. Maximal cliques that contain every vertex have been found.</p>
-<p><span class="math inline">\(R\)</span>: stores vertices that linked to each other.</p>
-<p><span class="math inline">\(P\)</span>:</p>
+<h1><span class="header-section-number">1</span> Algorithm</h1>
+<div id="preliminaries" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Preliminaries</h2>
+<ol style="list-style-type: decimal">
+<li><p>A simple undirected graph is denoted as <span class="math inline">\(G(V, E)\)</span>.</p></li>
+<li><p>For a vertex <span class="math inline">\(v \in V\)</span>, <span class="math inline">\(\Gamma(v)\)</span> denotes all vertices adjacent to <span class="math inline">\(v\)</span> in <span class="math inline">\(G\)</span>.</p></li>
+</ol>
+</div>
+<div id="algorithm-design" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Algorithm design</h2>
+<p>The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. Most optimizations are attributed to “locally optimal vertex ordering”, so we named the new algorithm as “<code>LOVO</code>”.</p>
+<p><code>LOVO</code> is based on Bron-Kerbosch’s algorithm<span class="citation"><sup>1</sup></span> that operating three disjoint sets of vertices during the search for maximal cliques:</p>
+<p><span class="math inline">\(X\)</span>: <span class="math inline">\(x \in X\)</span> are searched vertices. Maximal cliques that contain <span class="math inline">\(\forall x \in X\)</span> have been found.</p>
+<p><span class="math inline">\(R\)</span>: <span class="math inline">\(\forall r \in R\)</span> links to each other.</p>
+<p><span class="math inline">\(P\)</span>: <span class="math inline">\(\forall p \in P\)</span> links to all vertices in <span class="math inline">\(R\)</span>, but <span class="math inline">\(p \in P\)</span> not necessarily links to each other.</p>
+<p>Status <span class="math inline">\(s\)</span> is defined as a combination of <span class="math inline">\(X\)</span>, <span class="math inline">\(R\)</span>, and <span class="math inline">\(P\)</span>.</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+s &amp;: \{ x \in X \}, \{ r \in R \}, \{ p \in P \} \\
+&amp; X \cup R \cup P = V
+\end{split}
+\end{equation*}\]</span></p>
+<p>In raw Bron-Kerbosch’s algorithm:</p>
+<ul>
+<li>Step1:</li>
+</ul>
+</div>
+</div>
+<div id="unsolved-problems" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Unsolved problems</h1>
+<div id="order-vertices-in-p." class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Order vertices in <span class="math inline">\(P\)</span>.</h2>
+<p><strong>Strategy 1</strong>: choose <span class="math inline">\(v \in P\)</span> that maximizes <span class="math inline">\(\Gamma(v) \cap P\)</span>, then <span class="math inline">\(v\)</span> will be move to <span class="math inline">\(X\)</span> in the next status <span class="math inline">\(s\)</span>. The search number will be reduced.</p>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body" line-spacing="2">
+<div id="ref-bron1973algorithm" class="csl-entry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Bron, C. &amp; Kerbosch, J. Algorithm 457: Finding all cliques of an undirected graph. <em>Communications of the ACM</em> <strong>16,</strong> 575–577 (1973).</div>
+</div>
 </div>
 </div>
 
