@@ -35,7 +35,7 @@ knitr::opts_chunk$set(tidy = FALSE,
 
 1.  A simple undirected graph is denoted as $G(V, E)$.
 
-2.  For a vertex $v \in V$, $\Gamma(v)$ denotes all vertices adjacent to $v$ in $G$.
+2.  For a vertex $v \in V$, $\Gamma(v)$ denotes all vertices adjacent to $v$ in $G$. Note that $v \notin \Gamma(v)$.
 
 ## Algorithm design
 
@@ -47,26 +47,120 @@ $X$: $x \in X$ are searched vertices. Maximal cliques that contain $\forall x \i
 
 $R$: $\forall r \in R$ links to each other.
 
-$P$: $\forall p \in P$ links to all vertices in $R$, but $p \in P$ not necessarily links to each other.
+$P$: $\forall p \in P$ links to all vertices in $R$, but $p \in P$ not necessarily links to each other. When vertex $p_1$ deleted in $P$, set $\{ p \in P | p \neq p_1 \}$ is denoted as $\{ P \setminus p_1 \}$.
 
 Status $s$ is defined as a combination of $X$, $R$, and $P$.
 
 \begin{equation*}
 \begin{split}
 s &: \{ x \in X \}, \{ r \in R \}, \{ p \in P \} \\
-& X \cup R \cup P = V
 \end{split}
 \end{equation*}
 
+### Raw Bron-Kerbosch's algorithm
 
-In raw Bron-Kerbosch's algorithm:
+Raw Bron-Kerbosch's algorithm could be expressed as:
 
-* Step1: randomly selecting a vertex $p$ in $P$
+* Step1: randomly selecting a vertex $p_1$ in $P$, then a new status $s_{new}$ is generated:
+
+\begin{equation}
+\begin{split}
+s_{new} &: \{ x \in X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \} \\
+\end{split}
+(\#eq:1)
+\end{equation}
+
+* Step2: Iterating `Step1` until $P = \emptyset$:
+
+\begin{equation*}
+\begin{split}
+s_{stop} &: \{ x \in X \}, \{r \in R, p_1, \dots, p_n \}, \{ \} \\
+\end{split}
+\end{equation*}
+
+Check if $R$, a clique, is a subset of any $\Gamma(x | x \in X)$. If not, then $R$ is a new maximal clique.
+
+* Step3: backtracking status $s$:
+
+\begin{equation}
+\begin{split}
+s_{updated} &: \{ x \in X, p_1 \}, \{ r \in R \}, \{ P \setminus p_1 \} \\
+\end{split}
+(\#eq:2)
+\end{equation}
+
+It means for status $s$, $p_1$ has been completely searched. Then, repeat `Step1` and `Step2` until all vertices in $P$ are searched, in another words, $P = \emptyset$, so we get all maximal cliques from status $s$.
+
+The initial status of $G(V, E)$ is set as:
+
+\begin{equation*}
+\begin{split}
+s_{init} &: \{ \}, \{ \}, \{ v \in V \} \\
+\end{split}
+\end{equation*}
+
+### LOVO
+
+`LOVO` is designed based on the fact that: $\forall p \in P$ are searched in status $s$, and cliques in $s_{stop}$ is checked by $\Gamma(x)$, so for a given $x_n \in X$ if $P$ containing only $P \cap \Gamma(x_n)$ can be skipped when $R \subset \Gamma(x_n)$. $R \subset \Gamma(x_n)$ can be meet with high possibility, because $X$ is growing in `Step3`. Moreover, in a dense graph $\Gamma(x_n)$ covers most vertices that make the restriction above to be meet more easily.
+
+The skippable status is described as:
+
+\begin{equation*}
+\begin{split}
+s_{skip} &: \{x \in X\}, \{  r \in (R | R \subset \Gamma(x_n)) \}, \{ P \cap \Gamma(x_n | x_n \in X) \} \\
+\end{split}
+\end{equation*}
+
+In `LOVO`, $x_n$ is chosen to maximize $|N(x_n)|$, which is equal to the number of skipped iterations:
+
+\begin{equation*}
+\begin{split}
+N(x_n) &= (R \cup P) \cap \Gamma(x_n) \\
+\end{split}
+\end{equation*}
+
+The `LOVO` is described as:
+
+* step1: select $x_n$ to maximize $|N(x_n)|$,
+
+*Case1*: $R \not\subset \Gamma(x_n)$, randomly select $p_1$ from $P$.
+
+*Case2*: $R \subset \Gamma(x_n)$ and $P \setminus N(x_n) \neq \emptyset$, randomly select $p_1$ from $P \setminus N(x_n)$. In this way, $p \in P \setminus N(x_n)$ are always searched in last rank.
+
+*Case3*: $R \subset \Gamma(x_n)$ and $P \setminus N(x_n) = \emptyset$, skip current status, then backtrack to the second latest status.
+
+The status $s_{new}$ has the same format as \@ref(eq:1). The status $s$ is updated as \@ref(eq:2).
+
+* step2: Use the same vertex selection and ordering method for $s_{new}$. Note that $x_n^{\prime}$ in $s_{new}$ may be different from the $x_n$ in $s$. It means $x_n$ is always chose according to the current status $s$ and make the $|N(x_n)|$ local optimal. Repeat `step1` until $P = \emptyset$, then check whether current $R$ is a maximal clique.
+
+* step3: backtrack to the second latest status, and repeat `step2` until no status left.
+
+A search tree of status $s$ looks like:
+
+```
+{s}
+{s_u, s_n} ## s is updated to s_u, and s_n is generated based on s.
+{s_u, s_u1, s_n1} ## s_n is updated to s_u1, and s_n1 is generated based on s_n.
+{s_u, s_u1, s_u2, s_n2}
+{s_u, s_u1, s_u2, s_u3, s_n3} ## P in s_n3 is empty, check whether R in s_n is maximal clique.
+{s_u, s_u1, s_u2, s_n3', s_n3'} ## s_u3 is updated to s_n3', and s_n3' is genereated based on s_u3.
+{s_u, s_u1, s_u2, s_n3'} ## s_n3' is skipped because case3 above occurs.
+...
+{} ## Stop when no status left.
+```
+
+### Optimization
+
+## 
+
+Different from Bron-Kerbosch's algorithm, `LOVO` 
 
 # Unsolved problems
 
-## Order vertices in $P$.
+## Vertices ordering in $P$
 
 **Strategy 1**: choose $v \in P$ that maximizes $\Gamma(v) \cap P$, then $v$ will be move to $X$ in the next status $s$. The search number will be reduced.
+
+## Maximize $|(R \cup P) \cap \Gamma(x_n)|$ or $|P \cap \Gamma(x_n)|$ ?
 
 # References
