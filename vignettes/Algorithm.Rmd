@@ -65,7 +65,7 @@ Raw Bron-Kerbosch's algorithm could be expressed as:
 
 \begin{equation}
 \begin{split}
-s_{new} &: \{ x \in X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \} \\
+s_{new} &: \{ x \in X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \cap P \} \\
 \end{split}
 (\#eq:1)
 \end{equation}
@@ -101,7 +101,7 @@ s_{init} &: \{ \}, \{ \}, \{ v \in V \} \\
 
 ### LOVO
 
-`LOVO` is designed based on the fact that: $\forall p \in P$ are searched in status $s$, and cliques in $s_{stop}$ is checked by $\Gamma(x)$, so for a given $x_n \in X$ if $P$ containing only $P \cap \Gamma(x_n)$ can be skipped when $R \subset \Gamma(x_n)$. $R \subset \Gamma(x_n)$ can be meet with high possibility, because $X$ is growing in `Step3`. Moreover, in a dense graph $\Gamma(x_n)$ covers most vertices that make the restriction above to be meet more easily.
+`LOVO` is designed based on the fact that: $\forall p \in P$ are searched in status $s$, and cliques in $s_{stop}$ is checked by $\Gamma(x)$, so for a given $x_n \in X$ if $P$ containing only $P \cap \Gamma(x_n)$ can be skipped when $R \subset \Gamma(x_n)$. $R \subset \Gamma(x_n)$ can be meet with high possibility, because $X$ is kept growing in `Step3`. Moreover, in a dense graph $\Gamma(x_n)$ covers most vertices that make the restriction above to be meet more easily.
 
 The skippable status is described as:
 
@@ -149,11 +149,53 @@ A search tree of status $s$ looks like:
 {} ## Stop when no status left.
 ```
 
-### Optimization
+## Optimization
 
-## 
+### Check before search
 
-Different from Bron-Kerbosch's algorithm, `LOVO` 
+Different from Bron-Kerbosch's algorithm, `LOVO` "ordered" vertices in $P$ that roughly split $P$ into two groups $N(x_n)$ and $P \setminus N(x_n)$. Vertex $p$ for next search was randomly selected from $P \setminus N(x_n)$.
+
+`LOVO` always checked the union of $R$ and $P$ is part of searched maximal cliques, so invalid iterations could be avoid. *Case3* in `step1` above described the condition, $R \subset \Gamma(x_n)$ and $P \setminus N(x_n) = \emptyset$ that equals to $(R \cup P) \subset \Gamma(x_n | x_n \in X)$. Besides, maximized $|N(x_n)|$ guaranteed that largest possible searched maximal cliques or parts were checked in high priority. 
+
+It is possible that a chosen vertex $p_x$ from $P \setminus N(x_n)$ actually formed a searched maximal cliques. $p_x$ is omitted just because its corresponding $N(x_m)$ is not maximal. Any $p_x$ like below should not be searched:
+
+\begin{equation*}
+\begin{split}
+\{ \Gamma(p_x) \cap P \cup R, p_x \} \subset \Gamma(x_m | x_m \in X) \\
+\end{split}
+\end{equation*}
+
+`LOVO` only did one more search for $p_x$. Because when $p_x$ was selected, new status would be:
+
+\begin{equation*}
+\begin{split}
+s_{new} &: \{ x \in X \}, \{ r \in R, p_x \}, \{ \Gamma(p_x) \cap P \} \\
+\end{split}
+\end{equation*}
+
+Clearly, $s_{new}$ would be skipped before next search.
+
+### `bitset` transformation of linked vertices
+
+Compared to Bron-Kerbosch's algorithm, `LOVO` added the step $N(x_n)$ that handled huge amount of `set intersection` and `set union` operation. Instead of holding a integer vector for vertex indices, `LOVO` implemented a `bitset` for edge representation. A similar strategy called `bitscan` is used [@san2018efficiently].
+
+For example, using integer vector a triangle graph is represented as:
+
+```
+0: 1, 2
+1: 0, 2
+2: 0, 1
+```
+
+In `LOVO`, the graph is transformed as:
+
+```
+110
+101
+011
+```
+
+`LOVO`, even the operation gs$\Gamma(p_1) \cap P$ in Bron-Kerbosch's algorithm, benefited greatly from `and` and `or` with hardware optimization in different languages.
 
 # Unsolved problems
 

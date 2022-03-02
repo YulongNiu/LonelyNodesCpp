@@ -1934,7 +1934,7 @@ s &amp;: \{ x \in X \}, \{ r \in R \}, \{ p \in P \} \\
 </ul>
 <p><span class="math display" id="eq:1">\[\begin{equation}
 \begin{split}
-s_{new} &amp;: \{ x \in X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \} \\
+s_{new} &amp;: \{ x \in X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \cap P \} \\
 \end{split}
 \tag{1}
 \end{equation}\]</span></p>
@@ -1966,7 +1966,7 @@ s_{init} &amp;: \{ \}, \{ \}, \{ v \in V \} \\
 </div>
 <div id="lovo" class="section level3" number="1.2.2">
 <h3><span class="header-section-number">1.2.2</span> LOVO</h3>
-<p><code>LOVO</code> is designed based on the fact that: <span class="math inline">\(\forall p \in P\)</span> are searched in status <span class="math inline">\(s\)</span>, and cliques in <span class="math inline">\(s_{stop}\)</span> is checked by <span class="math inline">\(\Gamma(x)\)</span>, so for a given <span class="math inline">\(x_n \in X\)</span> if <span class="math inline">\(P\)</span> containing only <span class="math inline">\(P \cap \Gamma(x_n)\)</span> can be skipped when <span class="math inline">\(R \subset \Gamma(x_n)\)</span>. <span class="math inline">\(R \subset \Gamma(x_n)\)</span> can be meet with high possibility, because <span class="math inline">\(X\)</span> is growing in <code>Step3</code>. Moreover, in a dense graph <span class="math inline">\(\Gamma(x_n)\)</span> covers most vertices that make the restriction above to be meet more easily.</p>
+<p><code>LOVO</code> is designed based on the fact that: <span class="math inline">\(\forall p \in P\)</span> are searched in status <span class="math inline">\(s\)</span>, and cliques in <span class="math inline">\(s_{stop}\)</span> is checked by <span class="math inline">\(\Gamma(x)\)</span>, so for a given <span class="math inline">\(x_n \in X\)</span> if <span class="math inline">\(P\)</span> containing only <span class="math inline">\(P \cap \Gamma(x_n)\)</span> can be skipped when <span class="math inline">\(R \subset \Gamma(x_n)\)</span>. <span class="math inline">\(R \subset \Gamma(x_n)\)</span> can be meet with high possibility, because <span class="math inline">\(X\)</span> is kept growing in <code>Step3</code>. Moreover, in a dense graph <span class="math inline">\(\Gamma(x_n)\)</span> covers most vertices that make the restriction above to be meet more easily.</p>
 <p>The skippable status is described as:</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
@@ -2002,9 +2002,39 @@ N(x_n) &amp;= (R \cup P) \cap \Gamma(x_n) \\
 ...
 {} ## Stop when no status left.</code></pre>
 </div>
-<div id="optimization" class="section level3" number="1.2.3">
-<h3><span class="header-section-number">1.2.3</span> Optimization</h3>
-<p><code>LOVO</code> is</p>
+</div>
+<div id="optimization" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Optimization</h2>
+<div id="check-before-search" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Check before search</h3>
+<p>Different from Bron-Kerbosch’s algorithm, <code>LOVO</code> “ordered” vertices in <span class="math inline">\(P\)</span> that roughly split <span class="math inline">\(P\)</span> into two groups <span class="math inline">\(N(x_n)\)</span> and <span class="math inline">\(P \setminus N(x_n)\)</span>. Vertex <span class="math inline">\(p\)</span> for next search was randomly selected from <span class="math inline">\(P \setminus N(x_n)\)</span>.</p>
+<p><code>LOVO</code> always checked the union of <span class="math inline">\(R\)</span> and <span class="math inline">\(P\)</span> is part of searched maximal cliques, so invalid iterations could be avoid. <em>Case3</em> in <code>step1</code> above described the condition, <span class="math inline">\(R \subset \Gamma(x_n)\)</span> and <span class="math inline">\(P \setminus N(x_n) = \emptyset\)</span> that equals to <span class="math inline">\((R \cup P) \subset \Gamma(x_n | x_n \in X)\)</span>. Besides, maximized <span class="math inline">\(|N(x_n)|\)</span> guaranteed that largest possible searched maximal cliques or parts were checked in high priority.</p>
+<p>It is possible that a chosen vertex <span class="math inline">\(p_x\)</span> from <span class="math inline">\(P \setminus N(x_n)\)</span> actually formed a searched maximal cliques. <span class="math inline">\(p_x\)</span> is omitted just because its corresponding <span class="math inline">\(N(x_m)\)</span> is not maximal. Any <span class="math inline">\(p_x\)</span> like below should not be searched:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+\{ \Gamma(p_x) \cap P \cup R, p_x \} \subset \Gamma(x_m | x_m \in X) \\
+\end{split}
+\end{equation*}\]</span></p>
+<p><code>LOVO</code> only did one more search for <span class="math inline">\(p_x\)</span>. Because when <span class="math inline">\(p_x\)</span> was selected, new status would be:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+s_{new} &amp;: \{ x \in X \}, \{ r \in R, p_x \}, \{ \Gamma(p_x) \cap P \} \\
+\end{split}
+\end{equation*}\]</span></p>
+<p>Clearly, <span class="math inline">\(s_{new}\)</span> would be skipped before next search.</p>
+</div>
+<div id="bitset-transformation-of-linked-vertices" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> <code>bitset</code> transformation of linked vertices</h3>
+<p>Compared to Bron-Kerbosch’s algorithm, <code>LOVO</code> added the step <span class="math inline">\(N(x_n)\)</span> that handled huge amount of <code>set intersection</code> and <code>set union</code> operation. Instead of holding a integer vector for vertex indices, <code>LOVO</code> implemented a <code>bitset</code> for edge representation. A similar strategy called <code>bitscan</code> is used<span class="citation"><sup>2</sup></span>.</p>
+<p>For example, using integer vector a triangle graph is represented as:</p>
+<pre><code>0: 1, 2
+1: 0, 2
+2: 0, 1</code></pre>
+<p>In <code>LOVO</code>, the graph is transformed as:</p>
+<pre><code>110
+101
+011</code></pre>
+<p><code>LOVO</code>, even the operation in <span class="math inline">\(\Gamma(p_1) \cap P\)</span> in Bron-Kerbosch’s algorithm, benefited greatly from <code>and</code> and <code>or</code> with hardware optimization in different languages.</p>
 </div>
 </div>
 </div>
@@ -2023,6 +2053,9 @@ N(x_n) &amp;= (R \cup P) \cap \Gamma(x_n) \\
 <div id="refs" class="references csl-bib-body" line-spacing="2">
 <div id="ref-bron1973algorithm" class="csl-entry">
 <div class="csl-left-margin">1. </div><div class="csl-right-inline">Bron, C. &amp; Kerbosch, J. Algorithm 457: Finding all cliques of an undirected graph. <em>Communications of the ACM</em> <strong>16,</strong> 575–577 (1973).</div>
+</div>
+<div id="ref-san2018efficiently" class="csl-entry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">San Segundo, P., Artieda, J. &amp; Strash, D. Efficiently enumerating all maximal cliques with bit-parallelism. <em>Computers &amp; Operations Research</em> <strong>92,</strong> 37–46 (2018).</div>
 </div>
 </div>
 </div>
