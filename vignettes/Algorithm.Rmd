@@ -1,7 +1,6 @@
 ---
 title: "Fast maximal cliques enumeration by locally optimal vertex ordering"
 author: 
-- Yulong Niu
 date: "`r Sys.Date()`"
 csl: nature.csl
 bibliography: MaximalCliqueRef.bib
@@ -41,13 +40,13 @@ knitr::opts_chunk$set(tidy = FALSE,
 
 The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. Most optimizations are attributed to "locally optimal vertex ordering", so we named the new algorithm as "`LOVO`".
 
-`LOVO` is based on Bron-Kerbosch's algorithm [@bron1973algorithm] that operating three disjoint sets of vertices during the search for maximal cliques:
+`LOVO`, inspired by Bron-Kerbosch's algorithm [@bron1973algorithm], operated three disjoint sets of vertices during the search for maximal cliques:
 
-$X$: $x \in X$ are searched vertices. Maximal cliques that contain $\forall x \in X$ have been found.
+$X$: $x \in X$ are searched vertices. Maximal cliques that contain $\forall x \in X$ have been enumerated.
 
 $R$: $\forall r \in R$ links to each other.
 
-$P$: $\forall p \in P$ links to all vertices in $R$, but $p \in P$ not necessarily links to each other. When vertex $p_1$ deleted in $P$, set $\{ p \in P | p \neq p_1 \}$ is denoted as $\{ P \setminus p_1 \}$.
+$P$: $\forall p \in P$ links to all vertices in $R$, but $p \in P$ not necessarily links to each other. When vertex $p_1$ is deleted in $P$, the set $\{ p \in P | p \neq p_1 \}$ is denoted as $\{ P \setminus p_1 \}$.
 
 Status $s$ is defined as a combination of $X$, $R$, and $P$.
 
@@ -61,7 +60,7 @@ s &: \{ x \in X \}, \{ r \in R \}, \{ p \in P \} \\
 
 Raw Bron-Kerbosch's algorithm could be expressed as:
 
-* Step1: randomly selecting a vertex $p_1$ in $P$, then a new status $s_{new}$ is generated:
+* Step1: randomly select a vertex $p_1$ in $P$, then generate a new status $s_{new}$:
 
 \begin{equation}
 \begin{split}
@@ -70,7 +69,7 @@ s_{new} &: \{ x \in X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \cap P \} \\
 (\#eq:1)
 \end{equation}
 
-* Step2: Iterating `Step1` until $P = \emptyset$:
+* Step2: iterate `Step1` until $P = \emptyset$:
 
 \begin{equation*}
 \begin{split}
@@ -80,7 +79,7 @@ s_{stop} &: \{ x \in X \}, \{r \in R, p_1, \dots, p_n \}, \{ \} \\
 
 Check if $R$, a clique, is a subset of any $\Gamma(x | x \in X)$. If not, then $R$ is a new maximal clique.
 
-* Step3: backtracking status $s$:
+* Step3: backtrack to a updated status $s$:
 
 \begin{equation}
 \begin{split}
@@ -91,7 +90,7 @@ s_{updated} &: \{ x \in X, p_1 \}, \{ r \in R \}, \{ P \setminus p_1 \} \\
 
 It means for status $s$, $p_1$ has been completely searched. Then, repeat `Step1` and `Step2` until all vertices in $P$ are searched, in another words, $P = \emptyset$, so we get all maximal cliques from status $s$.
 
-The initial status of $G(V, E)$ is set as:
+The initial status of $G(V, E)$ could be set as:
 
 \begin{equation*}
 \begin{split}
@@ -111,7 +110,9 @@ s_{skip} &: \{x \in X\}, \{  r \in (R | R \subset \Gamma(x_n)) \}, \{ P \cap \Ga
 \end{split}
 \end{equation*}
 
-In `LOVO`, $x_n$ is chosen to maximize $|N(x_n)|$, which is equal to the number of skipped iterations:
+$P \cap \Gamma(x_n | x_n \in X)$ is equal to the number of skipped iterations.
+
+In `LOVO`, $x_n$ is chosen to maximize $|N(x_n)|$:
 
 \begin{equation*}
 \begin{split}
@@ -125,13 +126,13 @@ The `LOVO` is described as:
 
 *Case1*: $R \not\subset \Gamma(x_n)$, randomly select $p_1$ from $P$.
 
-*Case2*: $R \subset \Gamma(x_n)$ and $P \setminus N(x_n) \neq \emptyset$, randomly select $p_1$ from $P \setminus N(x_n)$. In this way, $p \in P \setminus N(x_n)$ are always searched in last rank.
+*Case2*: $R \subset \Gamma(x_n)$ and $P \setminus N(x_n) \neq \emptyset$, randomly select $p_1$ from $P \setminus N(x_n)$. In this way, $p \in  N(x_n)$ are always searched in last rank.
 
 *Case3*: $R \subset \Gamma(x_n)$ and $P \setminus N(x_n) = \emptyset$, skip current status, then backtrack to the second latest status.
 
 The status $s_{new}$ has the same format as \@ref(eq:1). The status $s$ is updated as \@ref(eq:2).
 
-* step2: Use the same vertex selection and ordering method for $s_{new}$. Note that $x_n^{\prime}$ in $s_{new}$ may be different from the $x_n$ in $s$. It means $x_n$ is always chose according to the current status $s$ and make the $|N(x_n)|$ local optimal. Repeat `step1` until $P = \emptyset$, then check whether current $R$ is a maximal clique.
+* step2: Use the same vertex selection and ordering method for $s_{new}$. Note that $x_n^{\prime}$ in $s_{new}$ may be different from the $x_n$ in $s$. It means $x_n$ is always chosen according to the current status $s$ and make the $|N(x_n)|$ local optimal. Repeat `step1` until $P = \emptyset$, then check whether current $R$ is a maximal clique.
 
 * step3: backtrack to the second latest status, and repeat `step2` until no status left.
 
@@ -139,12 +140,12 @@ A search tree of status $s$ looks like:
 
 ```
 {s}
-{s_u, s_n} ## s is updated to s_u, and s_n is generated based on s.
-{s_u, s_u1, s_n1} ## s_n is updated to s_u1, and s_n1 is generated based on s_n.
+{s_u, s_n} ## update s to s_u, generate s_n from s.
+{s_u, s_u1, s_n1} ## update s_n to s_u1, generate s_n1 from s_n.
 {s_u, s_u1, s_u2, s_n2}
 {s_u, s_u1, s_u2, s_u3, s_n3} ## P in s_n3 is empty, check whether R in s_n is maximal clique.
-{s_u, s_u1, s_u2, s_n3', s_n3'} ## s_u3 is updated to s_n3', and s_n3' is genereated based on s_u3.
-{s_u, s_u1, s_u2, s_n3'} ## s_n3' is skipped because case3 above occurs.
+{s_u, s_u1, s_u2, s_u3', s_n3'} ## update s_u3 to s_u3', generate s_n3' from s_u3.
+{s_u, s_u1, s_u2, s_u3'} ## s_n3' is skipped because case3 above occurs.
 ...
 {} ## Stop when no status left.
 ```
@@ -155,9 +156,9 @@ A search tree of status $s$ looks like:
 
 Different from Bron-Kerbosch's algorithm, `LOVO` "ordered" vertices in $P$ that roughly split $P$ into two groups $N(x_n)$ and $P \setminus N(x_n)$. Vertex $p$ for next search was randomly selected from $P \setminus N(x_n)$.
 
-`LOVO` always checked the union of $R$ and $P$ is part of searched maximal cliques, so invalid iterations could be avoid. *Case3* in `step1` above described the condition, $R \subset \Gamma(x_n)$ and $P \setminus N(x_n) = \emptyset$ that equals to $(R \cup P) \subset \Gamma(x_n | x_n \in X)$. Besides, maximized $|N(x_n)|$ guaranteed that largest possible searched maximal cliques or parts were checked in high priority. 
+`LOVO` always checked whether the union of $R$ and $P$ is part of searched maximal cliques, so invalid iterations could be avoid. *Case3* in `step1` above described the condition, $R \subset \Gamma(x_n)$ and $P \setminus N(x_n) = \emptyset$ that equals to $(R \cup P) \subset \Gamma(x_n | x_n \in X)$. Besides, maximized $|N(x_n)|$ guaranteed that largest possible searched maximal cliques or parts were checked in high priority. 
 
-It is possible that a chosen vertex $p_x$ from $P \setminus N(x_n)$ actually formed a searched maximal cliques. $p_x$ is omitted just because its corresponding $N(x_m)$ is not maximal. Any $p_x$ like below should not be searched:
+It is possible that a chosen vertex $p_x$ from $P \setminus N(x_n)$ actually formed a searched maximal cliques. $p_x$ was omitted just because its corresponding $N(x_m)$ is not maximal. Any $p_x$ like below should not be searched:
 
 \begin{equation*}
 \begin{split}
@@ -175,9 +176,31 @@ s_{new} &: \{ x \in X \}, \{ r \in R, p_x \}, \{ \Gamma(p_x) \cap P \} \\
 
 Clearly, $s_{new}$ would be skipped before next search.
 
+
+### Quick backtracking when $P = \emptyset$
+
+When $P = \emptyset$ in status $s$, a clique $R$ appeared. A continuously changed $P$ and $R$ may occur in continuous status. Then multiple status could be skipped at once in backtracking. For example:
+
+```
+{s_u, s_u1, s_u2, s_u3, s_n3}
+s_n3: R is {R, p1, p2, p3}, P is empty
+s_u3: R is {R, p1, p2}, P is {p3}
+s_u2: R is {R, p1}, P is {p2, p3}
+s_u1: R is {R}, P is {p1, p2, p3}
+```
+
+Status \{ $s_x | x \in \{last-1, last-2, last-3, ...\} \}$ were immediately skipped in `LOVO`, when:
+
+\begin{equation*}
+\begin{split}
+|R_x| + |P_x| <& |R_{last}| \\
+P_{last} &= \emptyset
+\end{split}
+\end{equation*}
+
 ### `bitset` transformation of linked vertices
 
-Compared to Bron-Kerbosch's algorithm, `LOVO` added the step $N(x_n)$ that handled huge amount of `set intersection` and `set union` operation. Instead of holding a integer vector for vertex indices, `LOVO` implemented a `bitset` for edge representation. A similar strategy called `bitscan` is used [@san2018efficiently].
+Compared to Bron-Kerbosch's algorithm, `LOVO` added the step $N(x_n)$ that handled huge amount of `set intersection` and `set union` operation. Instead of holding a integer vector for vertex indices, `LOVO` implemented a `bitset` for edge representation. A similar strategy called `bitscan` is used[@san2018efficiently].
 
 For example, using integer vector a triangle graph is represented as:
 
@@ -195,7 +218,7 @@ In `LOVO`, the graph is transformed as:
 011
 ```
 
-`LOVO`, even the operation gs$\Gamma(p_1) \cap P$ in Bron-Kerbosch's algorithm, benefited greatly from `and` and `or` with hardware optimization in different languages.
+`LOVO`, even the operation $\Gamma(p_1) \cap P$ in Bron-Kerbosch's algorithm, benefited greatly from bit `and` and `or` with hardware optimization in different languages. Moreover, `bitset` used much less memory compared to integer vector. For the example above, integer vector needed at least $N \times 6$ bits where $N$ is usually 32 or 64, while `bitset` used 9 bits. 
 
 # Unsolved problems
 
