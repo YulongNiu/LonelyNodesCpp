@@ -144,12 +144,12 @@ int main() {
   // uword  nodeIdx = 332;         // #maximal clique 94
   // uword nodeIdx = 10; // #maximal clique 5
 
-  string gfile   = "testgbig.bin"; // large graph
-  uword  nodeIdx = 9116;           // #maximal clique 3764
+  // string gfile   = "testgbig.bin"; // large graph
+  // uword  nodeIdx = 9116;           // #maximal clique 3764
   // uword nodeIdx = 100; // #maximal clique 264
 
-  // string gfile   = "testblog.bin"; // blog graph
-  // uword  nodeIdx = 0;              // #maximal clique 4
+  string gfile   = "testblog.bin"; // blog graph
+  uword  nodeIdx = 0;              // #maximal clique 4
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -314,6 +314,13 @@ int main() {
   // cout << "First0dbit_ is: " << First0dbit_(crown, seed, gdbit) << "\n";
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+  //~~~~~~~~~~~~~~~~~~~~~~~test find_first and find_next~~~~~~~~
+  uword       num = 123456;
+  bitset<100> testFindf{ num };
+  cout << "`testFindf` is: " << testFindf << endl;
+
+  cout << "find first of `testFindf` is: " << countr_zero(num) << endl;
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~~test SearchTree~~~~~~~~~~~~~~~~~~~
   auto start      = chrono::system_clock::now();
@@ -324,10 +331,14 @@ int main() {
   LeafBit startn({}, dbitempty, gdbit.at(nodeIdx));
   auto    cliques = SearchLeafBit(startn, gdbit);
 
+  // Leaf object method
   // Leaf startn({}, {}, { gg.at(nodeIdx) });
   // auto cliques = SearchLeafObj(startn, gidc);
 
+  // raw vector method
   // auto cliques = TestSearchTree(gg, gidc, nodeIdx);
+
+  for (uword i = 0; i < 10000; ++i) {}
 
   auto end      = chrono::system_clock::now();
   auto end_time = chrono::system_clock::to_time_t(end);
