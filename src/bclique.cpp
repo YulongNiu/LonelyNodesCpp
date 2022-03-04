@@ -23,8 +23,7 @@ arma::uword LeafBit::next_nodeidx(const vecdbit& gdbit) const {
   // No need to check seeds empty.
   // If `seeds.empty()`, `branches.find_first()` always returns.
 
-  auto crown = get_crown();
-  auto f0    = First0dbit_(crown, seeds, gdbit);
+  auto f0 = First0dbit_(crown, seeds, gdbit);
 
   return First0IdxBit_(stem, branches, f0, gdbit);
 }

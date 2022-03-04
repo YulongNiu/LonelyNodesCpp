@@ -9,14 +9,16 @@ namespace lonelynodes {
 
 class LeafBit {
 public:
-  LeafBit() : seeds{}, stem{}, branches{} {}
+  LeafBit() : seeds{}, stem{}, branches{}, crown{} {}
   LeafBit(const vecu& seeds, const dbit& stem, const dbit& branches)
-      : seeds{ seeds }, stem{ stem }, branches{ branches } {}
+      : seeds{ seeds }
+      , stem{ stem }
+      , branches{ branches }
+      , crown{ set_crown(stem, branches) } {}
 
   vecu get_seeds() const { return seeds; };
   dbit get_stem() const { return stem; };
   dbit get_branches() const { return branches; };
-  dbit get_crown() const; // concatenate `stem` and `branches`.
 
   arma::uword next_nodeidx(const arma::umat& gidc) const;
 
@@ -51,14 +53,15 @@ private:
   // for maximal cliques.
   // `branches`: nodes for next search.
   // `stem`: known cliques nodes in current leaf.
+  // `crown`: union of `stem` and `branches`.
   // No intersections among `seeds`, `branches`, or `steam`.
   const vecu seeds;
-  const dbit stem, branches;
-};
+  const dbit stem, branches, crown;
 
-inline dbit LeafBit::get_crown() const {
-  return stem | branches;
-}
+  static dbit set_crown(const dbit& stem, const dbit& branches) {
+    return stem | branches;
+  }
+};
 
 inline dbit LeafBit::next_branches(const arma::uword idx,
                                    const vecdbit&    gdbit) const {
