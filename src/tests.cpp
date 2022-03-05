@@ -134,8 +134,8 @@ int main() {
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~load graph~~~~~~~~~~~~~~~~~~~~~~~
-  string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
-  // string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
+  // string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
+  string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
 
   // string gfile   = "testm.bin"; // small graph
   // uword  nodeIdx = 0;           // #maximal clique 4
@@ -148,8 +148,8 @@ int main() {
   // uword  nodeIdx = 9116;           // #maximal clique 3764
   // uword nodeIdx = 100; // #maximal clique 264
 
-  string gfile   = "testblog.bin"; // blog graph
-  uword  nodeIdx = 0;              // #maximal clique 4
+  // string gfile   = "testblog.bin"; // blog graph
+  // uword  nodeIdx = 0;              // #maximal clique 4
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -326,10 +326,10 @@ int main() {
   auto start      = chrono::system_clock::now();
   auto start_time = chrono::system_clock::to_time_t(start);
 
-  dbit    dbitempty(gdbit.size(), 0);
-  LeafBit startn(dbitempty, dbitempty, gdbitall);
-  // LeafBit startn(dbitempty, dbitempty, gdbit.at(nodeIdx));
-  auto cliques = SearchLeafBit(startn, gdbit);
+  dbit dbitempty(gdbit.size(), 0);
+  // LeafBit startn(dbitempty, dbitempty, gdbitall);
+  LeafBit startn(dbitempty, dbitempty, gdbit.at(nodeIdx));
+  auto    cliques = SearchLeafBit(startn, gdbit);
 
   // Leaf object method
   // Leaf startn({}, {}, { gg.at(nodeIdx) });
@@ -348,7 +348,7 @@ int main() {
        << "end computation: " << ctime(&end_time)
        << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-  Printvecdbit(cliques);
+  // Printvecdbit(cliques);
 
   // cout << "\n"
   //      << "cliques are: \n";

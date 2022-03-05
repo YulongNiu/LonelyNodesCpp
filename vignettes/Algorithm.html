@@ -11,7 +11,7 @@
 
 <meta name="author" content />
 
-<meta name="date" content="2022-03-04" />
+<meta name="date" content="2022-03-05" />
 
 <title>Fast maximal cliques enumeration by locally optimal vertex ordering</title>
 
@@ -1885,7 +1885,7 @@ function toggle_visibility(id1) {
 
 
 <h1 class="title toc-ignore">Fast maximal cliques enumeration by locally optimal vertex ordering</h1>
-<h4 class="date">2022-03-04</h4>
+<h4 class="date">2022-03-05</h4>
 
 </div>
 
@@ -1933,7 +1933,7 @@ s &amp;: \{ x \in X \}, \{ r \in R \}, \{ p \in P \} \\
 </ul>
 <p><span class="math display" id="eq:1">\[\begin{equation}
 \begin{split}
-s_{new} &amp;: \{ x \in X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \cap P \} \\
+s_{new} &amp;: \{ \Gamma(p_1) \cap X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \cap P \} \\
 \end{split}
 \tag{1}
 \end{equation}\]</span></p>
@@ -1942,10 +1942,10 @@ s_{new} &amp;: \{ x \in X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \cap P \} \\
 </ul>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
-s_{stop} &amp;: \{ x \in X \}, \{r \in R, p_1, \dots, p_n \}, \{ \} \\
+s_{stop} &amp;: \{ \Gamma(p_n) \cap X \}, \{r \in R, p_1, \dots, p_n \}, \{ \} \\
 \end{split}
 \end{equation*}\]</span></p>
-<p>Check if <span class="math inline">\(R\)</span>, a clique, is a subset of any <span class="math inline">\(\Gamma(x | x \in X)\)</span>. If not, then <span class="math inline">\(R\)</span> is a new maximal clique.</p>
+<p>Check if <span class="math inline">\(X = \emptyset\)</span> in <span class="math inline">\(s_{stop}\)</span>, which means there is no vertices in <span class="math inline">\(X\)</span> adjacent to vertices in <span class="math inline">\(R\)</span>. If so, then <span class="math inline">\(R\)</span> is a new maximal clique.</p>
 <ul>
 <li>Step3: backtrack to a updated status <span class="math inline">\(s\)</span>:</li>
 </ul>

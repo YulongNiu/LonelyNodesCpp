@@ -64,7 +64,7 @@ Raw Bron-Kerbosch's algorithm could be expressed as:
 
 \begin{equation}
 \begin{split}
-s_{new} &: \{ x \in X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \cap P \} \\
+s_{new} &: \{ \Gamma(p_1) \cap X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \cap P \} \\
 \end{split}
 (\#eq:1)
 \end{equation}
@@ -73,11 +73,11 @@ s_{new} &: \{ x \in X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \cap P \} \\
 
 \begin{equation*}
 \begin{split}
-s_{stop} &: \{ x \in X \}, \{r \in R, p_1, \dots, p_n \}, \{ \} \\
+s_{stop} &: \{ \Gamma(p_n) \cap X \}, \{r \in R, p_1, \dots, p_n \}, \{ \} \\
 \end{split}
 \end{equation*}
 
-Check if $R$, a clique, is a subset of any $\Gamma(x | x \in X)$. If not, then $R$ is a new maximal clique.
+Check if $X = \emptyset$ in $s_{stop}$, which means there is no vertices in $X$ adjacent to vertices in $R$. If so, then $R$ is a new maximal clique.
 
 * Step3: backtrack to a updated status $s$:
 

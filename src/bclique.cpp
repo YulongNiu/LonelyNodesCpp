@@ -111,9 +111,8 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
       ++j; // d
 
       // cout << "----------" << endl;
-      // lastLeaf->print();
-      // lastLeaf->update_leaf(idx).print();
-      // lastLeaf->next_leaf(idx, gdbit).print();
+      // uLeaf->print();
+      // nLeaf->print();
 
       // step2: find maximal clique
       if (nLeaf->branches_empty()) {
@@ -124,10 +123,10 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
         cout << "vleaf size: " << vpleaf.size()
              << "; #cliques: " << cliques.size()
              << "; clique size: " << eachClique.count() << "; #loop: " << i
-             << "; #search: " << j << "; seeds: ";         // d
-        Printvecu(DBIT2VECU_(vpleaf.back()->get_seeds())); // d
+             << "; #search: " << j << endl; // d
 
         BackSkipLeafBit_(vpleaf);
+
         i = 0, j = 0; // d
       }
     } else {
