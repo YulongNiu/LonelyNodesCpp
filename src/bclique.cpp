@@ -30,13 +30,13 @@ arma::uword LeafBit::next_nodeidx(const vecdbit& gdbit) const {
 
 
 // If `seeds.empty()`, return `crown` that will never be empty.
-dbit First0dbit_(const dbit& crown, const vecu& seeds, const vecdbit& gdbit) {
+dbit First0dbit_(const dbit& crown, const dbit& seeds, const vecdbit& gdbit) {
   arma::uword maxCt = 0;
 
   dbit maxInter(crown.size(), 0);
 
-  for (const auto& elem : seeds) {
-    auto eachInter = crown & gdbit.at(elem);
+  for (auto i = seeds.find_first(); i != dbit::npos; i = seeds.find_next(i)) {
+    auto eachInter = crown & gdbit.at(i);
     auto eachCount = eachInter.count();
 
     if (eachCount > maxCt) {
@@ -111,25 +111,22 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
       ++j; // d
 
       // cout << "----------" << endl;
-      // lastLeaf->print();
-      // lastLeaf->update_leaf(idx).print();
-      // lastLeaf->next_leaf(idx, gdbit).print();
+      // uLeaf->print();
+      // nLeaf->print();
 
       // step2: find maximal clique
       if (nLeaf->branches_empty()) {
 
         auto eachClique = nLeaf->get_stem();
-        if (isMaximalCliqueBit_(eachClique, nLeaf->get_seeds(), gdbit)) {
-          cliques.push_back(eachClique);
-        }
+        if (nLeaf->get_seeds().none()) { cliques.push_back(eachClique); }
 
         cout << "vleaf size: " << vpleaf.size()
              << "; #cliques: " << cliques.size()
              << "; clique size: " << eachClique.count() << "; #loop: " << i
-             << "; #search: " << j << "; seeds: "; // d
-        Printvecu(vpleaf.back()->get_seeds());     // d
+             << "; #search: " << j << endl; // d
 
         BackSkipLeafBit_(vpleaf);
+
         i = 0, j = 0; // d
       }
     } else {
