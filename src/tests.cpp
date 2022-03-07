@@ -134,8 +134,8 @@ int main() {
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~load graph~~~~~~~~~~~~~~~~~~~~~~~
-  // string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
-  string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
+  string basepath = "/Users/yulong/RESEARCH/LonelyNodesCpp/test/";
+  // string basepath = "/share/data2/niuyulong/LonelyNodesCpp/test/";
 
   // string gfile   = "testm.bin"; // small graph
   // uword  nodeIdx = 0;           // #maximal clique 4

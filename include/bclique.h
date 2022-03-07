@@ -23,6 +23,7 @@ public:
   arma::uword next_nodeidx(const arma::umat& gidc) const;
 
   bool branches_empty() const { return branches.none(); }
+  bool seeds_empty() const { return seeds.none(); }
 
   arma::uword stem_size() const { return stem.count(); }
   arma::uword branches_size() const { return branches.count(); }

@@ -79,68 +79,21 @@ arma::uword First0IdxBit_(const dbit&    stem,
 }
 
 
-// vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
-
-//   vecdbit     cliques;
-//   vecpleafbit vpleaf;
-//   vpleaf.push_back(make_shared<LeafBit>(start));
-
-//   // count, will be deleted
-//   arma::uword i = 0, j = 0; // d
-
-//   for (; !vpleaf.empty();) {
-
-//     auto& lastpLeaf = vpleaf.back();
-
-//     auto idx = lastpLeaf->next_nodeidx(gdbit);
-//     ++i; // d
-
-//     if (!lastpLeaf->is_skippable(idx)) {
-//       // step1: check next node idx for last elem
-//       auto uLeaf    = lastpLeaf->update_leaf(idx);
-//       auto nLeaf    = lastpLeaf->next_leaf(idx, gdbit);
-//       vpleaf.back() = uLeaf;
-//       vpleaf.push_back(nLeaf);
-//       ++j; // d
-
-//       // cout << "----------" << endl;
-//       // uLeaf->print();
-//       // nLeaf->print();
-
-//       // step2: find maximal clique
-//       if (nLeaf->branches_empty()) {
-
-//         auto eachClique = nLeaf->get_stem();
-//         if (nLeaf->get_seeds().none()) { cliques.push_back(eachClique); }
-
-//         cout << "vleaf size: " << vpleaf.size()
-//              << "; #cliques: " << cliques.size()
-//              << "; clique size: " << eachClique.count() << "; #loop: " << i
-//              << "; #search: " << j << endl; // d
-
-//         BackSkipLeafBit_(vpleaf);
-
-//         i = 0, j = 0; // d
-//       }
-//     } else {
-//       vpleaf.pop_back();
-//     }
-//   }
-
-//   return cliques;
-// }
-
 vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
 
   vecdbit     cliques;
   vecpleafbit vpleaf;
   vpleaf.push_back(make_shared<LeafBit>(start));
 
+  // count, will be deleted
+  arma::uword i = 0, j = 0; // d
+
   for (; !vpleaf.empty();) {
 
     auto& lastpLeaf = vpleaf.back();
 
     auto idx = lastpLeaf->next_nodeidx(gdbit);
+    ++i; // d
 
     if (!lastpLeaf->is_skippable(idx)) {
       // step1: check next node idx for last elem
@@ -148,12 +101,24 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
       auto nLeaf    = lastpLeaf->next_leaf(idx, gdbit);
       vpleaf.back() = uLeaf;
       vpleaf.push_back(nLeaf);
+      ++j; // d
+
+      // cout << "----------" << endl;
+      // uLeaf->print();
+      // nLeaf->print();
 
       // step2: find maximal clique
-      if (nLeaf->branches_empty()) {
+      if (nLeaf->branches_empty() && nLeaf->seeds_empty()) {
 
-        auto eachClique = nLeaf->get_stem();
-        if (nLeaf->get_seeds().none()) { cliques.push_back(eachClique); }
+        cliques.push_back(nLeaf->get_stem());
+
+        cout << "vleaf size: " << vpleaf.size()
+             << "; #cliques: " << cliques.size()
+             << "; clique size: " << nLeaf->get_stem().count()
+             << "; #loop: " << i << "; #search: " << j << endl; // d
+
+        BackSkipLeafBit_(vpleaf);
+        i = 0, j = 0; // d
       }
     } else {
       vpleaf.pop_back();
