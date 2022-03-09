@@ -1,9 +1,10 @@
 #ifndef _BCLIQUE_H_
 #define _BCLIQUE_H_
 
+#include <memory>
+
 #include "init.h"
 #include "util.h"
-#include <memory>
 
 namespace lonelynodes {
 

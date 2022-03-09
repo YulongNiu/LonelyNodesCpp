@@ -129,6 +129,42 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
 }
 
 
+// vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
+
+//   vecdbit     cliques;
+//   vecpleafbit vpleaf;
+//   vpleaf.push_back(make_shared<LeafBit>(start));
+
+//   // count, will be deleted
+
+//   for (; !vpleaf.empty();) {
+
+//     auto& lastpLeaf = vpleaf.back();
+
+//     auto idx = lastpLeaf->next_nodeidx(gdbit);
+
+//     if (!lastpLeaf->is_skippable(idx)) {
+//       // step1: check next node idx for last elem
+//       auto uLeaf    = lastpLeaf->update_leaf(idx);
+//       auto nLeaf    = lastpLeaf->next_leaf(idx, gdbit);
+//       vpleaf.back() = uLeaf;
+//       vpleaf.push_back(nLeaf);
+
+//       // step2: find maximal clique
+//       if (nLeaf->branches_empty() && nLeaf->seeds_empty()) {
+
+//         cliques.push_back(nLeaf->get_stem());
+
+//         BackSkipLeafBit_(vpleaf);
+//       }
+//     } else {
+//       vpleaf.pop_back();
+//     }
+//   }
+
+//   return cliques;
+// }
+
 void BackSkipLeafBit_(vecpleafbit& vpleaf) {
 
   auto p = next(vpleaf.rbegin());
