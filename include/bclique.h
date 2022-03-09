@@ -1,28 +1,30 @@
 #ifndef _BCLIQUE_H_
 #define _BCLIQUE_H_
 
+#include <memory>
+
 #include "init.h"
 #include "util.h"
-#include <memory>
 
 namespace lonelynodes {
 
 class LeafBit {
 public:
-  LeafBit() : seeds{}, stem{}, branches{}, crown{} {}
+  LeafBit() : seeds{}, stem{}, branches{} {}
   LeafBit(const dbit& seeds, const dbit& stem, const dbit& branches)
-      : seeds{ seeds }
-      , stem{ stem }
-      , branches{ branches }
-      , crown{ set_crown(stem, branches) } {}
+      : seeds{ seeds }, stem{ stem }, branches{ branches } {}
 
   dbit get_seeds() const { return seeds; };
   dbit get_stem() const { return stem; };
   dbit get_branches() const { return branches; };
+  dbit get_crown() const {
+    return stem | branches;
+  } // union of `stem` and `branches`.
 
   arma::uword next_nodeidx(const arma::umat& gidc) const;
 
   bool branches_empty() const { return branches.none(); }
+  bool seeds_empty() const { return seeds.none(); }
 
   arma::uword stem_size() const { return stem.count(); }
   arma::uword branches_size() const { return branches.count(); }
@@ -53,13 +55,8 @@ private:
   // for maximal cliques.
   // `branches`: nodes for next search.
   // `stem`: known cliques nodes in current leaf.
-  // `crown`: union of `stem` and `branches`.
   // No intersections among `seeds`, `branches`, or `steam`.
-  const dbit seeds, stem, branches, crown;
-
-  static dbit set_crown(const dbit& stem, const dbit& branches) {
-    return stem | branches;
-  }
+  const dbit seeds, stem, branches;
 };
 
 inline dbit LeafBit::next_branches(const arma::uword idx,
@@ -125,8 +122,6 @@ inline void LeafBit::print() const {
 using pleafbit    = std::shared_ptr<LeafBit>;
 using vecpleafbit = std::vector<pleafbit>;
 
-dbit First0dbit_(const dbit& crown, const dbit& seed, const vecdbit& gdbit);
-
 arma::uword First0IdxBranchesBit_(const dbit& branches, const vecdbit& gdbit);
 
 // may equal to `dbit::npos`
@@ -139,11 +134,6 @@ arma::uword First0IdxBit_(const dbit&    stem,
 vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit);
 
 void BackSkipLeafBit_(vecpleafbit& vpleaf);
-
-bool isMaximalCliqueBit_(const dbit&    clique,
-                         const vecu&    seeds,
-                         const vecdbit& gdbit);
-
 } // namespace lonelynodes
 
 #endif // _BCLIQUE_H_
