@@ -108,7 +108,7 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
       // nLeaf->print();
 
       // step2: find maximal clique
-      if (nLeaf->branches_empty() && nLeaf->seeds_empty()) {
+      if (nLeaf->is_maximalclique()) {
 
         cliques.push_back(nLeaf->get_stem());
 

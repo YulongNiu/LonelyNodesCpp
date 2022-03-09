@@ -21,19 +21,18 @@ public:
     return stem | branches;
   } // union of `stem` and `branches`.
 
-  arma::uword next_nodeidx(const arma::umat& gidc) const;
-
-  bool branches_empty() const { return branches.none(); }
-  bool seeds_empty() const { return seeds.none(); }
-
   arma::uword stem_size() const { return stem.count(); }
   arma::uword branches_size() const { return branches.count(); }
   arma::uword crown_size() const { return stem.count() + branches.count(); }
 
   // find next search node index
   arma::uword next_nodeidx(const vecdbit& gdbit) const;
-
   bool is_skippable(const arma::uword idx) const { return idx == dbit::npos; };
+
+  // check maximal clique
+  bool branches_empty() const { return branches.none(); }
+  bool seeds_empty() const { return seeds.none(); }
+  bool is_maximalclique() const { return branches.none() && seeds.none(); }
 
   // next elem
   dbit next_branches(const arma::uword idx, const vecdbit& gdbit) const;
