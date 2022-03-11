@@ -225,7 +225,7 @@ In `LOVO`, the graph is transformed as:
 
 ## Set $X$ in Bron-Kerbosch's algorithm
 
-Interestingly, as described in Bron-Kerbosch's algorithm, for a given status $s$, $\forall p \in P$ $X \cap \Gamma(p) = X \mathrm{or} \: \emptyset$. It means each vertex in $X$ is adjacent to every or none of vertex in in $P$. We denote $X \cap \Gamma(p)$ as $N(p)$.
+Interestingly, as described in Bron-Kerbosch's algorithm, for a given status $s$, $\forall r \in R$ $X \cap \Gamma(r) = X \mathrm{or} \: \emptyset$. It means each vertex in $X$ is adjacent to every vertex in $R$, unless $X = \emptyset$. We denote $X \cap \Gamma(r)$ as $N(r)$.
 
 Prove:
 
@@ -253,7 +253,7 @@ s_{update} &: \{x_1, p_1 \}, \{  \}, \{ P \setminus p_1 \} \\
 \end{split}
 \end{equation*}
 
-For $s_{next}$ above, if $\Gamma(p_1) \cap x_1 = \emptyset$, then $N(p) = \emptyset$. Or if $\Gamma(p_1) \cap x_1 = x_1$, it means $x_1$ is adjacent to $p_1$, then $N(p) = x_1$. For the $s_{update}$ above, $N(p) = \emptyset$, the same as $s$.
+For $s_{next}$ above, if $\Gamma(p_1) \cap x_1 = \emptyset$, then $N(r) = \emptyset$. Or if $\Gamma(p_1) \cap x_1 = x_1$, it means $x_1$ is adjacent to $p_1$, then $N(r) = x_1$. For the $s_{update}$ above, $N(r) = \emptyset$, so as $s$.
 
 If the assertion above holds for status:
 
@@ -263,11 +263,19 @@ s^{\prime} &: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap X \}, \{r \in R, p
 \end{split}
 \end{equation*}
 
+which is also denoted as:
+
+\begin{equation*}
+\begin{split}
+s^{\prime} &: \{ X^{\prime} \}, \{ R^{\prime} \}, \{ P^{\prime} \}
+\end{split}
+\end{equation*}
+
 then
 
 \begin{equation*}
 \begin{split}
-s^{\prime}_{next} &: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap \Gamma(p_{n+1}) \cap X \}, \{r \in R, p_1, \dots, p_n, p_{n+1} \}, \{ \Gamma(p_{n+1}) \cap \{ P \setminus \{ p_1, \dots, p_n \} \} \} \\
+s^{\prime}_{next} &: \{ \Gamma(p_{n+1}) \cap X^{\prime} \}, \{R^{\prime}, p_{n+1} \}, \{ \Gamma(p_{n+1}) \cap P^{\prime} \} \\
 \end{split}
 \end{equation*}
 
@@ -275,11 +283,11 @@ and
 
 \begin{equation*}
 \begin{split}
-s^{\prime}_{update} &: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap X , p_{n+1}\}, \{r \in R, p_1, \dots, p_n \}, \{ P \setminus \{ p_1, \dots, p_n, p_{n+1}\} \} \\
+s^{\prime}_{update} &: \{X^{\prime}, p_{n+1}\}, \{ R^{\prime} \}, \{ P^{\prime} \setminus p_{n+1} \} \\
 \end{split}
 \end{equation*}
 
-For $s^{\prime}_{next}$ above, if $X^{\prime}_{next} = \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap \Gamma(p_{n+1}) \cap X \}$ is not empty, 
+For $s^{\prime}_{next}$ above, if $\Gamma(p_{n+1}) \cap X^{\prime} = \emptyset$, then $N(r) = \emptyset$. If not, because every vertex in $X^{\prime}$ are adjacent to each vertex in $R^{\prime}$ in $s^{\prime}$, $\Gamma(p_{n+1}) \cap X^{\prime}$ means only vertices adjacent to $p_{n+1}$ are kept in $X^{\prime}$, then $N(r) = X$ holds. For $s^{\prime}_{update}$ above, because $p_{n+1}$ is adjacent to every vertex in $R^{\prime}$, then $N(r) = X$ holds.
 
 
 # Unsolved problems

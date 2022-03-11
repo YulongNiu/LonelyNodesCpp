@@ -2059,7 +2059,7 @@ P_{last} &amp;= \emptyset
 <h1><span class="header-section-number">2</span> Discussion</h1>
 <div id="set-x-in-bron-kerboschs-algorithm" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Set <span class="math inline">\(X\)</span> in Bron-Kerbosch’s algorithm</h2>
-<p>Interestingly, as described in Bron-Kerbosch’s algorithm, for a given status <span class="math inline">\(s\)</span>, <span class="math inline">\(\forall p \in P\)</span> <span class="math inline">\(X \cap \Gamma(p) = X \mathrm{or} \: \emptyset\)</span>. It means each vertex in <span class="math inline">\(X\)</span> is adjacent to every or none of vertex in in <span class="math inline">\(P\)</span>. We denote <span class="math inline">\(X \cap \Gamma(p)\)</span> as <span class="math inline">\(N(p)\)</span>.</p>
+<p>Interestingly, as described in Bron-Kerbosch’s algorithm, for a given status <span class="math inline">\(s\)</span>, <span class="math inline">\(\forall r \in R\)</span> <span class="math inline">\(X \cap \Gamma(r) = X \mathrm{or} \: \emptyset\)</span>. It means each vertex in <span class="math inline">\(X\)</span> is adjacent to every vertex in <span class="math inline">\(R\)</span>, unless <span class="math inline">\(X = \emptyset\)</span>. We denote <span class="math inline">\(X \cap \Gamma(r)\)</span> as <span class="math inline">\(N(r)\)</span>.</p>
 <p>Prove:</p>
 <p>If</p>
 <p><span class="math display">\[\begin{equation*}
@@ -2079,26 +2079,32 @@ s_{next} &amp;: \{\Gamma(p_1) \cap x_1 \}, \{ p_1 \}, \{ \Gamma(p_1) \cap P \} \
 s_{update} &amp;: \{x_1, p_1 \}, \{  \}, \{ P \setminus p_1 \} \\
 \end{split}
 \end{equation*}\]</span></p>
-<p>For <span class="math inline">\(s_{next}\)</span> above, if <span class="math inline">\(\Gamma(p_1) \cap x_1 = \emptyset\)</span>, then <span class="math inline">\(N(p) = \emptyset\)</span>. Or if <span class="math inline">\(\Gamma(p_1) \cap x_1 = x_1\)</span>, it means <span class="math inline">\(x_1\)</span> is adjacent to <span class="math inline">\(p_1\)</span>, then <span class="math inline">\(N(p) = x_1\)</span>. For the <span class="math inline">\(s_{update}\)</span> above, <span class="math inline">\(N(p) = \emptyset\)</span>, the same as <span class="math inline">\(s\)</span>.</p>
+<p>For <span class="math inline">\(s_{next}\)</span> above, if <span class="math inline">\(\Gamma(p_1) \cap x_1 = \emptyset\)</span>, then <span class="math inline">\(N(r) = \emptyset\)</span>. Or if <span class="math inline">\(\Gamma(p_1) \cap x_1 = x_1\)</span>, it means <span class="math inline">\(x_1\)</span> is adjacent to <span class="math inline">\(p_1\)</span>, then <span class="math inline">\(N(r) = x_1\)</span>. For the <span class="math inline">\(s_{update}\)</span> above, <span class="math inline">\(N(r) = \emptyset\)</span>, so as <span class="math inline">\(s\)</span>.</p>
 <p>If the assertion above holds for status:</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
 s^{\prime} &amp;: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap X \}, \{r \in R, p_1, \dots, p_n \}, \{ P \setminus \{ p_1, \dots, p_n \} \} \\
 \end{split}
 \end{equation*}\]</span></p>
+<p>which is also denoted as:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+s^{\prime} &amp;: \{ X^{\prime} \}, \{ R^{\prime} \}, \{ P^{\prime} \}
+\end{split}
+\end{equation*}\]</span></p>
 <p>then</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
-s^{\prime}_{next} &amp;: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap \Gamma(p_{n+1}) \cap X \}, \{r \in R, p_1, \dots, p_n, p_{n+1} \}, \{ \Gamma(p_{n+1}) \cap \{ P \setminus \{ p_1, \dots, p_n \} \} \} \\
+s^{\prime}_{next} &amp;: \{ \Gamma(p_{n+1}) \cap X^{\prime} \}, \{R^{\prime}, p_{n+1} \}, \{ \Gamma(p_{n+1}) \cap P^{\prime} \} \\
 \end{split}
 \end{equation*}\]</span></p>
 <p>and</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
-s^{\prime}_{update} &amp;: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap X , p_{n+1}\}, \{r \in R, p_1, \dots, p_n \}, \{ P \setminus \{ p_1, \dots, p_n, p_{n+1}\} \} \\
+s^{\prime}_{update} &amp;: \{X^{\prime}, p_{n+1}\}, \{ R^{\prime} \}, \{ P^{\prime} \setminus p_{n+1} \} \\
 \end{split}
 \end{equation*}\]</span></p>
-<p>For <span class="math inline">\(s^{\prime}_{next}\)</span> above, if <span class="math inline">\(X^{\prime}_{next} = \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap \Gamma(p_{n+1}) \cap X \}\)</span> is not empty,</p>
+<p>For <span class="math inline">\(s^{\prime}_{next}\)</span> above, if <span class="math inline">\(\Gamma(p_{n+1}) \cap X^{\prime} = \emptyset\)</span>, then <span class="math inline">\(N(r) = \emptyset\)</span>. If not, because every vertex in <span class="math inline">\(X^{\prime}\)</span> are adjacent to each vertex in <span class="math inline">\(R^{\prime}\)</span> in <span class="math inline">\(s^{\prime}\)</span>, <span class="math inline">\(\Gamma(p_{n+1}) \cap X^{\prime}\)</span> means only vertices adjacent to <span class="math inline">\(p_{n+1}\)</span> are kept in <span class="math inline">\(X^{\prime}\)</span>, then <span class="math inline">\(N(r) = X\)</span> holds. For <span class="math inline">\(s^{\prime}_{update}\)</span> above, because <span class="math inline">\(p_{n+1}\)</span> is adjacent to every vertex in <span class="math inline">\(R^{\prime}\)</span>, then <span class="math inline">\(N(r) = X\)</span> holds.</p>
 </div>
 </div>
 <div id="unsolved-problems" class="section level1" number="3">
