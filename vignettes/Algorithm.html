@@ -9,9 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content />
+<meta name="author" content="Yulong Niu" />
 
-<meta name="date" content="2022-03-07" />
+<meta name="date" content="2022-03-11" />
 
 <title>Fast maximal cliques enumeration by locally optimal vertex ordering</title>
 
@@ -1885,7 +1885,8 @@ function toggle_visibility(id1) {
 
 
 <h1 class="title toc-ignore">Fast maximal cliques enumeration by locally optimal vertex ordering</h1>
-<h4 class="date">2022-03-07</h4>
+<p class="author-name">Yulong Niu</p>
+<h4 class="date">2022-03-11</h4>
 
 </div>
 
@@ -1907,16 +1908,16 @@ document.addEventListener("DOMContentLoaded", function() {
 <h1><span class="header-section-number">1</span> Algorithm</h1>
 <div id="preliminaries" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Preliminaries</h2>
-<ol style="list-style-type: decimal">
-<li><p>A simple undirected graph is denoted as <span class="math inline">\(G(V, E)\)</span>.</p></li>
+<ul>
+<li><p>A simple undirected graph is denoted as <span class="math inline">\(G(V, E)\)</span>, <span class="math inline">\(V\)</span> are vertices and <span class="math inline">\(E\)</span> are edges.</p></li>
 <li><p>For a vertex <span class="math inline">\(v \in V\)</span>, <span class="math inline">\(\Gamma(v)\)</span> denotes all vertices adjacent to <span class="math inline">\(v\)</span> in <span class="math inline">\(G\)</span>. Note that <span class="math inline">\(v \notin \Gamma(v)\)</span>.</p></li>
-</ol>
+</ul>
 </div>
 <div id="algorithm-design" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> Algorithm design</h2>
 <p>The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. Most optimizations are attributed to “locally optimal vertex ordering”, so we named the new algorithm as “<code>LOVO</code>”.</p>
 <p><code>LOVO</code>, inspired by Bron-Kerbosch’s algorithm<span class="citation"><sup>1</sup></span>, operated three disjoint sets of vertices during the search for maximal cliques:</p>
-<p><span class="math inline">\(X\)</span>: <span class="math inline">\(x \in X\)</span> are searched vertices. Maximal cliques that contain <span class="math inline">\(\forall x \in X\)</span> have been enumerated.</p>
+<p><span class="math inline">\(X\)</span>: <span class="math inline">\(x \in X\)</span> are searched vertices. Maximal cliques that contain <span class="math inline">\(\forall x \in X\)</span> have been searched.</p>
 <p><span class="math inline">\(R\)</span>: <span class="math inline">\(\forall r \in R\)</span> links to each other.</p>
 <p><span class="math inline">\(P\)</span>: <span class="math inline">\(\forall p \in P\)</span> links to all vertices in <span class="math inline">\(R\)</span>, but <span class="math inline">\(p \in P\)</span> not necessarily links to each other. When vertex <span class="math inline">\(p_1\)</span> is deleted in <span class="math inline">\(P\)</span>, the set <span class="math inline">\(\{ p \in P | p \neq p_1 \}\)</span> is denoted as <span class="math inline">\(\{ P \setminus p_1 \}\)</span>.</p>
 <p>Status <span class="math inline">\(s\)</span> is defined as a combination of <span class="math inline">\(X\)</span>, <span class="math inline">\(R\)</span>, and <span class="math inline">\(P\)</span>.</p>
@@ -1937,12 +1938,13 @@ s_{new} &amp;: \{ \Gamma(p_1) \cap X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \cap
 \end{split}
 \tag{1}
 \end{equation}\]</span></p>
+<p><span class="math inline">\(\{ \Gamma(p_1) \cap X \}\)</span> means only vertices <span class="math inline">\(x\)</span> in <span class="math inline">\(X\)</span> adjacent to <span class="math inline">\(p_1\)</span> are kept. Because <span class="math inline">\(X\)</span> stores vertices that have been searched for maximal cliques, so the function of <span class="math inline">\(x\)</span> is to check if new cliques are part of searched ones. If <span class="math inline">\(x\)</span> is not adjacent to <span class="math inline">\(p_1\)</span>, new cliques from <span class="math inline">\(s_{new}\)</span> are definitely not parts of already searched maximal cliques containing <span class="math inline">\(x\)</span>. This assertion can be deducted from the definition of “clique” that every two distinct vertices in a clique are adjacent.</p>
 <ul>
 <li>Step2: iterate <code>Step1</code> until <span class="math inline">\(P = \emptyset\)</span>:</li>
 </ul>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
-s_{stop} &amp;: \{ \Gamma(p_n) \cap X \}, \{r \in R, p_1, \dots, p_n \}, \{ \} \\
+s_{stop} &amp;: \{ \Gamma(p_n) \cap \Gamma(p_{n-1}) \cap \dots \cap X \}, \{r \in R, p_1, \dots, p_n \}, \{ \} \\
 \end{split}
 \end{equation*}\]</span></p>
 <p>Check if <span class="math inline">\(X = \emptyset\)</span> in <span class="math inline">\(s_{stop}\)</span>, which means there is no vertices in <span class="math inline">\(X\)</span> adjacent to vertices in <span class="math inline">\(R\)</span>. If so, then <span class="math inline">\(R\)</span> is a new maximal clique.</p>
@@ -1965,27 +1967,26 @@ s_{init} &amp;: \{ \}, \{ \}, \{ v \in V \} \\
 </div>
 <div id="lovo" class="section level3" number="1.2.2">
 <h3><span class="header-section-number">1.2.2</span> LOVO</h3>
-<p><code>LOVO</code> is designed based on the fact that: <span class="math inline">\(\forall p \in P\)</span> are searched in status <span class="math inline">\(s\)</span>, and cliques in <span class="math inline">\(s_{stop}\)</span> is checked by <span class="math inline">\(\Gamma(x)\)</span>, so for a given <span class="math inline">\(x_n \in X\)</span> if <span class="math inline">\(P\)</span> containing only <span class="math inline">\(P \cap \Gamma(x_n)\)</span> can be skipped when <span class="math inline">\(R \subset \Gamma(x_n)\)</span>. <span class="math inline">\(R \subset \Gamma(x_n)\)</span> can be meet with high possibility, because <span class="math inline">\(X\)</span> is kept growing in <code>Step3</code>. Moreover, in a dense graph <span class="math inline">\(\Gamma(x_n)\)</span> covers most vertices that make the restriction above to be meet more easily.</p>
+<p><code>LOVO</code> is designed based on the fact that: <span class="math inline">\(\forall p \in P\)</span> are searched in status <span class="math inline">\(s\)</span>, and cliques in <span class="math inline">\(s_{stop}\)</span> is checked by <span class="math inline">\(\Gamma(x)\)</span>. So for a given <span class="math inline">\(x_n \in X\)</span> if <span class="math inline">\(P\)</span> contains only <span class="math inline">\(P \cap \Gamma(x_n)\)</span>, the status can be skipped.</p>
 <p>The skippable status is described as:</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
-s_{skip} &amp;: \{x \in X\}, \{  r \in (R | R \subset \Gamma(x_n)) \}, \{ P \cap \Gamma(x_n | x_n \in X) \} \\
+s_{skip} &amp;: \{x \in X\}, \{  r \in R \}, \{ P \cap \Gamma(x_n | x_n \in X) \} \\
 \end{split}
 \end{equation*}\]</span></p>
 <p><span class="math inline">\(P \cap \Gamma(x_n | x_n \in X)\)</span> is equal to the number of skipped iterations.</p>
-<p>In <code>LOVO</code>, <span class="math inline">\(x_n\)</span> is chosen to maximize <span class="math inline">\(|N(x_n)|\)</span>:</p>
+<p>In <code>LOVO</code>, <span class="math inline">\(x_n\)</span> is chosen to maximize <span class="math inline">\(|N(x_i|x_i \in X)|\)</span>:</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
-N(x_n) &amp;= (R \cup P) \cap \Gamma(x_n) \\
+N(x_i) &amp;= P \cap \Gamma(x_i|x_i \in X) \\
 \end{split}
 \end{equation*}\]</span></p>
 <p>The <code>LOVO</code> is described as:</p>
 <ul>
-<li>step1: select <span class="math inline">\(x_n\)</span> to maximize <span class="math inline">\(|N(x_n)|\)</span>,</li>
+<li>step1: select <span class="math inline">\(x_n\)</span> to maximize <span class="math inline">\(|N(x_i|x_i \in X)|\)</span>,</li>
 </ul>
-<p><em>Case1</em>: <span class="math inline">\(R \not\subset \Gamma(x_n)\)</span>, randomly select <span class="math inline">\(p_1\)</span> from <span class="math inline">\(P\)</span>.</p>
-<p><em>Case2</em>: <span class="math inline">\(R \subset \Gamma(x_n)\)</span> and <span class="math inline">\(P \setminus N(x_n) \neq \emptyset\)</span>, randomly select <span class="math inline">\(p_1\)</span> from <span class="math inline">\(P \setminus N(x_n)\)</span>. In this way, <span class="math inline">\(p \in N(x_n)\)</span> are always searched in last rank.</p>
-<p><em>Case3</em>: <span class="math inline">\(R \subset \Gamma(x_n)\)</span> and <span class="math inline">\(P \setminus N(x_n) = \emptyset\)</span>, skip current status, then backtrack to the second latest status.</p>
+<p><em>Case1</em>: <span class="math inline">\(P \setminus N(x_n) \neq \emptyset\)</span>, randomly select <span class="math inline">\(p_1\)</span> from <span class="math inline">\(P \setminus N(x_n)\)</span>. In this way, <span class="math inline">\(p \in N(x_n)\)</span> are always searched in last rank.</p>
+<p><em>Case2</em>: <span class="math inline">\(P \setminus N(x_n) = \emptyset\)</span>, skip current status, then backtrack to the second latest status.</p>
 <p>The status <span class="math inline">\(s_{new}\)</span> has the same format as <a href="#eq:1">(1)</a>. The status <span class="math inline">\(s\)</span> is updated as <a href="#eq:2">(2)</a>.</p>
 <ul>
 <li><p>step2: Use the same vertex selection and ordering method for <span class="math inline">\(s_{new}\)</span>. Note that <span class="math inline">\(x_n^{\prime}\)</span> in <span class="math inline">\(s_{new}\)</span> may be different from the <span class="math inline">\(x_n\)</span> in <span class="math inline">\(s\)</span>. It means <span class="math inline">\(x_n\)</span> is always chosen according to the current status <span class="math inline">\(s\)</span> and make the <span class="math inline">\(|N(x_n)|\)</span> local optimal. Repeat <code>step1</code> until <span class="math inline">\(P = \emptyset\)</span>, then check whether current <span class="math inline">\(R\)</span> is a maximal clique.</p></li>
@@ -2054,14 +2055,57 @@ P_{last} &amp;= \emptyset
 </div>
 </div>
 </div>
-<div id="unsolved-problems" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Unsolved problems</h1>
-<div id="vertices-ordering-in-p" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Vertices ordering in <span class="math inline">\(P\)</span></h2>
-<p><strong>Strategy 1</strong>: choose <span class="math inline">\(v \in P\)</span> that maximizes <span class="math inline">\(\Gamma(v) \cap P\)</span>, then <span class="math inline">\(v\)</span> will be move to <span class="math inline">\(X\)</span> in the next status <span class="math inline">\(s\)</span>. The search number will be reduced.</p>
+<div id="discussion" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Discussion</h1>
+<div id="set-x-in-bron-kerboschs-algorithm" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Set <span class="math inline">\(X\)</span> in Bron-Kerbosch’s algorithm</h2>
+<p>Interestingly, as described in Bron-Kerbosch’s algorithm, for a given status <span class="math inline">\(s\)</span>, <span class="math inline">\(\forall p \in P\)</span> <span class="math inline">\(X \cap \Gamma(p) = X \mathrm{or} \: \emptyset\)</span>. It means each vertex in <span class="math inline">\(X\)</span> is adjacent to every or none of vertex in in <span class="math inline">\(P\)</span>. We denote <span class="math inline">\(X \cap \Gamma(p)\)</span> as <span class="math inline">\(N(p)\)</span>.</p>
+<p>Prove:</p>
+<p>If</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+s &amp;: \{x_1 \}, \{ \}, \{ p \in P \} \\
+\end{split}
+\end{equation*}\]</span></p>
+<p>then</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+s_{next} &amp;: \{\Gamma(p_1) \cap x_1 \}, \{ p_1 \}, \{ \Gamma(p_1) \cap P \} \\
+\end{split}
+\end{equation*}\]</span></p>
+<p>and</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+s_{update} &amp;: \{x_1, p_1 \}, \{  \}, \{ P \setminus p_1 \} \\
+\end{split}
+\end{equation*}\]</span></p>
+<p>For <span class="math inline">\(s_{next}\)</span> above, if <span class="math inline">\(\Gamma(p_1) \cap x_1 = \emptyset\)</span>, then <span class="math inline">\(N(p) = \emptyset\)</span>. Or if <span class="math inline">\(\Gamma(p_1) \cap x_1 = x_1\)</span>, it means <span class="math inline">\(x_1\)</span> is adjacent to <span class="math inline">\(p_1\)</span>, then <span class="math inline">\(N(p) = x_1\)</span>. For the <span class="math inline">\(s_{update}\)</span> above, <span class="math inline">\(N(p) = \emptyset\)</span>, the same as <span class="math inline">\(s\)</span>.</p>
+<p>If the assertion above holds for status:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+s^{\prime} &amp;: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap X \}, \{r \in R, p_1, \dots, p_n \}, \{ P \setminus \{ p_1, \dots, p_n \} \} \\
+\end{split}
+\end{equation*}\]</span></p>
+<p>then</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+s^{\prime}_{next} &amp;: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap \Gamma(p_{n+1}) \cap X \}, \{r \in R, p_1, \dots, p_n, p_{n+1} \}, \{ \Gamma(p_{n+1}) \cap \{ P \setminus \{ p_1, \dots, p_n \} \} \} \\
+\end{split}
+\end{equation*}\]</span></p>
+<p>and</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+s^{\prime}_{update} &amp;: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap X , p_{n+1}\}, \{r \in R, p_1, \dots, p_n \}, \{ P \setminus \{ p_1, \dots, p_n, p_{n+1}\} \} \\
+\end{split}
+\end{equation*}\]</span></p>
+<p>For <span class="math inline">\(s^{\prime}_{next}\)</span> above, if <span class="math inline">\(X^{\prime}_{next} = \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap \Gamma(p_{n+1}) \cap X \}\)</span> is not empty,</p>
 </div>
-<div id="maximize-r-cup-p-cap-gammax_n-or-p-cap-gammax_n" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Maximize <span class="math inline">\(|(R \cup P) \cap \Gamma(x_n)|\)</span> or <span class="math inline">\(|P \cap \Gamma(x_n)|\)</span> ?</h2>
+</div>
+<div id="unsolved-problems" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Unsolved problems</h1>
+<div id="vertices-ordering-in-p" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Vertices ordering in <span class="math inline">\(P\)</span></h2>
+<p><strong>Strategy 1</strong>: choose <span class="math inline">\(v \in P\)</span> that maximizes <span class="math inline">\(\Gamma(v) \cap P\)</span>, then <span class="math inline">\(v\)</span> will be move to <span class="math inline">\(X\)</span> in the next status <span class="math inline">\(s\)</span>. The search number will be reduced.</p>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">

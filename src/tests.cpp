@@ -144,12 +144,12 @@ int main() {
   // uword  nodeIdx = 332;         // #maximal clique 94
   // uword  nodeIdx = 10;          // #maximal clique 5
 
-  string gfile   = "testgbig.bin"; // large graph
-  uword  nodeIdx = 9116;           // #maximal clique 3764
+  // string gfile   = "testgbig.bin"; // large graph
+  // uword  nodeIdx = 9116;           // #maximal clique 3764
   // uword nodeIdx = 100; // #maximal clique 264
 
-  // string gfile   = "testblog.bin"; // blog graph
-  // uword  nodeIdx = 0;              // #maximal clique 4
+  string gfile   = "testblog.bin"; // blog graph
+  uword  nodeIdx = 0;              // #maximal clique 4
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -348,7 +348,7 @@ int main() {
        << "end computation: " << ctime(&end_time)
        << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-  // Printvecdbit(cliques);
+  Printvecdbit(cliques);
 
   // cout << "\n"
   //      << "cliques are: \n";

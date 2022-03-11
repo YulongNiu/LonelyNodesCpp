@@ -1,6 +1,7 @@
 ---
 title: "Fast maximal cliques enumeration by locally optimal vertex ordering"
 author: 
+- Yulong Niu
 date: "`r Sys.Date()`"
 csl: nature.csl
 bibliography: MaximalCliqueRef.bib
@@ -32,9 +33,9 @@ knitr::opts_chunk$set(tidy = FALSE,
 
 ## Preliminaries
 
-1.  A simple undirected graph is denoted as $G(V, E)$.
+* A simple undirected graph is denoted as $G(V, E)$, $V$ are vertices and $E$ are edges.
 
-2.  For a vertex $v \in V$, $\Gamma(v)$ denotes all vertices adjacent to $v$ in $G$. Note that $v \notin \Gamma(v)$.
+* For a vertex $v \in V$, $\Gamma(v)$ denotes all vertices adjacent to $v$ in $G$. Note that $v \notin \Gamma(v)$.
 
 ## Algorithm design
 
@@ -42,7 +43,7 @@ The algorithm described here is used for fast maximal cliques enumeration (MCE) 
 
 `LOVO`, inspired by Bron-Kerbosch's algorithm [@bron1973algorithm], operated three disjoint sets of vertices during the search for maximal cliques:
 
-$X$: $x \in X$ are searched vertices. Maximal cliques that contain $\forall x \in X$ have been enumerated.
+$X$: $x \in X$ are searched vertices. Maximal cliques that contain $\forall x \in X$ have been searched.
 
 $R$: $\forall r \in R$ links to each other.
 
@@ -69,11 +70,13 @@ s_{new} &: \{ \Gamma(p_1) \cap X \}, \{ r \in R, p_1 \}, \{ \Gamma(p_1) \cap P \
 (\#eq:1)
 \end{equation}
 
+$\{ \Gamma(p_1) \cap X \}$ means only vertices $x$ in $X$ adjacent to $p_1$ are kept. Because $X$ stores vertices that have been searched for maximal cliques, so the function of $x$ is to check if new cliques are part of searched ones. If $x$ is not adjacent to $p_1$, new cliques from $s_{new}$ are definitely not parts of already searched maximal cliques containing $x$. This assertion can be deducted from the definition of "clique" that every two distinct vertices in a clique are adjacent.
+
 * Step2: iterate `Step1` until $P = \emptyset$:
 
 \begin{equation*}
 \begin{split}
-s_{stop} &: \{ \Gamma(p_n) \cap X \}, \{r \in R, p_1, \dots, p_n \}, \{ \} \\
+s_{stop} &: \{ \Gamma(p_n) \cap \Gamma(p_{n-1}) \cap \dots \cap X \}, \{r \in R, p_1, \dots, p_n \}, \{ \} \\
 \end{split}
 \end{equation*}
 
@@ -100,35 +103,33 @@ s_{init} &: \{ \}, \{ \}, \{ v \in V \} \\
 
 ### LOVO
 
-`LOVO` is designed based on the fact that: $\forall p \in P$ are searched in status $s$, and cliques in $s_{stop}$ is checked by $\Gamma(x)$, so for a given $x_n \in X$ if $P$ containing only $P \cap \Gamma(x_n)$ can be skipped when $R \subset \Gamma(x_n)$. $R \subset \Gamma(x_n)$ can be meet with high possibility, because $X$ is kept growing in `Step3`. Moreover, in a dense graph $\Gamma(x_n)$ covers most vertices that make the restriction above to be meet more easily.
+`LOVO` is designed based on the fact that: $\forall p \in P$ are searched in status $s$, and cliques in $s_{stop}$ is checked by $\Gamma(x)$. So for a given $x_n \in X$ if $P$ contains only $P \cap \Gamma(x_n)$, the status can be skipped.
 
 The skippable status is described as:
 
 \begin{equation*}
 \begin{split}
-s_{skip} &: \{x \in X\}, \{  r \in (R | R \subset \Gamma(x_n)) \}, \{ P \cap \Gamma(x_n | x_n \in X) \} \\
+s_{skip} &: \{x \in X\}, \{  r \in R \}, \{ P \cap \Gamma(x_n | x_n \in X) \} \\
 \end{split}
 \end{equation*}
 
 $P \cap \Gamma(x_n | x_n \in X)$ is equal to the number of skipped iterations.
 
-In `LOVO`, $x_n$ is chosen to maximize $|N(x_n)|$:
+In `LOVO`, $x_n$ is chosen to maximize $|N(x_i|x_i \in X)|$:
 
 \begin{equation*}
 \begin{split}
-N(x_n) &= (R \cup P) \cap \Gamma(x_n) \\
+N(x_i) &= P \cap \Gamma(x_i|x_i \in X) \\
 \end{split}
 \end{equation*}
 
 The `LOVO` is described as:
 
-* step1: select $x_n$ to maximize $|N(x_n)|$,
+* step1: select $x_n$ to maximize $|N(x_i|x_i \in X)|$,
 
-*Case1*: $R \not\subset \Gamma(x_n)$, randomly select $p_1$ from $P$.
+*Case1*: $P \setminus N(x_n) \neq \emptyset$, randomly select $p_1$ from $P \setminus N(x_n)$. In this way, $p \in  N(x_n)$ are always searched in last rank.
 
-*Case2*: $R \subset \Gamma(x_n)$ and $P \setminus N(x_n) \neq \emptyset$, randomly select $p_1$ from $P \setminus N(x_n)$. In this way, $p \in  N(x_n)$ are always searched in last rank.
-
-*Case3*: $R \subset \Gamma(x_n)$ and $P \setminus N(x_n) = \emptyset$, skip current status, then backtrack to the second latest status.
+*Case2*: $P \setminus N(x_n) = \emptyset$, skip current status, then backtrack to the second latest status.
 
 The status $s_{new}$ has the same format as \@ref(eq:1). The status $s$ is updated as \@ref(eq:2).
 
@@ -220,12 +221,71 @@ In `LOVO`, the graph is transformed as:
 
 `LOVO`, even the operation $\Gamma(p_1) \cap P$ in Bron-Kerbosch's algorithm, benefited greatly from bit `and` and `or` with hardware optimization in different languages. Moreover, `bitset` used much less memory compared to integer vector. For the example above, integer vector needed at least $N \times 6$ bits where $N$ is usually 32 or 64, while `bitset` used 9 bits. 
 
+# Discussion 
+
+## Set $X$ in Bron-Kerbosch's algorithm
+
+Interestingly, as described in Bron-Kerbosch's algorithm, for a given status $s$, $\forall p \in P$ $X \cap \Gamma(p) = X \mathrm{or} \: \emptyset$. It means each vertex in $X$ is adjacent to every or none of vertex in in $P$. We denote $X \cap \Gamma(p)$ as $N(p)$.
+
+Prove:
+
+If
+
+\begin{equation*}
+\begin{split}
+s &: \{x_1 \}, \{ \}, \{ p \in P \} \\
+\end{split}
+\end{equation*}
+
+then
+
+\begin{equation*}
+\begin{split}
+s_{next} &: \{\Gamma(p_1) \cap x_1 \}, \{ p_1 \}, \{ \Gamma(p_1) \cap P \} \\
+\end{split}
+\end{equation*}
+
+and 
+
+\begin{equation*}
+\begin{split}
+s_{update} &: \{x_1, p_1 \}, \{  \}, \{ P \setminus p_1 \} \\
+\end{split}
+\end{equation*}
+
+For $s_{next}$ above, if $\Gamma(p_1) \cap x_1 = \emptyset$, then $N(p) = \emptyset$. Or if $\Gamma(p_1) \cap x_1 = x_1$, it means $x_1$ is adjacent to $p_1$, then $N(p) = x_1$. For the $s_{update}$ above, $N(p) = \emptyset$, the same as $s$.
+
+If the assertion above holds for status:
+
+\begin{equation*}
+\begin{split}
+s^{\prime} &: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap X \}, \{r \in R, p_1, \dots, p_n \}, \{ P \setminus \{ p_1, \dots, p_n \} \} \\
+\end{split}
+\end{equation*}
+
+then
+
+\begin{equation*}
+\begin{split}
+s^{\prime}_{next} &: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap \Gamma(p_{n+1}) \cap X \}, \{r \in R, p_1, \dots, p_n, p_{n+1} \}, \{ \Gamma(p_{n+1}) \cap \{ P \setminus \{ p_1, \dots, p_n \} \} \} \\
+\end{split}
+\end{equation*}
+
+and 
+
+\begin{equation*}
+\begin{split}
+s^{\prime}_{update} &: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap X , p_{n+1}\}, \{r \in R, p_1, \dots, p_n \}, \{ P \setminus \{ p_1, \dots, p_n, p_{n+1}\} \} \\
+\end{split}
+\end{equation*}
+
+For $s^{\prime}_{next}$ above, if $X^{\prime}_{next} = \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap \Gamma(p_{n+1}) \cap X \}$ is not empty, 
+
+
 # Unsolved problems
 
 ## Vertices ordering in $P$
 
 **Strategy 1**: choose $v \in P$ that maximizes $\Gamma(v) \cap P$, then $v$ will be move to $X$ in the next status $s$. The search number will be reduced.
-
-## Maximize $|(R \cup P) \cap \Gamma(x_n)|$ or $|P \cap \Gamma(x_n)|$ ?
 
 # References
