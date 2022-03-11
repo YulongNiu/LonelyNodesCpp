@@ -1983,13 +1983,13 @@ N(x_i) &amp;= P \cap \Gamma(x_i|x_i \in X) \\
 \end{equation*}\]</span></p>
 <p>The <code>LOVO</code> is described as:</p>
 <ul>
-<li>step1: select <span class="math inline">\(x_n\)</span> to maximize <span class="math inline">\(|N(x_i|x_i \in X)|\)</span>,</li>
+<li>step1: select <span class="math inline">\(x_n\)</span> to maximize <span class="math inline">\(|N(x_i|x_i \in X)|\)</span>.</li>
 </ul>
 <p><em>Case1</em>: <span class="math inline">\(P \setminus N(x_n) \neq \emptyset\)</span>, randomly select <span class="math inline">\(p_1\)</span> from <span class="math inline">\(P \setminus N(x_n)\)</span>. In this way, <span class="math inline">\(p \in N(x_n)\)</span> are always searched in last rank.</p>
 <p><em>Case2</em>: <span class="math inline">\(P \setminus N(x_n) = \emptyset\)</span>, skip current status, then backtrack to the second latest status.</p>
-<p>The status <span class="math inline">\(s_{new}\)</span> has the same format as <a href="#eq:1">(1)</a>. The status <span class="math inline">\(s\)</span> is updated as <a href="#eq:2">(2)</a>.</p>
+<p>The status <span class="math inline">\(s_{new}\)</span> has the same format as <a href="#eq:1">(1)</a>. Because <span class="math inline">\(x_n \notin \Gamma(p_1) \cap X\)</span>, so the mode of <span class="math inline">\(X\)</span> is reduced in <span class="math inline">\(s_{new}\)</span>. The status <span class="math inline">\(s\)</span> is updated as <a href="#eq:2">(2)</a>.</p>
 <ul>
-<li><p>step2: Use the same vertex selection and ordering method for <span class="math inline">\(s_{new}\)</span>. Note that <span class="math inline">\(x_n^{\prime}\)</span> in <span class="math inline">\(s_{new}\)</span> may be different from the <span class="math inline">\(x_n\)</span> in <span class="math inline">\(s\)</span>. It means <span class="math inline">\(x_n\)</span> is always chosen according to the current status <span class="math inline">\(s\)</span> and make the <span class="math inline">\(|N(x_n)|\)</span> local optimal. Repeat <code>step1</code> until <span class="math inline">\(P = \emptyset\)</span>, then check whether current <span class="math inline">\(R\)</span> is a maximal clique.</p></li>
+<li><p>step2: use the same vertex selection and ordering method for <span class="math inline">\(s_{new}\)</span>. Note that <span class="math inline">\(x_n^{\prime}\)</span> in <span class="math inline">\(s_{new}\)</span> may be different from the <span class="math inline">\(x_n\)</span> in <span class="math inline">\(s\)</span>. It means <span class="math inline">\(x_n\)</span> is always chosen according to the current status <span class="math inline">\(s\)</span> and make the <span class="math inline">\(|N(x_n)|\)</span> local optimal. Repeat <code>step1</code> until <span class="math inline">\(P = \emptyset\)</span>, then check whether current <span class="math inline">\(R\)</span> is a maximal clique.</p></li>
 <li><p>step3: backtrack to the second latest status, and repeat <code>step2</code> until no status left.</p></li>
 </ul>
 <p>A search tree of status <span class="math inline">\(s\)</span> looks like:</p>
@@ -2009,20 +2009,21 @@ N(x_i) &amp;= P \cap \Gamma(x_i|x_i \in X) \\
 <div id="check-before-search" class="section level3" number="1.3.1">
 <h3><span class="header-section-number">1.3.1</span> Check before search</h3>
 <p>Different from Bron-Kerbosch’s algorithm, <code>LOVO</code> “ordered” vertices in <span class="math inline">\(P\)</span> that roughly split <span class="math inline">\(P\)</span> into two groups <span class="math inline">\(N(x_n)\)</span> and <span class="math inline">\(P \setminus N(x_n)\)</span>. Vertex <span class="math inline">\(p\)</span> for next search was randomly selected from <span class="math inline">\(P \setminus N(x_n)\)</span>.</p>
-<p><code>LOVO</code> always checked whether the union of <span class="math inline">\(R\)</span> and <span class="math inline">\(P\)</span> is part of searched maximal cliques, so invalid iterations could be avoid. <em>Case3</em> in <code>step1</code> above described the condition, <span class="math inline">\(R \subset \Gamma(x_n)\)</span> and <span class="math inline">\(P \setminus N(x_n) = \emptyset\)</span> that equals to <span class="math inline">\((R \cup P) \subset \Gamma(x_n | x_n \in X)\)</span>. Besides, maximized <span class="math inline">\(|N(x_n)|\)</span> guaranteed that largest possible searched maximal cliques or parts were checked in high priority.</p>
+<p><code>LOVO</code> always checked whether current status is part of searched maximal cliques, so invalid iterations could be avoid. <em>Case2</em> in <code>step1</code> above described the condition, <span class="math inline">\(P \setminus N(x_n) = \emptyset\)</span>. Besides, maximized <span class="math inline">\(|N(x_n)|\)</span> guaranteed that largest possible searched maximal cliques or parts were checked in high priority.</p>
 <p>It is possible that a chosen vertex <span class="math inline">\(p_x\)</span> from <span class="math inline">\(P \setminus N(x_n)\)</span> actually formed a searched maximal cliques. <span class="math inline">\(p_x\)</span> was omitted just because its corresponding <span class="math inline">\(N(x_m)\)</span> is not maximal. Any <span class="math inline">\(p_x\)</span> like below should not be searched:</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
-\{ \Gamma(p_x) \cap P \cup R, p_x \} \subset \Gamma(x_m | x_m \in X) \\
+\{ \Gamma(p_x) \cap P, p_x \} \subset \Gamma(x_m | x_m \in X) \\
 \end{split}
 \end{equation*}\]</span></p>
 <p><code>LOVO</code> only did one more search for <span class="math inline">\(p_x\)</span>. Because when <span class="math inline">\(p_x\)</span> was selected, new status would be:</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
-s_{new} &amp;: \{ x \in X \}, \{ r \in R, p_x \}, \{ \Gamma(p_x) \cap P \} \\
+s_{new} &amp;: \{ \Gamma(p_x) \cap X \}, \{ r \in R, p_x \}, \{ \Gamma(p_x) \cap P \} \\
 \end{split}
 \end{equation*}\]</span></p>
-<p>Clearly, <span class="math inline">\(s_{new}\)</span> would be skipped before next search.</p>
+<p>Because <span class="math inline">\(p_x\)</span> and <span class="math inline">\(x_m\)</span> are adjacent, <span class="math inline">\(x_m \in \Gamma(p_x) \cap X\)</span>.
+<span class="math inline">\(s_{new}\)</span> would be skipped before next search.</p>
 </div>
 <div id="quick-backtracking-when-p-emptyset" class="section level3" number="1.3.2">
 <h3><span class="header-section-number">1.3.2</span> Quick backtracking when <span class="math inline">\(P = \emptyset\)</span></h3>
@@ -2080,7 +2081,7 @@ s_{update} &amp;: \{x_1, p_1 \}, \{  \}, \{ P \setminus p_1 \} \\
 \end{split}
 \end{equation*}\]</span></p>
 <p>For <span class="math inline">\(s_{next}\)</span> above, if <span class="math inline">\(\Gamma(p_1) \cap x_1 = \emptyset\)</span>, then <span class="math inline">\(N(r) = \emptyset\)</span>. Or if <span class="math inline">\(\Gamma(p_1) \cap x_1 = x_1\)</span>, it means <span class="math inline">\(x_1\)</span> is adjacent to <span class="math inline">\(p_1\)</span>, then <span class="math inline">\(N(r) = x_1\)</span>. For the <span class="math inline">\(s_{update}\)</span> above, <span class="math inline">\(N(r) = \emptyset\)</span>, so as <span class="math inline">\(s\)</span>.</p>
-<p>If the assertion above holds for status:</p>
+<p>If the assertion above holds for status <span class="math inline">\(s^{\prime}\)</span>:</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
 s^{\prime} &amp;: \{ \Gamma(p_1) \cap \dots \cap \Gamma(p_n) \cap X \}, \{r \in R, p_1, \dots, p_n \}, \{ P \setminus \{ p_1, \dots, p_n \} \} \\
