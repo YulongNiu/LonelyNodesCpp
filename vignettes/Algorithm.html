@@ -9,9 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Yulong Niu" />
+<meta name="author" content />
 
-<meta name="date" content="2022-03-11" />
+<meta name="date" content="2022-03-14" />
 
 <title>Fast maximal cliques enumeration by locally optimal vertex ordering</title>
 
@@ -1885,8 +1885,7 @@ function toggle_visibility(id1) {
 
 
 <h1 class="title toc-ignore">Fast maximal cliques enumeration by locally optimal vertex ordering</h1>
-<p class="author-name">Yulong Niu</p>
-<h4 class="date">2022-03-11</h4>
+<h4 class="date">2022-03-14</h4>
 
 </div>
 
@@ -1917,7 +1916,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h2><span class="header-section-number">1.2</span> Algorithm design</h2>
 <p>The algorithm described here is used for fast maximal cliques enumeration (MCE) of undirected graphs. Most optimizations are attributed to “locally optimal vertex ordering”, so we named the new algorithm as “<code>LOVO</code>”.</p>
 <p><code>LOVO</code>, inspired by Bron-Kerbosch’s algorithm<span class="citation"><sup>1</sup></span>, operated three disjoint sets of vertices during the search for maximal cliques:</p>
-<p><span class="math inline">\(X\)</span>: <span class="math inline">\(x \in X\)</span> are searched vertices. Maximal cliques that contain <span class="math inline">\(\forall x \in X\)</span> have been searched.</p>
+<p><span class="math inline">\(X\)</span>: <span class="math inline">\(x \in X\)</span> are searched vertices. Maximal cliques that contain <span class="math inline">\(\forall x \in X\)</span> have been searched. Each vertex in <span class="math inline">\(X\)</span> are adjacent to every vertex in <span class="math inline">\(R\)</span> described below.</p>
 <p><span class="math inline">\(R\)</span>: <span class="math inline">\(\forall r \in R\)</span> links to each other.</p>
 <p><span class="math inline">\(P\)</span>: <span class="math inline">\(\forall p \in P\)</span> links to all vertices in <span class="math inline">\(R\)</span>, but <span class="math inline">\(p \in P\)</span> not necessarily links to each other. When vertex <span class="math inline">\(p_1\)</span> is deleted in <span class="math inline">\(P\)</span>, the set <span class="math inline">\(\{ p \in P | p \neq p_1 \}\)</span> is denoted as <span class="math inline">\(\{ P \setminus p_1 \}\)</span>.</p>
 <p>Status <span class="math inline">\(s\)</span> is defined as a combination of <span class="math inline">\(X\)</span>, <span class="math inline">\(R\)</span>, and <span class="math inline">\(P\)</span>.</p>
@@ -1968,7 +1967,7 @@ s_{init} &amp;: \{ \}, \{ \}, \{ v \in V \} \\
 <div id="lovo" class="section level3" number="1.2.2">
 <h3><span class="header-section-number">1.2.2</span> LOVO</h3>
 <p><code>LOVO</code> is designed based on the fact that: <span class="math inline">\(\forall p \in P\)</span> are searched in status <span class="math inline">\(s\)</span>, and cliques in <span class="math inline">\(s_{stop}\)</span> is checked by <span class="math inline">\(\Gamma(x)\)</span>. So for a given <span class="math inline">\(x_n \in X\)</span> if <span class="math inline">\(P\)</span> contains only <span class="math inline">\(P \cap \Gamma(x_n)\)</span>, the status can be skipped.</p>
-<p>The skippable status is described as:</p>
+<p>The skippable status is described as, <span class="math inline">\(\exists x_n\)</span>:</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
 s_{skip} &amp;: \{x \in X\}, \{  r \in R \}, \{ P \cap \Gamma(x_n | x_n \in X) \} \\
@@ -1987,9 +1986,9 @@ N(x_i) &amp;= P \cap \Gamma(x_i|x_i \in X) \\
 </ul>
 <p><em>Case1</em>: <span class="math inline">\(P \setminus N(x_n) \neq \emptyset\)</span>, randomly select <span class="math inline">\(p_1\)</span> from <span class="math inline">\(P \setminus N(x_n)\)</span>. In this way, <span class="math inline">\(p \in N(x_n)\)</span> are always searched in last rank.</p>
 <p><em>Case2</em>: <span class="math inline">\(P \setminus N(x_n) = \emptyset\)</span>, skip current status, then backtrack to the second latest status.</p>
-<p>The status <span class="math inline">\(s_{new}\)</span> has the same format as <a href="#eq:1">(1)</a>. Because <span class="math inline">\(x_n \notin \Gamma(p_1) \cap X\)</span>, so the mode of <span class="math inline">\(X\)</span> is reduced in <span class="math inline">\(s_{new}\)</span>. The status <span class="math inline">\(s\)</span> is updated as <a href="#eq:2">(2)</a>.</p>
+<p>The status <span class="math inline">\(s_{new}\)</span> has the same format as <a href="#eq:1">(1)</a>. Because <span class="math inline">\(x_n \notin \Gamma(p_1) \cap X\)</span>, the mode of <span class="math inline">\(X\)</span> is reduced in <span class="math inline">\(s_{new}\)</span>. The status <span class="math inline">\(s\)</span> is updated as <a href="#eq:2">(2)</a>.</p>
 <ul>
-<li><p>step2: use the same vertex selection and ordering method for <span class="math inline">\(s_{new}\)</span>. Note that <span class="math inline">\(x_n^{\prime}\)</span> in <span class="math inline">\(s_{new}\)</span> may be different from the <span class="math inline">\(x_n\)</span> in <span class="math inline">\(s\)</span>. It means <span class="math inline">\(x_n\)</span> is always chosen according to the current status <span class="math inline">\(s\)</span> and make the <span class="math inline">\(|N(x_n)|\)</span> local optimal. Repeat <code>step1</code> until <span class="math inline">\(P = \emptyset\)</span>, then check whether current <span class="math inline">\(R\)</span> is a maximal clique.</p></li>
+<li><p>step2: use the same vertex selection and ordering method for <span class="math inline">\(s_{new}\)</span>. Note that <span class="math inline">\(x_n^{\prime}\)</span> in <span class="math inline">\(s_{update}\)</span> may be different from the <span class="math inline">\(x_n\)</span> in <span class="math inline">\(s\)</span>. It means <span class="math inline">\(x_n\)</span> is always chosen according to the current status <span class="math inline">\(s\)</span> and make the <span class="math inline">\(|N(x_n)|\)</span> local optimal. Repeat <code>step1</code> until <span class="math inline">\(P = \emptyset\)</span>, then check whether current <span class="math inline">\(R\)</span> is a maximal clique.</p></li>
 <li><p>step3: backtrack to the second latest status, and repeat <code>step2</code> until no status left.</p></li>
 </ul>
 <p>A search tree of status <span class="math inline">\(s\)</span> looks like:</p>
@@ -2010,7 +2009,7 @@ N(x_i) &amp;= P \cap \Gamma(x_i|x_i \in X) \\
 <h3><span class="header-section-number">1.3.1</span> Check before search</h3>
 <p>Different from Bron-Kerbosch’s algorithm, <code>LOVO</code> “ordered” vertices in <span class="math inline">\(P\)</span> that roughly split <span class="math inline">\(P\)</span> into two groups <span class="math inline">\(N(x_n)\)</span> and <span class="math inline">\(P \setminus N(x_n)\)</span>. Vertex <span class="math inline">\(p\)</span> for next search was randomly selected from <span class="math inline">\(P \setminus N(x_n)\)</span>.</p>
 <p><code>LOVO</code> always checked whether current status is part of searched maximal cliques, so invalid iterations could be avoid. <em>Case2</em> in <code>step1</code> above described the condition, <span class="math inline">\(P \setminus N(x_n) = \emptyset\)</span>. Besides, maximized <span class="math inline">\(|N(x_n)|\)</span> guaranteed that largest possible searched maximal cliques or parts were checked in high priority.</p>
-<p>It is possible that a chosen vertex <span class="math inline">\(p_x\)</span> from <span class="math inline">\(P \setminus N(x_n)\)</span> actually formed a searched maximal cliques. <span class="math inline">\(p_x\)</span> was omitted just because its corresponding <span class="math inline">\(N(x_m)\)</span> is not maximal. Any <span class="math inline">\(p_x\)</span> like below should not be searched:</p>
+<p>It is possible that a chosen vertex <span class="math inline">\(p_x\)</span> from <span class="math inline">\(P \setminus N(x_n)\)</span> actually formed a searched maximal cliques. <span class="math inline">\(p_x\)</span> was omitted just because its corresponding <span class="math inline">\(N(x_m)\)</span> is not maximal. Any <span class="math inline">\(p_x\)</span> like below should be omitted:</p>
 <p><span class="math display">\[\begin{equation*}
 \begin{split}
 \{ \Gamma(p_x) \cap P, p_x \} \subset \Gamma(x_m | x_m \in X) \\
@@ -2022,8 +2021,7 @@ N(x_i) &amp;= P \cap \Gamma(x_i|x_i \in X) \\
 s_{new} &amp;: \{ \Gamma(p_x) \cap X \}, \{ r \in R, p_x \}, \{ \Gamma(p_x) \cap P \} \\
 \end{split}
 \end{equation*}\]</span></p>
-<p>Because <span class="math inline">\(p_x\)</span> and <span class="math inline">\(x_m\)</span> are adjacent, <span class="math inline">\(x_m \in \Gamma(p_x) \cap X\)</span>.
-<span class="math inline">\(s_{new}\)</span> would be skipped before next search.</p>
+<p>Because <span class="math inline">\(p_x\)</span> and <span class="math inline">\(x_m\)</span> are adjacent, <span class="math inline">\(x_m \in \Gamma(p_x) \cap X\)</span>. Then <span class="math inline">\(x_m\)</span> would be chosen in <span class="math inline">\(s_{new}\)</span>, so <span class="math inline">\(s_{new}\)</span> would be skipped before next search.</p>
 </div>
 <div id="quick-backtracking-when-p-emptyset" class="section level3" number="1.3.2">
 <h3><span class="header-section-number">1.3.2</span> Quick backtracking when <span class="math inline">\(P = \emptyset\)</span></h3>

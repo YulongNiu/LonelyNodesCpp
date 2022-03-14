@@ -1,7 +1,6 @@
 ---
 title: "Fast maximal cliques enumeration by locally optimal vertex ordering"
 author: 
-- Yulong Niu
 date: "`r Sys.Date()`"
 csl: nature.csl
 bibliography: MaximalCliqueRef.bib
@@ -43,7 +42,7 @@ The algorithm described here is used for fast maximal cliques enumeration (MCE) 
 
 `LOVO`, inspired by Bron-Kerbosch's algorithm [@bron1973algorithm], operated three disjoint sets of vertices during the search for maximal cliques:
 
-$X$: $x \in X$ are searched vertices. Maximal cliques that contain $\forall x \in X$ have been searched.
+$X$: $x \in X$ are searched vertices. Maximal cliques that contain $\forall x \in X$ have been searched. Each vertex in $X$ are adjacent to every vertex in $R$ described below.
 
 $R$: $\forall r \in R$ links to each other.
 
@@ -105,7 +104,7 @@ s_{init} &: \{ \}, \{ \}, \{ v \in V \} \\
 
 `LOVO` is designed based on the fact that: $\forall p \in P$ are searched in status $s$, and cliques in $s_{stop}$ is checked by $\Gamma(x)$. So for a given $x_n \in X$ if $P$ contains only $P \cap \Gamma(x_n)$, the status can be skipped.
 
-The skippable status is described as:
+The skippable status is described as, $\exists x_n$:
 
 \begin{equation*}
 \begin{split}
@@ -131,9 +130,9 @@ The `LOVO` is described as:
 
 *Case2*: $P \setminus N(x_n) = \emptyset$, skip current status, then backtrack to the second latest status.
 
-The status $s_{new}$ has the same format as \@ref(eq:1). Because $x_n \notin  \Gamma(p_1) \cap X$, so the mode of $X$ is reduced in $s_{new}$. The status $s$ is updated as \@ref(eq:2).
+The status $s_{new}$ has the same format as \@ref(eq:1). Because $x_n \notin  \Gamma(p_1) \cap X$, the mode of $X$ is reduced in $s_{new}$. The status $s$ is updated as \@ref(eq:2).
 
-* step2: use the same vertex selection and ordering method for $s_{new}$. Note that $x_n^{\prime}$ in $s_{new}$ may be different from the $x_n$ in $s$. It means $x_n$ is always chosen according to the current status $s$ and make the $|N(x_n)|$ local optimal. Repeat `step1` until $P = \emptyset$, then check whether current $R$ is a maximal clique.
+* step2: use the same vertex selection and ordering method for $s_{new}$. Note that $x_n^{\prime}$ in $s_{update}$ may be different from the $x_n$ in $s$. It means $x_n$ is always chosen according to the current status $s$ and make the $|N(x_n)|$ local optimal. Repeat `step1` until $P = \emptyset$, then check whether current $R$ is a maximal clique.
 
 * step3: backtrack to the second latest status, and repeat `step2` until no status left.
 
@@ -159,7 +158,7 @@ Different from Bron-Kerbosch's algorithm, `LOVO` "ordered" vertices in $P$ that 
 
 `LOVO` always checked whether current status is part of searched maximal cliques, so invalid iterations could be avoid. *Case2* in `step1` above described the condition, $P \setminus N(x_n) = \emptyset$. Besides, maximized $|N(x_n)|$ guaranteed that largest possible searched maximal cliques or parts were checked in high priority. 
 
-It is possible that a chosen vertex $p_x$ from $P \setminus N(x_n)$ actually formed a searched maximal cliques. $p_x$ was omitted just because its corresponding $N(x_m)$ is not maximal. Any $p_x$ like below should not be searched:
+It is possible that a chosen vertex $p_x$ from $P \setminus N(x_n)$ actually formed a searched maximal cliques. $p_x$ was omitted just because its corresponding $N(x_m)$ is not maximal. Any $p_x$ like below should be omitted:
 
 \begin{equation*}
 \begin{split}
@@ -175,8 +174,7 @@ s_{new} &: \{ \Gamma(p_x) \cap X \}, \{ r \in R, p_x \}, \{ \Gamma(p_x) \cap P \
 \end{split}
 \end{equation*}
 
-Because $p_x$ and $x_m$ are adjacent, $x_m \in \Gamma(p_x) \cap X$. 
-$s_{new}$ would be skipped before next search.
+Because $p_x$ and $x_m$ are adjacent, $x_m \in \Gamma(p_x) \cap X$. Then $x_m$ would be chosen in $s_{new}$, so $s_{new}$ would be skipped before next search.
 
 
 ### Quick backtracking when $P = \emptyset$
