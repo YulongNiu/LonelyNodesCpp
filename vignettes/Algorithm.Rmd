@@ -79,7 +79,15 @@ s_{stop} &: \{ \Gamma(p_n) \cap \Gamma(p_{n-1}) \cap \dots \cap X \}, \{r \in R,
 \end{split}
 \end{equation*}
 
-Check if $X = \emptyset$ in $s_{stop}$, which means there is no vertices in $X$ adjacent to vertices in $R$. If so, then $R$ is a new maximal clique.
+which is denoted as:
+
+\begin{equation*}
+\begin{split}
+s_{stop} &: \{ X_{stop} \}, \{ R_{stop} \}, \{ P_{stop} \} \\
+\end{split}
+\end{equation*}
+
+Check if $X_{stop} = \emptyset$ in $s_{stop}$, which means there is no vertices in $X_{stop}$ adjacent to vertices in $R_{stop}$. If so, then $R_{stop}$ is a new maximal clique.
 
 * Step3: backtrack to a updated status $s$:
 
@@ -102,19 +110,19 @@ s_{init} &: \{ \}, \{ \}, \{ v \in V \} \\
 
 ### LOVO
 
-`LOVO` is designed based on the fact that: $\forall p \in P$ are searched in status $s$, and cliques in $s_{stop}$ is checked by $\Gamma(x)$. So for a given $x_n \in X$ if $P$ contains only $P \cap \Gamma(x_n)$, the status can be skipped.
+`LOVO` is designed based on the fact that: $\forall p \in P$ are searched in status $s$, and cliques in $s_{stop}$ is checked by $\Gamma(x)$. So for a given $x_i \in X$ if $P$ contains only $P \cap \Gamma(x_i)$, the status can be skipped.
 
-The skippable status is described as, $\exists x_n$:
+The skippable status is described as, $\exists x_i$:
 
 \begin{equation*}
 \begin{split}
-s_{skip} &: \{x \in X\}, \{  r \in R \}, \{ P \cap \Gamma(x_n | x_n \in X) \} \\
+s_{skip} &: \{x \in X\}, \{  r \in R \}, \{ P \cap \Gamma(x_i | x_i \in X) = P \} \\
 \end{split}
 \end{equation*}
 
-$P \cap \Gamma(x_n | x_n \in X)$ is equal to the number of skipped iterations.
+$P \cap \Gamma(x_i | x_i \in X)$ is equal to the number of skipped iterations.
 
-In `LOVO`, $x_n$ is chosen to maximize $|N(x_i|x_i \in X)|$:
+In `LOVO`, $x_i$ is chosen to maximize $|N(x)|$:
 
 \begin{equation*}
 \begin{split}
@@ -124,15 +132,15 @@ N(x_i) &= P \cap \Gamma(x_i|x_i \in X) \\
 
 The `LOVO` is described as:
 
-* step1: select $x_n$ to maximize $|N(x_i|x_i \in X)|$.
+* step1: select $x_i$ to maximize $|N(x)|$.
 
-*Case1*: $P \setminus N(x_n) \neq \emptyset$, randomly select $p_1$ from $P \setminus N(x_n)$. In this way, $p \in  N(x_n)$ are always searched in last rank.
+*Case1*: $P \setminus N(x_i) \neq \emptyset$, randomly select $p_1$ from $P \setminus N(x_i)$. In this way, $p \in  N(x_i)$ are always searched in last rank.
 
-*Case2*: $P \setminus N(x_n) = \emptyset$, skip current status, then backtrack to the second latest status.
+*Case2*: $P \setminus N(x_i) = \emptyset$, skip current status.
 
 The status $s_{new}$ has the same format as \@ref(eq:1). Because $x_n \notin  \Gamma(p_1) \cap X$, the mode of $X$ is reduced in $s_{new}$. The status $s$ is updated as \@ref(eq:2).
 
-* step2: use the same vertex selection and ordering method for $s_{new}$. Note that $x_n^{\prime}$ in $s_{update}$ may be different from the $x_n$ in $s$. It means $x_n$ is always chosen according to the current status $s$ and make the $|N(x_n)|$ local optimal. Repeat `step1` until $P = \emptyset$, then check whether current $R$ is a maximal clique.
+* step2: use the same vertex selection and ordering method for $s_{new}$. Note that $x_i^{\prime}$ in $s_{update}$ may be different from the $x_i$ in $s$. It means $x_i$ is always chosen according to the current status $s$ and make the $|N(x_i)|$ local optimal. Repeat `step1` until $P = \emptyset$, then check whether current $R$ is a maximal clique.
 
 * step3: backtrack to the second latest status, and repeat `step2` until no status left.
 
@@ -154,15 +162,15 @@ A search tree of status $s$ looks like:
 
 ### Check before search
 
-Different from Bron-Kerbosch's algorithm, `LOVO` "ordered" vertices in $P$ that roughly split $P$ into two groups $N(x_n)$ and $P \setminus N(x_n)$. Vertex $p$ for next search was randomly selected from $P \setminus N(x_n)$.
+Different from Bron-Kerbosch's algorithm, `LOVO` "ordered" vertices in $P$ that roughly split $P$ into two groups $N(x_i)$ and $P \setminus N(x_i)$. Vertex $p$ for next search was randomly selected from $P \setminus N(x_i)$.
 
-`LOVO` always checked whether current status is part of searched maximal cliques, so invalid iterations could be avoid. *Case2* in `step1` above described the condition, $P \setminus N(x_n) = \emptyset$. Besides, maximized $|N(x_n)|$ guaranteed that largest possible searched maximal cliques or parts were checked in high priority. 
+`LOVO` always checked whether current status is part of searched maximal cliques, so invalid iterations could be avoid. *Case2* in `step1` above described the condition, $P \setminus N(x_i) = \emptyset$. Besides, maximized $|N(x_i)|$ guaranteed that largest possible searched maximal cliques or parts were checked in high priority. 
 
-It is possible that a chosen vertex $p_x$ from $P \setminus N(x_n)$ actually formed a searched maximal cliques. $p_x$ was omitted just because its corresponding $N(x_m)$ is not maximal. Any $p_x$ like below should be omitted:
+It is possible that a chosen vertex $p_x$ from $P \setminus N(x_i)$ actually formed a searched maximal cliques. $p_x$ was selected just because its corresponding $N(x_j)$ is not maximal. Any $p_x$ like below should be omitted:
 
 \begin{equation*}
 \begin{split}
-\{ \Gamma(p_x) \cap P, p_x \} \subset \Gamma(x_m | x_m \in X) \\
+\{ \Gamma(p_x) \cap P, p_x \} \subset \Gamma(x_j | x_j \in X) \\
 \end{split}
 \end{equation*}
 
@@ -174,7 +182,7 @@ s_{new} &: \{ \Gamma(p_x) \cap X \}, \{ r \in R, p_x \}, \{ \Gamma(p_x) \cap P \
 \end{split}
 \end{equation*}
 
-Because $p_x$ and $x_m$ are adjacent, $x_m \in \Gamma(p_x) \cap X$. Then $x_m$ would be chosen in $s_{new}$, so $s_{new}$ would be skipped before next search.
+Because $p_x$ and $x_j$ are adjacent, $x_j \in \Gamma(p_x) \cap X$. Then $x_j$ would be chosen in $s_{new}$, so $s_{new}$ would be skipped before next search.
 
 
 ### Quick backtracking when $P = \emptyset$

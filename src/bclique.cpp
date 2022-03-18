@@ -2,6 +2,7 @@
 
 #include "bclique.h"
 #include "init.h"
+#include "thread_pool.hpp"
 #include "util.h"
 
 using namespace std;
@@ -172,6 +173,32 @@ void BackSkipLeafBit_(vecpleafbit& vpleaf) {
        (p != vpleaf.rend()) && ((*p)->crown_size() < bestSize);
        ++p) {}
 
+
   vpleaf.erase(p.base(), vpleaf.end());
 }
+
+// void ChainReact(const pleafbit&    pleaf,
+//                 const vecdbit&     gdbit,
+//                 const thread_pool& tpool) {
+
+//   if (pleaf->branches_empty()) {
+//     if (pleaf->seeds_empty()) {
+//       // is maximal cliques
+//       // cout << pleaf->get_branches() << endl;
+//     }
+//   } else {
+//     auto idx = pleaf->next_nodeidx(gdbit);
+
+//     // next pleaf
+//     auto npleaf = pleaf->next_leaf(idx, gdbit);
+//     tpool.push_task(ChainReact, npleaf, gdbit, tpool);
+
+//     // update pleaf
+//     auto uleaf = pleaf->update_leaf(idx);
+//     tpool.push_task(ChainReact, uleaf, gdbit, tpool);
+//   }
+
+//   if (tpool.get_tasks_total() == 0) return;
+// }
+
 } // namespace lonelynodes

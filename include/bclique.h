@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "init.h"
+#include "thread_pool.hpp"
 #include "util.h"
 
 namespace lonelynodes {
@@ -133,6 +134,10 @@ arma::uword First0IdxBit_(const dbit&    stem,
 vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit);
 
 void BackSkipLeafBit_(vecpleafbit& vpleaf);
+
+void ChainReact(const pleafbit& pleaf,
+                const vecdbit&  gdbit,
+                thread_pool&    tpool);
 } // namespace lonelynodes
 
 #endif // _BCLIQUE_H_

@@ -12,6 +12,7 @@
 #include "clique.h"
 #include "init.h"
 #include "pivot.h"
+#include "thread_pool.hpp"
 #include "util.h"
 
 using namespace std;
@@ -314,6 +315,12 @@ int main() {
   // cout << "First0dbit_ is: " << First0dbit_(crown, seed, gdbit) << "\n";
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+  //~~~~~~~~~~~~~~~~~~~~~~~test thread pool~~~~~~~~~~~~~~~~~
+  thread_pool pool;
+  cout << "#threads is: " << pool.get_thread_count() << endl;
+  cout << "#unfinished tasks is: " << pool.get_tasks_total() << endl;
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   //~~~~~~~~~~~~~~~~~~~~~~~test find_first and find_next~~~~~~~~
   uword       num = 123456;
   bitset<100> testFindf{ num };
@@ -348,7 +355,7 @@ int main() {
        << "end computation: " << ctime(&end_time)
        << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-  Printvecdbit(cliques);
+  // Printvecdbit(cliques);
 
   // cout << "\n"
   //      << "cliques are: \n";
@@ -358,13 +365,8 @@ int main() {
   // cout << "\n"
   //      << "cliques size are: \n";
   // Printvecu(Lenvecvu(cliques));
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  // //~~~~~~~~~~~~~~~~~~~~~test Leaf obj~~~~~~~~~~~~~~~~~~~
-  // Leaf firstLeaf{ { 1 }, { 2, 3 }, { 4 } };
-  // firstLeaf.print();
-  // Printvecu(firstLeaf.next_seeds());
-  // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   return 0;
 }
