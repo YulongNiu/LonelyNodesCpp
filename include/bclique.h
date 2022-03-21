@@ -138,6 +138,10 @@ void BackSkipLeafBit_(vecpleafbit& vpleaf);
 void ChainReact(const pleafbit& pleaf,
                 const vecdbit&  gdbit,
                 thread_pool&    tpool);
+
+void SearchLeafBit2(const pleafbit& pleaf,
+                    const vecdbit&  gdbit,
+                    vecdbit&        cliques);
 } // namespace lonelynodes
 
 #endif // _BCLIQUE_H_

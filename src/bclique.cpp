@@ -12,17 +12,10 @@ namespace lonelynodes {
 arma::uword LeafBit::next_nodeidx(const vecdbit& gdbit) const {
 
   // No need to check branches empty.
-  // Case1: `branches_size() == 1`,
-  // then branches in "next_leaf" is empty and will be checked;
-  // both "next_leaf" and "update_leaf" will be skipped.
-  // Case2: `branches_size() >= 2` and branches in "next_leaf" is empty.
-  // "next_leaf" will be checked and skipped.
-  // But branches in "update_leaf" >= 1,
-  // so case1 will be repeated.
-  // In total, empty branches will not appear here.
+  // If `branches.none()`, `npos` always returns.
 
   // No need to check seeds empty.
-  // If `seeds.empty()`, `branches.find_first()` always returns.
+  // If `seeds.none()`, `branches.find_first()` always returns.
 
   arma::uword maxCt = 0;
 
@@ -80,56 +73,6 @@ arma::uword First0IdxBit_(const dbit&    stem,
 }
 
 
-vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
-
-  vecdbit     cliques;
-  vecpleafbit vpleaf;
-  vpleaf.push_back(make_shared<LeafBit>(start));
-
-  // count, will be deleted
-  arma::uword i = 0, j = 0; // d
-
-  for (; !vpleaf.empty();) {
-
-    auto& lastpLeaf = vpleaf.back();
-
-    auto idx = lastpLeaf->next_nodeidx(gdbit);
-    ++i; // d
-
-    if (!lastpLeaf->is_skippable(idx)) {
-      // step1: check next node idx for last elem
-      auto uLeaf    = lastpLeaf->update_leaf(idx);
-      auto nLeaf    = lastpLeaf->next_leaf(idx, gdbit);
-      vpleaf.back() = uLeaf;
-      vpleaf.push_back(nLeaf);
-      ++j; // d
-
-      // cout << "----------" << endl;
-      // uLeaf->print();
-      // nLeaf->print();
-
-      // step2: find maximal clique
-      if (nLeaf->is_maximalclique()) {
-
-        cliques.push_back(nLeaf->get_stem());
-
-        cout << "vleaf size: " << vpleaf.size()
-             << "; #cliques: " << cliques.size()
-             << "; clique size: " << nLeaf->get_stem().count()
-             << "; #loop: " << i << "; #search: " << j << endl; // d
-
-        BackSkipLeafBit_(vpleaf);
-        i = 0, j = 0; // d
-      }
-    } else {
-      vpleaf.pop_back();
-    }
-  }
-
-  return cliques;
-}
-
-
 // vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
 
 //   vecdbit     cliques;
@@ -137,12 +80,14 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
 //   vpleaf.push_back(make_shared<LeafBit>(start));
 
 //   // count, will be deleted
+//   arma::uword i = 0, j = 0; // d
 
 //   for (; !vpleaf.empty();) {
 
 //     auto& lastpLeaf = vpleaf.back();
 
 //     auto idx = lastpLeaf->next_nodeidx(gdbit);
+//     ++i; // d
 
 //     if (!lastpLeaf->is_skippable(idx)) {
 //       // step1: check next node idx for last elem
@@ -150,12 +95,24 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
 //       auto nLeaf    = lastpLeaf->next_leaf(idx, gdbit);
 //       vpleaf.back() = uLeaf;
 //       vpleaf.push_back(nLeaf);
+//       ++j; // d
+
+//       // cout << "----------" << endl;
+//       // uLeaf->print();
+//       // nLeaf->print();
 
 //       // step2: find maximal clique
 //       if (nLeaf->is_maximalclique()) {
 
 //         cliques.push_back(nLeaf->get_stem());
+
+//         cout << "vleaf size: " << vpleaf.size()
+//              << "; #cliques: " << cliques.size()
+//              << "; clique size: " << nLeaf->get_stem().count()
+//              << "; #loop: " << i << "; #search: " << j << endl; // d
+
 //         BackSkipLeafBit_(vpleaf);
+//         i = 0, j = 0; // d
 //       }
 //     } else {
 //       vpleaf.pop_back();
@@ -164,6 +121,41 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
 
 //   return cliques;
 // }
+
+vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit) {
+
+  vecdbit     cliques;
+  vecpleafbit vpleaf;
+  vpleaf.push_back(make_shared<LeafBit>(start));
+
+  // count, will be deleted
+
+  for (; !vpleaf.empty();) {
+
+    auto& lastpLeaf = vpleaf.back();
+
+    auto idx = lastpLeaf->next_nodeidx(gdbit);
+
+    if (!lastpLeaf->is_skippable(idx)) {
+      // step1: check next node idx for last elem
+      auto uLeaf    = lastpLeaf->update_leaf(idx);
+      auto nLeaf    = lastpLeaf->next_leaf(idx, gdbit);
+      vpleaf.back() = uLeaf;
+      vpleaf.push_back(nLeaf);
+
+      // step2: find maximal clique
+      if (nLeaf->is_maximalclique()) {
+
+        cliques.push_back(nLeaf->get_stem());
+        BackSkipLeafBit_(vpleaf);
+      }
+    } else {
+      vpleaf.pop_back();
+    }
+  }
+
+  return cliques;
+}
 
 void BackSkipLeafBit_(vecpleafbit& vpleaf) {
 
@@ -175,6 +167,29 @@ void BackSkipLeafBit_(vecpleafbit& vpleaf) {
 
 
   vpleaf.erase(p.base(), vpleaf.end());
+}
+
+
+void SearchLeafBit2(const pleafbit& pleaf,
+                    const vecdbit&  gdbit,
+                    vecdbit&        cliques) {
+
+  if (pleaf->is_maximalclique()) {
+    // find maximal cliques
+    cliques.push_back(pleaf->get_stem());
+  } else {
+    auto idx = pleaf->next_nodeidx(gdbit);
+    if (!pleaf->is_skippable(idx)) {
+
+      // next pleaf
+      auto npleaf = pleaf->next_leaf(idx, gdbit);
+      SearchLeafBit2(npleaf, gdbit, cliques);
+
+      // update pleaf
+      auto upleaf = pleaf->update_leaf(idx);
+      SearchLeafBit2(upleaf, gdbit, cliques);
+    }
+  }
 }
 
 // void ChainReact(const pleafbit&    pleaf,

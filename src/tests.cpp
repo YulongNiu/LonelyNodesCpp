@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <ctime>
 #include <iostream>
+#include <memory>
 #include <type_traits>
 
 #include "bclique.h"
@@ -145,12 +146,12 @@ int main() {
   // uword  nodeIdx = 332;         // #maximal clique 94
   // uword  nodeIdx = 10;          // #maximal clique 5
 
-  // string gfile   = "testgbig.bin"; // large graph
-  // uword  nodeIdx = 9116;           // #maximal clique 3764
+  string gfile   = "testgbig.bin"; // large graph
+  uword  nodeIdx = 9116;           // #maximal clique 3764
   // uword nodeIdx = 100; // #maximal clique 264
 
-  string gfile   = "testblog.bin"; // blog graph
-  uword  nodeIdx = 0;              // #maximal clique 4
+  // string gfile   = "testblog.bin"; // blog graph
+  // uword  nodeIdx = 0;              // #maximal clique 4
 
   // string gfile   = "c-fat200-5.bin"; // c-fat200-5 graph
   // uword  nodeIdx = 99;
@@ -333,19 +334,25 @@ int main() {
   auto start      = chrono::system_clock::now();
   auto start_time = chrono::system_clock::to_time_t(start);
 
-  dbit dbitempty(gdbit.size(), 0);
-  // LeafBit startn(dbitempty, dbitempty, gdbitall);
-  LeafBit startn(dbitempty, dbitempty, gdbit.at(nodeIdx));
-  auto    cliques = SearchLeafBit(startn, gdbit);
+  // // LeafBit vector method
+  // dbit dbitempty(gdbit.size(), 0);
+  // // LeafBit startn(dbitempty, dbitempty, gdbitall);
+  // LeafBit startn(dbitempty, dbitempty, gdbit.at(nodeIdx));
+  // auto    cliques = SearchLeafBit(startn, gdbit);
 
-  // Leaf object method
+  // LeafBit recursion method
+  dbit     dbitempty(gdbit.size(), 0);
+  LeafBit  startn(dbitempty, dbitempty, gdbit.at(nodeIdx));
+  pleafbit startnp = make_shared<LeafBit>(startn);
+  vecdbit  cliques;
+  SearchLeafBit2(startnp, gdbit, cliques);
+
+  // // Leaf object method
   // Leaf startn({}, {}, { gg.at(nodeIdx) });
   // auto cliques = SearchLeafObj(startn, gidc);
 
   // raw vector method
   // auto cliques = TestSearchTree(gg, gidc, nodeIdx);
-
-  for (uword i = 0; i < 10000; ++i) {}
 
   auto end      = chrono::system_clock::now();
   auto end_time = chrono::system_clock::to_time_t(end);
@@ -356,6 +363,7 @@ int main() {
        << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
   // Printvecdbit(cliques);
+  cout << "#cliques: " << cliques.size() << endl;
 
   // cout << "\n"
   //      << "cliques are: \n";
