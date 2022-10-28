@@ -9,6 +9,10 @@ EXE := ${BIN_DIR}/tests
 SRC := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC))
 
+# CXX				:= g++-11
+# CPPFLAGS	:= -Iinclude -I/usr/local/include -MMD -MP
+# LDLIBS		:= -L/usr/local/lib -larmadillo
+
 CXX				:= clang++
 CPPFLAGS	:= -Iinclude -MMD -MP
 CFLAGS		:= -std=c++17 -g -Wall -O3

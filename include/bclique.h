@@ -53,8 +53,8 @@ public:
 private:
   // `seeds`: searched nodes, each of which has been completely searched
   // for maximal cliques.
-  // `branches`: nodes for next search.
   // `stem`: known cliques nodes in current leaf.
+  // `branches`: nodes for next search.
   // No intersections among `seeds`, `branches`, or `steam`.
   const dbit seeds, stem, branches;
 };

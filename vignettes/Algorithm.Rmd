@@ -1,6 +1,6 @@
 ---
 title: "Fast maximal cliques enumeration by locally optimal vertex ordering"
-author: 
+author: Yulong Niu
 date: "`r Sys.Date()`"
 csl: nature.csl
 bibliography: MaximalCliqueRef.bib
@@ -42,11 +42,11 @@ The algorithm described here is used for fast maximal cliques enumeration (MCE) 
 
 `LOVO`, inspired by Bron-Kerbosch's algorithm [@bron1973algorithm], operated three disjoint sets of vertices during the search for maximal cliques:
 
-$X$: $x \in X$ are searched vertices. Maximal cliques that contain $\forall x \in X$ have been searched. Each vertex in $X$ are adjacent to every vertex in $R$ described below.
+$X$: $x \in X$ are searched vertices. Maximal cliques that contain $\forall x \in X$ have been searched. Each vertex in $X$ are adjacent to every vertex in $R$ described below, or $X = \emptyset$.
 
-$R$: $\forall r \in R$ links to each other.
+$R$: $\forall r \in R$ links to each other, and $\Gamma(r) \cap X = X$.
 
-$P$: $\forall p \in P$ links to all vertices in $R$, but $p \in P$ not necessarily links to each other. When vertex $p_1$ is deleted in $P$, the set $\{ p \in P | p \neq p_1 \}$ is denoted as $\{ P \setminus p_1 \}$.
+$P$: $\forall p \in P$ links to all vertices in $R$, but $p \in P$ not necessarily links to each other. When vertex $p_1$ is deleted in $P$, set $\{ p \in P | p \neq p_1 \}$ is denoted as $\{ P \setminus p_1 \}$.
 
 Status $s$ is defined as a combination of $X$, $R$, and $P$.
 
@@ -234,7 +234,7 @@ In `LOVO`, the graph is transformed as:
 
 Interestingly, as described in Bron-Kerbosch's algorithm, for a given status $s$, $\forall r \in R$ $X \cap \Gamma(r) = X \mathrm{or} \: \emptyset$. It means each vertex in $X$ is adjacent to every vertex in $R$, unless $X = \emptyset$. We denote $X \cap \Gamma(r)$ as $N(r)$.
 
-Prove:
+Proof:
 
 If
 

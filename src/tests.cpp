@@ -334,18 +334,18 @@ int main() {
   auto start      = chrono::system_clock::now();
   auto start_time = chrono::system_clock::to_time_t(start);
 
-  // // LeafBit vector method
-  // dbit dbitempty(gdbit.size(), 0);
-  // // LeafBit startn(dbitempty, dbitempty, gdbitall);
-  // LeafBit startn(dbitempty, dbitempty, gdbit.at(nodeIdx));
-  // auto    cliques = SearchLeafBit(startn, gdbit);
+  // LeafBit vector method
+  dbit dbitempty(gdbit.size(), 0);
+  // LeafBit startn(dbitempty, dbitempty, gdbitall);
+  LeafBit startn(dbitempty, dbitempty, gdbit.at(nodeIdx));
+  auto    cliques = SearchLeafBit(startn, gdbit);
 
-  // LeafBit recursion method
-  dbit     dbitempty(gdbit.size(), 0);
-  LeafBit  startn(dbitempty, dbitempty, gdbit.at(nodeIdx));
-  pleafbit startnp = make_shared<LeafBit>(startn);
-  vecdbit  cliques;
-  SearchLeafBit2(startnp, gdbit, cliques);
+  // // LeafBit recursion method
+  // dbit     dbitempty(gdbit.size(), 0);
+  // LeafBit  startn(dbitempty, dbitempty, gdbit.at(nodeIdx));
+  // pleafbit startnp = make_shared<LeafBit>(startn);
+  // vecdbit  cliques;
+  // SearchLeafBit2(startnp, gdbit, cliques);
 
   // // Leaf object method
   // Leaf startn({}, {}, { gg.at(nodeIdx) });
@@ -360,10 +360,10 @@ int main() {
   chrono::duration<double> elapsed_seconds = end - start;
   cout << "start computation: " << ctime(&start_time)
        << "end computation: " << ctime(&end_time)
-       << "elapsed time: " << elapsed_seconds.count() << "s\n";
+       << "elapsed time: " << elapsed_seconds.count() << "s\n"
+       << "#cliques: " << cliques.size() << endl;
 
   // Printvecdbit(cliques);
-  cout << "#cliques: " << cliques.size() << endl;
 
   // cout << "\n"
   //      << "cliques are: \n";
