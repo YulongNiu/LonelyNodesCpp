@@ -132,6 +132,8 @@ public:
     return elem;
   }
 
+  void check() const;
+
   void print() const {
     cout << "quick is: " << quick << "; slow is: " << slow << endl;
   }
@@ -139,6 +141,21 @@ public:
 private:
   const int quick, slow;
 };
+
+
+inline void chain::check() const {
+  if (get_quick() == 0) {
+    cout << "End reaction." << endl;
+  } else {
+    chain nchain = next();
+    // nchain.print();
+    pool.push_task(&chain::check, nchain);
+
+    chain uchain = update();
+    // uchain.print();
+    pool.push_task(&chain::check, uchain);
+  }
+}
 
 
 void ChainReact(const chain& start) {
@@ -434,7 +451,9 @@ int main() {
 
   chain schain{ 4, 13 };
   // ChainReact(schain);
-  ChainReactParallel(schain);
+  // ChainReactParallel(schain);
+
+  // schain.check();
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
