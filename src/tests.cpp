@@ -20,6 +20,9 @@ using namespace std;
 using namespace ln;
 using namespace arma;
 
+BS::synced_stream sync_out;
+BS::thread_pool   pool;
+
 // length of each clique
 ln::vecu Lenvecvu(const ln::vecvu& v) {
   vecu res;
@@ -112,6 +115,58 @@ ln::vecvu TestSearchTree(const ln::gumap&  g,
   return cliques;
 }
 
+class chain {
+public:
+  chain(const int quick, const int slow) : quick{ quick }, slow{ slow } {}
+
+  int get_quick() const { return quick; }
+  int get_slow() const { return slow; }
+
+  chain next() const {
+    chain elem{ quick / 2, slow };
+    return elem;
+  }
+
+  chain update() const {
+    chain elem{ (quick + slow) / 2, slow > 0 ? slow - 1 : 0 };
+    return elem;
+  }
+
+  void print() const {
+    cout << "quick is: " << quick << "; slow is: " << slow << endl;
+  }
+
+private:
+  const int quick, slow;
+};
+
+
+void ChainReact(const chain& start) {
+  if (start.get_quick() == 0) {
+    cout << "End reaction." << endl;
+  } else {
+    chain nchain = start.next();
+    ChainReact(nchain);
+
+    chain uchain = start.update();
+    ChainReact(uchain);
+  }
+}
+
+
+void ChainReactParallel(const chain& start) {
+  if (start.get_quick() == 0) {
+    cout << "End reaction." << endl;
+  } else {
+    auto nchain = pool.submit(&chain::next, &start).get();
+    ChainReactParallel(nchain);
+
+    auto uchain = pool.submit(&chain::update, &start).get();
+    ChainReactParallel(uchain);
+  }
+}
+
+
 int main() {
 
   // //~~~~~~~~~~~~~~~~~~test dynamic_bitset~~~~~~~~~~~~~~~~~~~
@@ -141,12 +196,12 @@ int main() {
   // string gfile   = "testm.bin"; // small graph
   // uword  nodeIdx = 0;           // #maximal clique 4
 
-  // string gfile   = "testg.bin"; // median graph
-  // uword  nodeIdx = 332;         // #maximal clique 94
+  string gfile   = "testg.bin"; // median graph
+  uword  nodeIdx = 332;         // #maximal clique 94
   // uword  nodeIdx = 10;          // #maximal clique 5
 
-  string gfile   = "testgbig.bin"; // large graph
-  uword  nodeIdx = 9116;           // #maximal clique 3764
+  // string gfile   = "testgbig.bin"; // large graph
+  // uword  nodeIdx = 9116;           // #maximal clique 3764
   // uword nodeIdx = 100; // #maximal clique 264
 
   // string gfile   = "testblog.bin"; // blog graph
@@ -189,7 +244,7 @@ int main() {
   // updaten.print();
 
   dbit    dbitemptyTest(gdbit.size(), 0);
-  LeafBit startnTest(dbitemptyTest, dbitemptyTest, gdbit.at(nodeIdx));
+  LeafBit startnTest{ dbitemptyTest, dbitemptyTest, gdbit.at(nodeIdx) };
   BOOST_ASSERT_MSG(startnTest.next_nodeidx(gdbit) ==
                      gdbit.at(nodeIdx).find_first(),
                    "idx for `seeds.empty()` is checked.");
@@ -316,9 +371,6 @@ int main() {
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~~~~~~~~test thread pool~~~~~~~~~~~~~~~~~
-  BS::synced_stream sync_out;
-  BS::thread_pool   pool;
-
   cout << "#threads is: " << pool.get_thread_count() << endl;
   cout << "#unfinished tasks is: " << pool.get_tasks_total() << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -326,7 +378,7 @@ int main() {
   //~~~~~~~~~~~~~~~~~~~~~~~test find_first and find_next~~~~~~~~
   uword       num = 123456;
   bitset<100> testFindf{ num };
-  // cout << "`testFindf` is: " << testFindf << endl;
+  cout << "`testFindf` is: " << testFindf << endl;
 
   // cout << "find first of `testFindf` is: " << countr_zero(num) << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -338,7 +390,7 @@ int main() {
   // LeafBit vector method
   dbit dbitempty(gdbit.size(), 0);
   // LeafBit startn(dbitempty, dbitempty, gdbitall);
-  LeafBit startn(dbitempty, dbitempty, gdbit.at(nodeIdx));
+  LeafBit startn{ dbitempty, dbitempty, gdbit.at(nodeIdx) };
   auto    cliques = SearchLeafBit(startn, gdbit);
 
   // // LeafBit recursion method
@@ -375,6 +427,15 @@ int main() {
   //      << "cliques size are: \n";
   // Printvecu(Lenvecvu(cliques));
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+  //~~~~~~~~~~~~~~~~~~~~test threads pool~~~~~~~~~~~~~~~~~~~
+  cout << "#threads: " << pool.get_thread_count() << endl;
+
+  chain schain{ 4, 13 };
+  // ChainReact(schain);
+  ChainReactParallel(schain);
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
   return 0;

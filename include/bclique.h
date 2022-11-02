@@ -135,9 +135,9 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit);
 
 void BackSkipLeafBit_(vecpleafbit& vpleaf);
 
-void ChainReact(const pleafbit&  pleaf,
-                const vecdbit&   gdbit,
-                BS::thread_pool& tpool);
+// void ChainReact(const pleafbit&  pleaf,
+//                 const vecdbit&   gdbit,
+//                 BS::thread_pool& tpool);
 
 void SearchLeafBit2(const pleafbit& pleaf,
                     const vecdbit&  gdbit,

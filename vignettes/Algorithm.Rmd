@@ -58,6 +58,8 @@ s &: \{ x \in X \}, \{ r \in R \}, \{ p \in P \} \\
 
 ### Raw Bron-Kerbosch's algorithm
 
+*TODO*: B-K description is not accurate. 
+
 Raw Bron-Kerbosch's algorithm could be expressed as:
 
 * Step1: randomly select a vertex $p_1$ in $P$, then generate a new status $s_{new}$:
