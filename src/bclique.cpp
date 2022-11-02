@@ -1,8 +1,8 @@
 #include <memory>
 
+#include "BS_thread_pool.hpp"
 #include "bclique.h"
 #include "init.h"
-#include "thread_pool.hpp"
 #include "util.h"
 
 using namespace std;
@@ -196,11 +196,9 @@ void SearchLeafBit2(const pleafbit& pleaf,
 //                 const vecdbit&     gdbit,
 //                 const thread_pool& tpool) {
 
-//   if (pleaf->branches_empty()) {
-//     if (pleaf->seeds_empty()) {
-//       // is maximal cliques
-//       // cout << pleaf->get_branches() << endl;
-//     }
+//   if (pleaf->is_maximalclique()) {
+//     // is maximal cliques
+//     // cout << pleaf->get_branches() << endl;
 //   } else {
 //     auto idx = pleaf->next_nodeidx(gdbit);
 

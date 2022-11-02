@@ -9,17 +9,16 @@
 #include <memory>
 #include <type_traits>
 
+#include "BS_thread_pool.hpp"
 #include "bclique.h"
 #include "clique.h"
 #include "init.h"
 #include "pivot.h"
-#include "thread_pool.hpp"
 #include "util.h"
 
 using namespace std;
 using namespace ln;
 using namespace arma;
-
 
 // length of each clique
 ln::vecu Lenvecvu(const ln::vecvu& v) {
@@ -317,7 +316,9 @@ int main() {
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~~~~~~~~test thread pool~~~~~~~~~~~~~~~~~
-  thread_pool pool;
+  BS::synced_stream sync_out;
+  BS::thread_pool   pool;
+
   cout << "#threads is: " << pool.get_thread_count() << endl;
   cout << "#unfinished tasks is: " << pool.get_tasks_total() << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
