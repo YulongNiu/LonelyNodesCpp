@@ -144,7 +144,7 @@ int main() {
 
   // string gfile   = "testg.bin"; // median graph
   // uword  nodeIdx = 332;         // #maximal clique 94
-  // uword  nodeIdx = 10;          // #maximal clique 5
+  // uword nodeIdx = 10; // #maximal clique 5
 
   string gfile = "testgbig.bin"; // large graph
   // uword  nodeIdx = 9116;           // #maximal clique 3764
@@ -352,7 +352,13 @@ int main() {
   LeafBit startn{ dbitempty, dbitempty, gdbit.at(nodeIdx) };
   vecdbit cliques;
   SearchLeafBit2(make_shared<LeafBit>(startn), gdbit, cliques);
-  // SearchLeafBit2Parallel(make_shared<LeafBit>(startn), gdbit, cliques);
+
+
+  // // LeafBit recursion parallel method
+  // dbit    dbitempty(gdbit.size(), 0);
+  // LeafBit startn{ dbitempty, dbitempty, gdbit.at(nodeIdx) };
+  // vecdbit cliques;
+  // SearchLeafBit2Parallel(startn, gdbit, cliques);
 
   // // Leaf object method
   // Leaf startn({}, {}, { gg.at(nodeIdx) });

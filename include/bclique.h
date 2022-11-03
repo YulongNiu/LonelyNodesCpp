@@ -35,17 +35,19 @@ public:
   bool is_maximalclique() const { return branches.none() && seeds.none(); }
 
   // next elem
-  dbit next_branches(const arma::uword idx, const vecdbit& gdbit) const;
-  dbit next_stem(const arma::uword idx) const;
-  dbit next_seeds(const arma::uword idx, const vecdbit& gdbit) const;
-  std::shared_ptr<LeafBit> next_leaf(const arma::uword idx,
-                                     const vecdbit&    gdbit) const;
+  dbit    next_branches(const arma::uword idx, const vecdbit& gdbit) const;
+  dbit    next_stem(const arma::uword idx) const;
+  dbit    next_seeds(const arma::uword idx, const vecdbit& gdbit) const;
+  LeafBit next_leaf(const arma::uword idx, const vecdbit& gdbit) const;
+  std::shared_ptr<LeafBit> next_pleaf(const arma::uword idx,
+                                      const vecdbit&    gdbit) const;
 
   // update current elem
   dbit                     update_branches(arma::uword idx) const;
   dbit                     update_stem() const;
   dbit                     update_seeds(const arma::uword idx) const;
-  std::shared_ptr<LeafBit> update_leaf(const arma::uword idx) const;
+  LeafBit                  update_leaf(const arma::uword idx) const;
+  std::shared_ptr<LeafBit> update_pleaf(const arma::uword idx) const;
 
   void print() const;
 
@@ -74,6 +76,19 @@ inline dbit LeafBit::next_seeds(const arma::uword idx,
   return seeds & gdbit.at(idx);
 }
 
+inline LeafBit LeafBit::next_leaf(const arma::uword idx,
+                                  const vecdbit&    gdbit) const {
+  return LeafBit(next_seeds(idx, gdbit),
+                 next_stem(idx),
+                 next_branches(idx, gdbit));
+}
+
+inline std::shared_ptr<LeafBit>
+LeafBit::next_pleaf(const arma::uword idx, const vecdbit& gdbit) const {
+  return std::make_shared<LeafBit>(
+    LeafBit(next_seeds(idx, gdbit), next_stem(idx), next_branches(idx, gdbit)));
+}
+
 inline dbit LeafBit::update_branches(arma::uword idx) const {
   dbit res{ branches };
   res.reset(idx);
@@ -90,14 +105,13 @@ inline dbit LeafBit::update_seeds(const arma::uword idx) const {
   return res;
 }
 
-inline std::shared_ptr<LeafBit> LeafBit::next_leaf(const arma::uword idx,
-                                                   const vecdbit& gdbit) const {
-  return std::make_shared<LeafBit>(
-    LeafBit(next_seeds(idx, gdbit), next_stem(idx), next_branches(idx, gdbit)));
+inline LeafBit LeafBit::update_leaf(const arma::uword idx) const {
+  return LeafBit(update_seeds(idx), update_stem(), update_branches(idx));
 }
 
+
 inline std::shared_ptr<LeafBit>
-LeafBit::update_leaf(const arma::uword idx) const {
+LeafBit::update_pleaf(const arma::uword idx) const {
   return std::make_shared<LeafBit>(
     LeafBit(update_seeds(idx), update_stem(), update_branches(idx)));
 }
@@ -139,9 +153,9 @@ void SearchLeafBit2(const pleafbit& pleaf,
                     vecdbit&        cliques);
 
 
-void SearchLeafBit2Parallel(const pleafbit& pleaf,
-                            const vecdbit&  gdbit,
-                            vecdbit&        cliques);
+void SearchLeafBit2Parallel(const LeafBit& leaf,
+                            const vecdbit& gdbit,
+                            vecdbit&       cliques);
 
 } // namespace lonelynodes
 
