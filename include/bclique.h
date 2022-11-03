@@ -3,7 +3,6 @@
 
 #include <memory>
 
-#include "BS_thread_pool.hpp"
 #include "init.h"
 #include "util.h"
 
@@ -135,13 +134,15 @@ vecdbit SearchLeafBit(const LeafBit& start, const vecdbit& gdbit);
 
 void BackSkipLeafBit_(vecpleafbit& vpleaf);
 
-// void ChainReact(const pleafbit&  pleaf,
-//                 const vecdbit&   gdbit,
-//                 BS::thread_pool& tpool);
-
 void SearchLeafBit2(const pleafbit& pleaf,
                     const vecdbit&  gdbit,
                     vecdbit&        cliques);
+
+
+void SearchLeafBit2Parallel(const pleafbit& pleaf,
+                            const vecdbit&  gdbit,
+                            vecdbit&        cliques);
+
 } // namespace lonelynodes
 
 #endif // _BCLIQUE_H_

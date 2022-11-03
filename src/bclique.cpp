@@ -9,6 +9,8 @@ using namespace std;
 
 namespace lonelynodes {
 
+BS::thread_pool pool;
+
 arma::uword LeafBit::next_nodeidx(const vecdbit& gdbit) const {
 
   // No need to check branches empty.
@@ -192,26 +194,26 @@ void SearchLeafBit2(const pleafbit& pleaf,
   }
 }
 
-// void ChainReact(const pleafbit&    pleaf,
-//                 const vecdbit&     gdbit,
-//                 const thread_pool& tpool) {
+void SearchLeafBit2Parallel(const pleafbit& pleaf,
+                            const vecdbit&  gdbit,
+                            vecdbit&        cliques) {
 
-//   if (pleaf->is_maximalclique()) {
-//     // is maximal cliques
-//     // cout << pleaf->get_branches() << endl;
-//   } else {
-//     auto idx = pleaf->next_nodeidx(gdbit);
+  if (pleaf->is_maximalclique()) {
+    // find maximal cliques
+    cliques.push_back(pleaf->get_stem());
+  } else {
+    auto idx = pleaf->next_nodeidx(gdbit);
+    if (!pleaf->is_skippable(idx)) {
 
-//     // next pleaf
-//     auto npleaf = pleaf->next_leaf(idx, gdbit);
-//     tpool.push_task(ChainReact, npleaf, gdbit, tpool);
+      // next pleaf
+      auto npleaf = pleaf->next_leaf(idx, gdbit);
+      pool.push_task(SearchLeafBit2Parallel, npleaf, gdbit, cliques);
 
-//     // update pleaf
-//     auto uleaf = pleaf->update_leaf(idx);
-//     tpool.push_task(ChainReact, uleaf, gdbit, tpool);
-//   }
-
-//   if (tpool.get_tasks_total() == 0) return;
-// }
+      // update pleaf
+      auto upleaf = pleaf->update_leaf(idx);
+      pool.push_task(SearchLeafBit2Parallel, upleaf, gdbit, cliques);
+    }
+  }
+}
 
 } // namespace lonelynodes

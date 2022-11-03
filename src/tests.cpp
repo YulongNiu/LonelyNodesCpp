@@ -142,13 +142,13 @@ int main() {
   // string gfile   = "testm.bin"; // small graph
   // uword  nodeIdx = 0;           // #maximal clique 4
 
-  string gfile   = "testg.bin"; // median graph
-  uword  nodeIdx = 332;         // #maximal clique 94
+  // string gfile   = "testg.bin"; // median graph
+  // uword  nodeIdx = 332;         // #maximal clique 94
   // uword  nodeIdx = 10;          // #maximal clique 5
 
-  // string gfile   = "testgbig.bin"; // large graph
+  string gfile = "testgbig.bin"; // large graph
   // uword  nodeIdx = 9116;           // #maximal clique 3764
-  // uword nodeIdx = 100; // #maximal clique 264
+  uword nodeIdx = 100; // #maximal clique 264
 
   // string gfile   = "testblog.bin"; // blog graph
   // uword  nodeIdx = 0;              // #maximal clique 4
@@ -321,6 +321,12 @@ int main() {
 
   cout << "#threads is: " << pool.get_thread_count() << endl;
   cout << "#unfinished tasks is: " << pool.get_tasks_total() << endl;
+
+  // cr::chain schain{ 4, 10 };
+
+  // cr::ChainReact(schain);
+  // cr::ChainReactParallel(schain);
+  // cr::schain.react();
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~~~~~~~~test find_first and find_next~~~~~~~~
@@ -335,18 +341,18 @@ int main() {
   auto start      = chrono::system_clock::now();
   auto start_time = chrono::system_clock::to_time_t(start);
 
-  // LeafBit vector method
-  dbit dbitempty(gdbit.size(), 0);
-  // LeafBit startn(dbitempty, dbitempty, gdbitall);
-  LeafBit startn{ dbitempty, dbitempty, gdbit.at(nodeIdx) };
-  auto    cliques = SearchLeafBit(startn, gdbit);
+  // // LeafBit vector method
+  // dbit dbitempty(gdbit.size(), 0);
+  // // LeafBit startn{dbitempty, dbitempty, gdbitall};
+  // LeafBit startn{ dbitempty, dbitempty, gdbit.at(nodeIdx) };
+  // auto    cliques = SearchLeafBit(startn, gdbit);
 
-  // // LeafBit recursion method
-  // dbit     dbitempty(gdbit.size(), 0);
-  // LeafBit  startn(dbitempty, dbitempty, gdbit.at(nodeIdx));
-  // pleafbit startnp = make_shared<LeafBit>(startn);
-  // vecdbit  cliques;
-  // SearchLeafBit2(startnp, gdbit, cliques);
+  // LeafBit recursion method
+  dbit    dbitempty(gdbit.size(), 0);
+  LeafBit startn{ dbitempty, dbitempty, gdbit.at(nodeIdx) };
+  vecdbit cliques;
+  SearchLeafBit2(make_shared<LeafBit>(startn), gdbit, cliques);
+  // SearchLeafBit2Parallel(make_shared<LeafBit>(startn), gdbit, cliques);
 
   // // Leaf object method
   // Leaf startn({}, {}, { gg.at(nodeIdx) });
@@ -375,15 +381,6 @@ int main() {
   //      << "cliques size are: \n";
   // Printvecu(Lenvecvu(cliques));
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-  //~~~~~~~~~~~~~~~~~~~~test threads pool~~~~~~~~~~~~~~~~~~~
-  cr::chain schain{ 4, 10 };
-  // cr::ChainReact(schain);
-  cr::ChainReactParallel(schain);
-
-  // cr::schain.react();
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   return 0;
 }
