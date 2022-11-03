@@ -14,14 +14,12 @@
 #include "clique.h"
 #include "init.h"
 #include "pivot.h"
+#include "tptest.h"
 #include "util.h"
 
 using namespace std;
 using namespace ln;
 using namespace arma;
-
-BS::synced_stream sync_out;
-BS::thread_pool   pool;
 
 // length of each clique
 ln::vecu Lenvecvu(const ln::vecvu& v) {
@@ -114,75 +112,6 @@ ln::vecvu TestSearchTree(const ln::gumap&  g,
 
   return cliques;
 }
-
-class chain {
-public:
-  chain(const int quick, const int slow) : quick{ quick }, slow{ slow } {}
-
-  int get_quick() const { return quick; }
-  int get_slow() const { return slow; }
-
-  chain next() const {
-    chain elem{ quick / 2, slow };
-    return elem;
-  }
-
-  chain update() const {
-    chain elem{ (quick + slow) / 2, slow > 0 ? slow - 1 : 0 };
-    return elem;
-  }
-
-  void check() const;
-
-  void print() const {
-    cout << "quick is: " << quick << "; slow is: " << slow << endl;
-  }
-
-private:
-  const int quick, slow;
-};
-
-
-inline void chain::check() const {
-  if (get_quick() == 0) {
-    cout << "End reaction." << endl;
-  } else {
-    chain nchain = next();
-    // nchain.print();
-    pool.push_task(&chain::check, nchain);
-
-    chain uchain = update();
-    // uchain.print();
-    pool.push_task(&chain::check, uchain);
-  }
-}
-
-
-void ChainReact(const chain& start) {
-  if (start.get_quick() == 0) {
-    cout << "End reaction." << endl;
-  } else {
-    chain nchain = start.next();
-    ChainReact(nchain);
-
-    chain uchain = start.update();
-    ChainReact(uchain);
-  }
-}
-
-
-void ChainReactParallel(const chain& start) {
-  if (start.get_quick() == 0) {
-    cout << "End reaction." << endl;
-  } else {
-    auto nchain = pool.submit(&chain::next, &start).get();
-    ChainReactParallel(nchain);
-
-    auto uchain = pool.submit(&chain::update, &start).get();
-    ChainReactParallel(uchain);
-  }
-}
-
 
 int main() {
 
@@ -388,6 +317,8 @@ int main() {
   // //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   //~~~~~~~~~~~~~~~~~~~~~~~test thread pool~~~~~~~~~~~~~~~~~
+  BS::thread_pool pool;
+
   cout << "#threads is: " << pool.get_thread_count() << endl;
   cout << "#unfinished tasks is: " << pool.get_tasks_total() << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -447,15 +378,12 @@ int main() {
 
 
   //~~~~~~~~~~~~~~~~~~~~test threads pool~~~~~~~~~~~~~~~~~~~
-  cout << "#threads: " << pool.get_thread_count() << endl;
+  cr::chain schain{ 4, 10 };
+  // cr::ChainReact(schain);
+  cr::ChainReactParallel(schain);
 
-  chain schain{ 4, 13 };
-  // ChainReact(schain);
-  // ChainReactParallel(schain);
-
-  // schain.check();
+  // cr::schain.react();
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
   return 0;
 }
