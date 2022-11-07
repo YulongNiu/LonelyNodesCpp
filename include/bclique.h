@@ -14,6 +14,8 @@ public:
   LeafBit(const dbit& seeds, const dbit& stem, const dbit& branches)
       : seeds{ seeds }, stem{ stem }, branches{ branches } {}
 
+  // ~LeafBit() { std::cout << "LeafBit destroyed.\n"; }
+
   dbit get_seeds() const { return seeds; };
   dbit get_stem() const { return stem; };
   dbit get_branches() const { return branches; };
@@ -153,9 +155,9 @@ void SearchLeafBit2(const pleafbit& pleaf,
                     vecdbit&        cliques);
 
 
-void SearchLeafBit2Parallel(const LeafBit& leaf,
-                            const vecdbit& gdbit,
-                            vecdbit&       cliques);
+void SearchLeafBit2Parallel(const pleafbit& pleaf,
+                            const vecdbit&  gdbit,
+                            vecdbit&        cliques);
 
 } // namespace lonelynodes
 

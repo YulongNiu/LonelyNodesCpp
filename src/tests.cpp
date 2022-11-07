@@ -142,8 +142,8 @@ int main() {
   // string gfile   = "testm.bin"; // small graph
   // uword  nodeIdx = 0;           // #maximal clique 4
 
-  // string gfile   = "testg.bin"; // median graph
-  // uword  nodeIdx = 332;         // #maximal clique 94
+  // string gfile = "testg.bin"; // median graph
+  // // uword  nodeIdx = 332;         // #maximal clique 94
   // uword nodeIdx = 10; // #maximal clique 5
 
   string gfile = "testgbig.bin"; // large graph
@@ -333,7 +333,6 @@ int main() {
   uword       num = 123456;
   bitset<100> testFindf{ num };
   cout << "`testFindf` is: " << testFindf << endl;
-
   // cout << "find first of `testFindf` is: " << countr_zero(num) << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -347,18 +346,13 @@ int main() {
   // LeafBit startn{ dbitempty, dbitempty, gdbit.at(nodeIdx) };
   // auto    cliques = SearchLeafBit(startn, gdbit);
 
-  // LeafBit recursion method
+
+  // `LeafBit` recursion method
   dbit    dbitempty(gdbit.size(), 0);
   LeafBit startn{ dbitempty, dbitempty, gdbit.at(nodeIdx) };
   vecdbit cliques;
   SearchLeafBit2(make_shared<LeafBit>(startn), gdbit, cliques);
-
-
-  // // LeafBit recursion parallel method
-  // dbit    dbitempty(gdbit.size(), 0);
-  // LeafBit startn{ dbitempty, dbitempty, gdbit.at(nodeIdx) };
-  // vecdbit cliques;
-  // SearchLeafBit2Parallel(startn, gdbit, cliques);
+  // SearchLeafBit2Parallel(make_shared<LeafBit>(startn), gdbit, cliques);
 
   // // Leaf object method
   // Leaf startn({}, {}, { gg.at(nodeIdx) });

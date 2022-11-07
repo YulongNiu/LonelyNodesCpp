@@ -193,24 +193,46 @@ void SearchLeafBit2(const pleafbit& pleaf,
   }
 }
 
-void SearchLeafBit2Parallel(const LeafBit& leaf,
-                            const vecdbit& gdbit,
-                            vecdbit&       cliques) {
 
-  if (leaf.is_maximalclique()) {
-    // cliques.push_back(leaf.get_stem());
-    Printvecu(DBIT2VECU_(leaf.get_stem()));
+// void SearchLeafBit2Parallel(const LeafBit& leaf,
+//                             const vecdbit& gdbit,
+//                             vecdbit&       cliques) {
+
+//   if (leaf.is_maximalclique()) {
+//     // cliques.push_back(leaf.get_stem());
+//     Printvecu(DBIT2VECU_(leaf.get_stem()));
+//   } else {
+//     auto idx = leaf.next_nodeidx(gdbit);
+//     if (!leaf.is_skippable(idx)) {
+
+//       auto nleaf = leaf.next_leaf(idx, gdbit);
+//       auto uleaf = leaf.update_leaf(idx);
+
+//       pool.push_task(SearchLeafBit2Parallel, nleaf, gdbit, cliques);
+//       pool.push_task(SearchLeafBit2Parallel, uleaf, gdbit, cliques);
+//     }
+//   }
+// }
+
+
+void SearchLeafBit2Parallel(const pleafbit& pleaf,
+                            const vecdbit&  gdbit,
+                            vecdbit&        cliques) {
+
+  if (pleaf->is_maximalclique()) {
+    // cliques.push_back(pleaf->get_stem());
+    Printvecu(DBIT2VECU_(pleaf->get_stem()));
   } else {
-    auto idx = leaf.next_nodeidx(gdbit);
-    if (!leaf.is_skippable(idx)) {
+    auto idx = pleaf->next_nodeidx(gdbit);
+    if (!pleaf->is_skippable(idx)) {
 
       // next pleaf
-      auto nleaf = leaf.next_leaf(idx, gdbit);
-      pool.push_task(SearchLeafBit2Parallel, nleaf, gdbit, cliques);
+      auto npleaf = pleaf->next_pleaf(idx, gdbit);
+      pool.push_task(SearchLeafBit2Parallel, npleaf, gdbit, cliques);
 
       // update pleaf
-      auto uleaf = leaf.update_leaf(idx);
-      pool.push_task(SearchLeafBit2Parallel, uleaf, gdbit, cliques);
+      auto upleaf = pleaf->update_pleaf(idx);
+      pool.push_task(SearchLeafBit2Parallel, upleaf, gdbit, cliques);
     }
   }
 }
